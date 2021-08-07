@@ -1,9 +1,0 @@
-{
-    "users": [
-        {
-            "user_ID": "Tom",
-            "catalog_id": "Leaf_001",
-            "password": "a"
-        }
-    ]
-}

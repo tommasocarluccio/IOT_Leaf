@@ -1,2 +1,0 @@
-{"sensorID": "mq135_X1","end_points": "MQTT/REST",
-		"catalog": "http://127.0.0.1:8080/catalog","parameters": [{"parameter":"AQI", "unit":"ppm"}]}

@@ -1,9 +1,0 @@
-{
-	"registration": [
-        {
-            "addressIP": "192.168.1.130",
-            "port": 9990
-        }
-    ],
-	"database_URL":"http://192.168.1.130:8080/leaf/"
-}

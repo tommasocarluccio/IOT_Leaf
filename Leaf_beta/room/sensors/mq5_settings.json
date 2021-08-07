@@ -1,9 +1,0 @@
-{
-	"sensorID": "mq135_X1",
-	"end_points": "MQTT/REST",
-	"parameters": [{
-		"parameter": "AQI",
-		"value": null,
-		"unit": "ppm"
-	}]
-}

@@ -1,8 +1,0 @@
-#! /bin/bash
-
-cd registration
-xterm -e "python3 reg.py" &
-sleep 3
-
-cd ..
-xterm -e "python3 bot.py"
