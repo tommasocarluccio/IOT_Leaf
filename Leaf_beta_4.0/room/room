@@ -1,0 +1,4 @@
+#! /bin/bash
+xterm -e "python3 room_run.py conf/etc/room_settings.json Leaf_001"
+sleep 5
+xterm -e "python3 subscriber.py conf/etc/room_settings.json"	

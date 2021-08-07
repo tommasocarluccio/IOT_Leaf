@@ -1,0 +1,18 @@
+#! /bin/bash
+cd Leaf/Leaf_beta_v2/database 
+./server &
+sleep 3
+cd ../bot 
+./bot &
+sleep 3
+cd ../catalog
+./catalog &
+sleep 3
+cd ../room
+./room &
+sleep 3
+cd sensors 
+./sensors &
+sleep 3
+cd ..
+./lcd 

@@ -1,0 +1,3 @@
+#! /bin/bash
+xterm -e "python3 main.py etc/catalog_settings.json"
+sleep 5

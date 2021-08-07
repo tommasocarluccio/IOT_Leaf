@@ -1,0 +1,177 @@
+{
+	"version": 1,
+	"allow_edit": true,
+	"plugins": [],
+	"panes": [{
+		"width": 1,
+		"row": {
+			"3": 1
+		},
+		"col": {
+			"3": 1
+		},
+		"col_width": 3,
+		"widgets": [{
+			"type": "html",
+			"settings": {
+				"html": "<html><head><title>ThingSpeak Embedded Plot</title></head>\n<body>\n<center>\n<img width=\"340\" height=\"240\" src=\"https://i.ibb.co/C8qQd7q/leaf-definitivo-2.png\">\n</iframe></center>\n</body></html>",
+				"height": 4
+			}
+		}]
+	}, {
+		"title": "Mean Day AQI",
+		"width": 1,
+		"row": {
+			"3": 11,
+			"5": 11,
+			"3.5": 1
+		},
+		"col": {
+			"3": 1,
+			"5": 1
+		},
+		"col_width": 1,
+		"widgets": [{
+			"type": "gauge",
+			"settings": {
+				"title": "Mean Day AQI",
+				"value": "datasources[\"Freeboard data\"][\"feeds\"][\"1\"][\"field4\"]",
+				"units": "AQI",
+				"min_value": 0,
+				"max_value": "5000"
+			}
+		}, {
+			"type": "text_widget",
+			"settings": {
+				"size": "regular",
+				"animate": true
+			}
+		}]
+	}, {
+		"width": 1,
+		"row": {
+			"3": 11,
+			"5": 11
+		},
+		"col": {
+			"3": 2,
+			"5": 2
+		},
+		"col_width": 2,
+		"widgets": [{
+			"type": "html",
+			"settings": {
+				"html": "<html><head><title>ThingSpeak Embedded Plot</title></head>\n<body>\n<center>\n<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1223956/charts/1?bgcolor=%23ffffff&color=%23d62020&days=1&dynamic=true&results=60&title=Day+AQI+%28Hour+avg%29&type=line\"></iframe>\n\n</center>\n</body></html>",
+				"height": 4
+			}
+		}]
+	}, {
+		"title": "Mean Day Temperature",
+		"width": 1,
+		"row": {
+			"3": 21,
+			"6": 9,
+			"3.5": 9
+		},
+		"col": {
+			"3": 1,
+			"6": 1,
+			"3.5": 1
+		},
+		"col_width": 1,
+		"widgets": [{
+			"type": "gauge",
+			"settings": {
+				"title": "Mean Day Temperature",
+				"value": "datasources[\"Freeboard data\"][\"feeds\"][\"1\"][\"field5\"]",
+				"units": "Celsius Degrees",
+				"min_value": 0,
+				"max_value": 100
+			}
+		}, {
+			"type": "text_widget",
+			"settings": {
+				"size": "regular",
+				"animate": true
+			}
+		}]
+	}, {
+		"width": 1,
+		"row": {
+			"3": 21,
+			"6": 21
+		},
+		"col": {
+			"3": 2,
+			"6": 2
+		},
+		"col_width": 2,
+		"widgets": [{
+			"type": "html",
+			"settings": {
+				"html": "<html><head><title>ThingSpeak Embedded Plot</title></head>\n<body>\n<center><iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1223956/charts/2?bgcolor=%23ffffff&color=%23d62020&days=1&dynamic=true&results=60&title=Day+Temp+%28Hour+avg%29&type=line\"></iframe>\n\n</center>\n</body></html>",
+				"height": 4
+			}
+		}]
+	}, {
+		"title": "Mean Day Humidity",
+		"width": 1,
+		"row": {
+			"3": 31,
+			"7": 17,
+			"3.5": 17
+		},
+		"col": {
+			"3": 1,
+			"7": 1,
+			"3.5": 1
+		},
+		"col_width": 1,
+		"widgets": [{
+			"type": "gauge",
+			"settings": {
+				"title": "Mean Day Humidity",
+				"value": "datasources[\"Freeboard data\"][\"feeds\"][\"1\"][\"field6\"]",
+				"units": "%",
+				"min_value": 0,
+				"max_value": 100
+			}
+		}, {
+			"type": "text_widget",
+			"settings": {
+				"size": "regular",
+				"animate": true
+			}
+		}]
+	}, {
+		"width": 1,
+		"row": {
+			"3": 31,
+			"7": 31
+		},
+		"col": {
+			"3": 2,
+			"7": 2
+		},
+		"col_width": 2,
+		"widgets": [{
+			"type": "html",
+			"settings": {
+				"html": "<html><head><title>ThingSpeak Embedded Plot</title></head>\n<body>\n<center>\n<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1223956/charts/3?bgcolor=%23ffffff&color=%23d62020&days=1&dynamic=true&results=60&title=Day+Hum+%28Hour+avg%29&type=line\"></iframe>\n\n</center>\n</body></html>",
+				"height": 4
+			}
+		}]
+	}],
+	"datasources": [{
+		"name": "Freeboard data",
+		"type": "JSON",
+		"settings": {
+			"url": "https://api.thingspeak.com/channels/1223956/feeds.json?results=2",
+			"use_thingproxy": true,
+			"refresh": 5,
+			"method": "GET",
+			"name": "Freeboard data"
+		}
+	}],
+	"columns": 3
+}

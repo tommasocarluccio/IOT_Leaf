@@ -1,0 +1,1 @@
+{"sensorID": "dht11_X1","parameters": [{"parameter":"temperature", "unit":"C"},{"parameter":"humidity", "unit":"%"}]}

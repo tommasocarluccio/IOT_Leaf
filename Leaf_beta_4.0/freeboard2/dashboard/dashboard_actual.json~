@@ -1,0 +1,329 @@
+{
+	"version": 1,
+	"allow_edit": true,
+	"plugins": [],
+	"panes": [{
+		"width": 1,
+		"row": {
+			"3": 1
+		},
+		"col": {
+			"3": 1
+		},
+		"col_width": 3,
+		"widgets": [{
+			"type": "html",
+			"settings": {
+				"html": "<html><head><title>ThingSpeak Embedded Plot</title></head>\n<body>\n<center>\n<img width=\"340\" height=\"240\" src=\"https://i.ibb.co/C8qQd7q/leaf-definitivo-2.png\">\n</iframe></center>\n</body></html>",
+				"height": 4
+			}
+		}]
+	}, {
+		"title": "EXTERNAL DATA",
+		"width": 1,
+		"row": {
+			"3": 11,
+			"5": 11
+		},
+		"col": {
+			"3": 1,
+			"5": 1
+		},
+		"col_width": 2,
+		"widgets": [{
+			"type": "text_widget",
+			"settings": {
+				"title": "External Station",
+				"size": "regular",
+				"value": "datasources[\"External conditions\"][\"data\"][\"city\"][\"name\"]",
+				"animate": true
+			}
+		}]
+	}, {
+		"width": 1,
+		"row": {
+			"3": 11,
+			"6": 11
+		},
+		"col": {
+			"3": 3,
+			"6": 3
+		},
+		"col_width": 1,
+		"widgets": [{
+			"type": "text_widget",
+			"settings": {
+				"title": "Day",
+				"size": "regular",
+				"value": "datasources[\"External conditions\"][\"data\"][\"time\"][\"s\"].split(' ')[0]",
+				"animate": true
+			}
+		}, {
+			"type": "text_widget",
+			"settings": {
+				"title": "Time",
+				"size": "regular",
+				"value": "datasources[\"External conditions\"][\"data\"][\"time\"][\"s\"].split(' ')[1].split(':')[0]+':'+datasources[\"External conditions\"][\"data\"][\"time\"][\"s\"].split(' ')[1].split(':')[1]",
+				"animate": true
+			}
+		}]
+	}, {
+		"title": "",
+		"width": 1,
+		"row": {
+			"3": 15,
+			"5": 11,
+			"6": 11
+		},
+		"col": {
+			"3": 1,
+			"5": 1,
+			"6": 1
+		},
+		"col_width": 1,
+		"widgets": [{
+			"type": "gauge",
+			"settings": {
+				"title": "External AQI",
+				"value": "datasources[\"External conditions\"][\"data\"][\"aqi\"]",
+				"units": "AQI",
+				"min_value": 0,
+				"max_value": "500"
+			}
+		}, {
+			"type": "text_widget",
+			"settings": {
+				"title": "AQI classification",
+				"size": "regular",
+				"value": "aqi=datasources[\"External conditions\"][\"data\"][\"aqi\"]\nif (aqi<=50){\n    return('Good');\n}\nelse if(aqi>50 && aqi<=100){\n    return('Moderate');\n}\nelse if (aqi && aqi<=200){\n    return('Unhealthy');\n}\nelse if (aqi>200 && aqi<=300){\n    return('Very Unhealthy');\n}\nelse{\n    return('Hazardous');\n}",
+				"sparkline": false,
+				"animate": true
+			}
+		}]
+	}, {
+		"width": 1,
+		"row": {
+			"3": 15,
+			"5": 11,
+			"6": 11
+		},
+		"col": {
+			"3": 2,
+			"5": 2,
+			"6": 2
+		},
+		"col_width": 1,
+		"widgets": [{
+			"type": "text_widget",
+			"settings": {
+				"title": "Temperature",
+				"size": "big",
+				"value": "datasources[\"External conditions\"][\"data\"][\"iaqi\"][\"t\"][\"v\"]",
+				"animate": true,
+				"units": "°C"
+			}
+		}, {
+			"type": "text_widget",
+			"settings": {
+				"title": "Apparent Temperature",
+				"size": "big",
+				"value": "(datasources[\"External conditions\"][\"data\"][\"iaqi\"][\"t\"][\"v\"]-(0.7*datasources[\"External conditions\"][\"data\"][\"iaqi\"][\"w\"][\"v\"])-4+(0.33*(datasources[\"External conditions\"][\"data\"][\"iaqi\"][\"h\"][\"v\"]/100)*6.105*Math.exp(17.27*(datasources[\"External conditions\"][\"data\"][\"iaqi\"][\"t\"][\"v\"]/(237+datasources[\"External conditions\"][\"data\"][\"iaqi\"][\"t\"][\"v\"]))))).toFixed(2)",
+				"sparkline": true,
+				"animate": true,
+				"units": "°C"
+			}
+		}]
+	}, {
+		"title": "",
+		"width": 1,
+		"row": {
+			"3": 17,
+			"5": 11,
+			"6": 11
+		},
+		"col": {
+			"3": 3,
+			"5": 3,
+			"6": 3
+		},
+		"col_width": 1,
+		"widgets": [{
+			"type": "text_widget",
+			"settings": {
+				"title": "Humidity",
+				"size": "big",
+				"value": "datasources[\"External conditions\"][\"data\"][\"iaqi\"][\"h\"][\"v\"]",
+				"animate": true,
+				"units": "%"
+			}
+		}, {
+			"type": "text_widget",
+			"settings": {
+				"title": "Wind",
+				"size": "regular",
+				"value": "datasources[\"External conditions\"][\"data\"][\"iaqi\"][\"w\"][\"v\"]",
+				"animate": true,
+				"units": "m/s"
+			}
+		}]
+	}, {
+		"width": 1,
+		"row": {
+			"3": 25,
+			"6": 25
+		},
+		"col": {
+			"3": 3,
+			"6": 3
+		},
+		"col_width": 1,
+		"widgets": [{
+			"type": "text_widget",
+			"settings": {
+				"title": "Day",
+				"size": "regular",
+				"value": "datasources[\"LEAF GENERAL\"][\"feeds\"][\"0\"][\"created_at\"].split('T')[0]",
+				"animate": true
+			}
+		}, {
+			"type": "text_widget",
+			"settings": {
+				"title": "Time",
+				"size": "regular",
+				"value": "datasources[\"LEAF GENERAL\"][\"feeds\"][\"0\"][\"created_at\"].split('T')[1].split('Z')[0]",
+				"animate": true
+			}
+		}]
+	}, {
+		"title": "Internal data",
+		"width": 1,
+		"row": {
+			"3": 25,
+			"6": 25
+		},
+		"col": {
+			"3": 1,
+			"6": 1
+		},
+		"col_width": 2,
+		"widgets": [{
+			"type": "text_widget",
+			"settings": {
+				"size": "regular",
+				"value": "return('Leaf Platform')",
+				"animate": true
+			}
+		}]
+	}, {
+		"title": "",
+		"width": 1,
+		"row": {
+			"3": 29,
+			"5": 23,
+			"7": 23
+		},
+		"col": {
+			"3": 1,
+			"5": 1,
+			"7": 1
+		},
+		"col_width": 1,
+		"widgets": [{
+			"type": "gauge",
+			"settings": {
+				"title": "Internal AQI",
+				"value": "datasources[\"LEAF GENERAL\"][\"feeds\"][\"0\"][\"field1\"]",
+				"units": "AQI",
+				"min_value": 0,
+				"max_value": "5000"
+			}
+		}, {
+			"type": "text_widget",
+			"settings": {
+				"title": "AQI classification",
+				"size": "regular",
+				"value": "aqi=datasources[\"LEAF GENERAL\"][\"feeds\"][\"0\"][\"field1\"]\nif (aqi<=600){\n    return('Good');\n}\nelse if(aqi>600 && aqi<=1000){\n    return('Moderate');\n}\nelse if (aqi>1000 && aqi<=1500){\n    return('Unhealthy');\n}\nelse{\n    return('Hazardous');\n}",
+				"animate": true
+			}
+		}]
+	}, {
+		"title": "",
+		"width": 1,
+		"row": {
+			"3": 29,
+			"5": 23,
+			"7": 23
+		},
+		"col": {
+			"3": 2,
+			"5": 2,
+			"7": 2
+		},
+		"col_width": 1,
+		"widgets": [{
+			"type": "text_widget",
+			"settings": {
+				"title": "Temperature",
+				"size": "big",
+				"value": "datasources[\"LEAF GENERAL\"][\"feeds\"][\"0\"][\"field2\"]",
+				"animate": true,
+				"units": "°C"
+			}
+		}, {
+			"type": "text_widget",
+			"settings": {
+				"title": "Apparent Temperature",
+				"size": "big",
+				"value": "temp=Number(datasources[\"LEAF GENERAL\"][\"feeds\"][\"0\"][\"field2\"]);\nhum=Number(datasources[\"LEAF GENERAL\"][\"feeds\"][\"0\"][\"field3\"]);\ne=(hum/100)*6.105*Math.exp(17.27*(temp/(temp+237)));\nta=(temp+0.33*e-4).toFixed(2)\nreturn(ta);",
+				"sparkline": true,
+				"animate": true,
+				"units": "°C"
+			}
+		}]
+	}, {
+		"title": "Umidità interno",
+		"width": 1,
+		"row": {
+			"3": 31,
+			"5": 23,
+			"7": 23
+		},
+		"col": {
+			"3": 3,
+			"5": 3,
+			"7": 3
+		},
+		"col_width": 1,
+		"widgets": [{
+			"type": "text_widget",
+			"settings": {
+				"title": "Humidity",
+				"size": "big",
+				"value": "datasources[\"LEAF GENERAL\"][\"feeds\"][\"0\"][\"field3\"]",
+				"sparkline": false,
+				"animate": true,
+				"units": "%"
+			}
+		}]
+	}],
+	"datasources": [{
+		"name": "LEAF GENERAL",
+		"type": "JSON",
+		"settings": {
+			"url": "https://api.thingspeak.com/channels/1223949/feeds.json?api_key=32TJR21E57W6MIA1&results=1",
+			"use_thingproxy": true,
+			"refresh": 5,
+			"method": "GET"
+		}
+	}, {
+		"name": "External conditions",
+		"type": "JSON",
+		"settings": {
+			"url": "http://api.waqi.info/feed/Turin/?token=8b03b422d0b7122fefecf85cf73b81eddcd7a589",
+			"use_thingproxy": true,
+			"refresh": 5,
+			"method": "GET"
+		}
+	}],
+	"columns": 3
+}
