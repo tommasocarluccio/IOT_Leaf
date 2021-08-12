@@ -1,11 +1,30 @@
 import cherrypy
 import json
-import os
 import sys
-sys.path.append('/home/pi/Desktop/Leaf/Leaf_beta_v2/bot')
+import os
+import requests
 
 class Registration_deployer(object):
     exposed=True
+    def __init__(self,filename):
+        self.filename=filename
+        self.registration_configuration=json.load(open(self.filename,"r"))
+        self.serviceCatalogAddress=self.registration_configuration['service_catalog']
+        self.registrationServiceName=self.registration_configuration['service_name']
+        self.registrationServiceIP=self.registration_configuration['IP_address']
+        self.registrationServicePort=self.registration_configuration['IP_port']
+
+    def registerRequest(self):
+        msg={"service":self.registrationServiceName,"IP_address":self.registrationServiceIP,"port":self.registrationServicePort}
+        try:
+            service=requests.post(f'{self.serviceCatalogAddress}/register',json=msg).json()
+            return service
+        except IndexError as e:
+            #print(e)
+            print("Failure in registration.")
+            return False
+
+        
     def GET(self,*uri,**params):
         if (len(uri))>0 and uri[0]=="reg.html":
             return open('reg.html')
@@ -30,19 +49,22 @@ class Registration_deployer(object):
                 return open("correct_reg.html")
 
 if __name__ == '__main__':
-    configuration=json.load(open("../etc/bot_configuration.json"))
-    regURL=configuration['registration'][0].get('addressIP')
-    regPort=configuration['registration'][0].get('port')
-    conf = {
-        '/': {
-            'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
-            'tools.staticdir.root': os.path.abspath(os.getcwd()),
-            'tools.sessions.on': True
+    filename=sys.argv[1]
+    registrationService=Registration_deployer(filename)
+    if registrationService.registerRequest() is not False:
+        conf = {
+            '/': {
+                'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
+                'tools.staticdir.root': os.path.abspath(os.getcwd()),
+                'tools.sessions.on': True
+            }
         }
-    }
-    
-    cherrypy.tree.mount(Registration_deployer(), '/', conf)
-    cherrypy.config.update({'server.socket_host': regURL})
-    cherrypy.config.update({'server.socket_port': regPort}) 
-    cherrypy.engine.start()
-    cherrypy.engine.block()
+        
+        cherrypy.tree.mount(registrationService, registrationService.registrationServiceName, conf)
+        cherrypy.config.update({'server.socket_host': registrationService.registrationServiceIP})
+        cherrypy.config.update({'server.socket_port': registrationService.registrationServicePort}) 
+        cherrypy.engine.start()
+        cherrypy.engine.block()
+    else:
+        print("Exiting...")
+

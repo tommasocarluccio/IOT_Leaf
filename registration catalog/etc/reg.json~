@@ -1,4 +1,9 @@
 {
+	 "description":"Welcome to the users registration service",
+	 "service_catalog":"http://192.168.1.130:8080/Leaf/service_catalog",
+	 "service_name":"user_registration",
+	 "IP_address":"192.168.1.130",
+	 "IP_port":9090,
     "users": [
         {
             "user_ID": "Avi",

@@ -10,7 +10,7 @@ class Service():
         self.ip_address=ip_address
         self.ip_port=ip_port
     def jsonify(self):
-        service={'IP_address':self.ip_address,'port':self.ip_port,'service':"/Leaf/"+self.service_name}
+        service={'IP_address':self.ip_address,'port':self.ip_port,'service':'/'+self.service_name}
         return service
         
     
