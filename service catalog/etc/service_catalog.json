@@ -1,0 +1,17 @@
+{
+    "description": "Welcome to the Leaf catalog service",
+    "service_catalog": [
+        {
+            "IP_address": "192.168.1.130",
+            "port": 8080,
+            "service": "/Leaf/service_catalog"
+        }
+    ],
+    "broker": [
+        {
+            "IP_address": "192.168.1.130",
+            "port": 1883,
+            "service": "/broker"
+        }
+    ]
+}
