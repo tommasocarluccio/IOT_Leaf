@@ -1,4 +1,4 @@
-{
+import cherrypy{
 	 "description":"Welcome to the users registration service",
 	 "service_catalog":"http://192.168.1.130:8080/Leaf/service_catalog",
 	 "service_name":"user_registration",
