@@ -1,31 +1,13 @@
 {
-    "description": "Welcome to the Leaf catalog service",
-    "service_catalog": [
-        {
+    "description": "Welcome to the Leaf Service Catalog",
+    "service_catalog": {
             "IP_address": "192.168.1.130",
             "port": 8080,
             "service": "/service_catalog"
-        }
-    ],
-    "broker": [
-        {
+        },
+    "broker":{
             "IP_address": "192.168.1.130",
             "port": 1883,
             "service": "/broker"
         }
-    ],
-    "prova": [
-        {
-            "IP_address": "11821",
-            "port": 8081,
-            "service": "/prova"
-        }
-    ],
-    "user_registration": [
-        {
-            "IP_address": "192.168.1.130",
-            "port": 9090,
-            "service": "/user_registration"
-        }
-    ]
 }
