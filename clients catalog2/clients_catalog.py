@@ -8,15 +8,15 @@ from clients_class import *
 
 class Registration_deployer(object):
     exposed=True
-    def __init__(self,db_filename):
-        self.db_filename=db_filename
-        self.MyClientsCatalog=ClientsCatalog(self.db_filename)
-        self.serviceCatalogAddress=self.MyClientsCatalog.clientsContent['service_catalog']
-        self.service_name=self.MyClientsCatalog.clientsContent['service_name']
-        self.clientsCatalogIP=self.MyClientsCatalog.clientsContent['IP_address']
-        self.clientsCatalogPort=self.MyClientsCatalog.clientsContent['IP_port']
+    def __init__(self,filename):
+        self.filename=filename
+        self.catalog=ClientsCatalog(self.filename)
+        self.serviceCatalogAddress=self.catalog.clientsContent['service_catalog']
+        self.service_name=self.catalog.clientsContent['service_name']
+        self.clientsCatalogIP=self.catalog.clientsContent['IP_address']
+        self.clientsCatalogPort=self.catalog.clientsContent['IP_port']
         self.service=self.registerRequest()
-        self.flagNew=False
+        #self.flagNew=False
 
     def registerRequest(self):
         msg={"service":self.service_name,"IP_address":self.clientsCatalogIP,"port":self.clientsCatalogPort}
@@ -33,38 +33,60 @@ class Registration_deployer(object):
             return open('etc/reg.html')
 
         elif (len(uri)>0 and uri[0]=="reg_results"):
-            for platform in self.MyClientsCatalog.clientsContent.get("platforms"):
-                if platform['platform_ID']==params['platformID']:
-                    return open("etc/fail_reg_user.html") 
+            check=self.catalog.check_registration(params['userID'],params['platformID'])
+            if check is not False:
+                html_error="etc/fail_reg_"+check+".html"
+                return open(html_error)
+                
             if params['psw']!=params['psw-repeat']:
                 return open("etc/fail_reg_pass.html") 
 
             else:
-                self.MyClientsCatalog.clientsContent["platforms"].append({
-                    "platform_ID":params['platformID'],
-                    "user":{"username":params['userID'],"password":params['psw']}
+                self.catalog.platforms.set_value(params['platformID'],"associated",True)
+                self.catalog.users.content["users"].append({
+                    "username":params['userID'],
+                    "password":params['psw'],
+                    "platforms_list":[params["platformID"]]
                     })
-                self.MyClientsCatalog.save()
-                #self.checkpassword = cherrypy.lib.auth_basic.checkpassword_dict(self.MyClientsCatalog.userpassdict)
-                self.flagNew=True
+                self.catalog.users.save()
+                self.catalog.platforms.save()
+                #self.checkpassword = cherrypy.lib.auth_basic.checkpassword_dict(self.catalog.userpassdict)
+                #self.flagNew=True
+                print("User '{}' correctly registered with platform '{}'\n".format(params['userID'],params['platformID']))
                 return open("etc/correct_reg.html")
         elif(len(uri))>0 and uri[0]=="login":
         
-            data=self.MyClientsCatalog.find_user(str(cherrypy.request.login)).copy()
+            data=self.catalog.find_user(str(cherrypy.request.login)).copy()
             print(data)
             del data['password']
             return json.dumps(data)
+        else:
+            raise cherrypy.HTTPError(501, "No operation!")
+            
     
     def DELETE(self,*uri):
         command=str(uri[0])
         if command=='removePlatform':
-            platform_ID=uri[1]
-            outputFlag=self.MyClientsCatalog.removePlatform(platform_ID)
+            username=uri[1]
+            #username=str(cherrypy.request.login)
+            platform_ID=uri[2]
+            outputFlag=self.catalog.users.removePlatform(username,platform_ID)
             if outputFlag==True:
                 output="Platform '{}' removed".format(platform_ID)
-                self.MyClientsCatalog.save()
+                self.catalog.platforms.set_value(platform_ID,"associated",False)
+                self.catalog.users.save()
+                self.catalog.platforms.save()
             else:
-                output="Platform '{}' not found ".format(platform_ID)
+                #output="Platform '{}' not found ".format(platform_ID)
+                raise cherrypy.HTTPError(404, "Platform not found")
+        elif command=='removeUser':
+            username=uri[1]
+            outputFlag=self.catalog.users.removeUser(username)
+            if outputFlag==True:
+                output="User '{}' removed".format(username)
+                self.catalog.users.save()
+            else:
+                raise cherrypy.HTTPError(404, "User not found")
         
         else:
             raise cherrypy.HTTPError(501, "No operation!")
@@ -75,8 +97,8 @@ class Registration_deployer(object):
 if __name__ == '__main__':
     clients_db=sys.argv[1]
     clientsCatalog=Registration_deployer(clients_db)
-    get_ha1 = cherrypy.lib.auth_digest.get_ha1_dict_plain(clientsCatalog.MyClientsCatalog.userpassdict)
-    clientsCatalog.checkpassword = cherrypy.lib.auth_basic.checkpassword_dict(clientsCatalog.MyClientsCatalog.userpassdict)
+    get_ha1 = cherrypy.lib.auth_digest.get_ha1_dict_plain(clientsCatalog.catalog.users.userpassdict)
+    clientsCatalog.checkpassword = cherrypy.lib.auth_basic.checkpassword_dict(clientsCatalog.catalog.users.userpassdict)
     if clientsCatalog.service is not False:
         conf = {
             '/': {
@@ -119,7 +141,7 @@ if __name__ == '__main__':
                 clientsCatalog.flagNew=False
                 cherrypy.engine.stop()
                 cherrypy.server.httpserver=None
-                clientsCatalog.MyClientsCatalog.createDict()
+                clientsCatalog.catalog.createDict()
                 conf = {
                   'global' : {
                     'server.socket_host' : clientsCatalog.clientsCatalogIP,
