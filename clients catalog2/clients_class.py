@@ -45,6 +45,13 @@ class UsersCatalog():
         else:
             return user
         
+    def login(self,username,password):
+        user=self.find_user(username)
+        if user is not False and user['password']==password:
+            return user
+        else:
+            return False  
+        
     def removePlatform(self,username,platform_ID):
         user=self.find_user(username)
         if user is not False:

@@ -55,11 +55,16 @@ class Registration_deployer(object):
                 print("User '{}' correctly registered with platform '{}'\n".format(params['userID'],params['platformID']))
                 return open("etc/correct_reg.html")
         elif(len(uri))>0 and uri[0]=="login":
-        
-            data=self.catalog.find_user(str(cherrypy.request.login)).copy()
-            print(data)
-            del data['password']
-            return json.dumps(data)
+            #username=str(cherrypy.request.login)
+            username=params['username']
+            password=params['password']
+            try:
+                data=self.catalog.users.login(username,password).copy()
+                print(data)
+                del data['password']
+                return json.dumps(data)
+            except:
+                raise cherrypy.HTTPError(403,"Login failed")
         else:
             raise cherrypy.HTTPError(501, "No operation!")
             
@@ -93,12 +98,14 @@ class Registration_deployer(object):
         print(output)
         result={"result":outputFlag}
         return json.dumps(result)
+    
+        
         
 if __name__ == '__main__':
     clients_db=sys.argv[1]
     clientsCatalog=Registration_deployer(clients_db)
-    get_ha1 = cherrypy.lib.auth_digest.get_ha1_dict_plain(clientsCatalog.catalog.users.userpassdict)
-    clientsCatalog.checkpassword = cherrypy.lib.auth_basic.checkpassword_dict(clientsCatalog.catalog.users.userpassdict)
+    #get_ha1 = cherrypy.lib.auth_digest.get_ha1_dict_plain(clientsCatalog.catalog.users.userpassdict)
+    #clientsCatalog.checkpassword = cherrypy.lib.auth_basic.checkpassword_dict(clientsCatalog.catalog.users.userpassdict)
     if clientsCatalog.service is not False:
         conf = {
             '/': {
