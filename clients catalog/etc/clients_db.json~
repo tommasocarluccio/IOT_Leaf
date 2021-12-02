@@ -1,0 +1,20 @@
+{
+  "description": "Welcome to the users registration service",
+  "service_catalog": "http://192.168.1.130:8080/service_catalog",
+  "service_name": "clients_service",
+  "IP_address": "192.168.1.130",
+  "IP_port": 9090,
+  "platforms": [
+    {
+      "platform_ID": "Leaf_001",
+      "associated":true,
+      "user": {
+        "username": "Avi",
+        "password": "prova"
+      },
+      "conf": {
+        "key": "sd"
+      }
+    }
+  ]
+}

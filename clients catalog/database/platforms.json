@@ -1,0 +1,14 @@
+{
+    "platforms": [
+        {
+            "platform_ID": "Leaf_001",
+            "associated": true,
+            "keys": {}
+        },
+        {
+            "platform_ID": "Leaf_002",
+            "associated": true,
+            "keys": {}
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "users": [
+        {
+            "username": "Avi",
+            "platforms_list": [
+                "Leaf_001"
+            ],
+            "password": "Pas"
+        },
+        {
+            "username": "Gino",
+            "password": "prova",
+            "platforms_list": []
+        }
+    ]
+}
