@@ -19,11 +19,11 @@ class ServiceCatalogREST():
             except:
                 raise cherrypy.HTTPError(404,"Service: Not found")
         else:
-            output=self.catalog.content['description'] #if no resource is found, it return a general description about catalog
+            output=self.catalog.content['description'] 
 
         return json.dumps(output,indent=4) 
 
-    def POST(self,*uri):
+    def PUT(self,*uri):
         successFlag=0
         if len(uri)!=0:
             if uri[0]=="register":

@@ -1,0 +1,10 @@
+{
+    "description": "Welcome to the profiles database",
+    "service_catalog": "http://192.168.1.130:8080/service_catalog",
+    "weather_api": "https://api.openweathermap.org/data/2.5/weather",
+    "weather_key": "636b475c1fb0e1d78527fbb3edf59473",
+    "delta": 10800,
+    "service_name":"profiles_catalog",
+    "IP_address": "192.168.1.130",
+    "IP_port": 8081
+}

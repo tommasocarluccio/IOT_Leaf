@@ -1,9 +1,11 @@
 import json
 import time
 from datetime import datetime
+from generic_service import *
 
 class NewProfile():
-    def __init__(self,platform_ID,platform_name,inactiveTime,preferences, location, lastUpdate):
+    def __init__(self,username,platform_ID,platform_name,inactiveTime,preferences, location, lastUpdate):
+        self.username=username
         self.platform_ID=platform_ID
         self.platform_name=platform_name
         self.inactiveTime=inactiveTime
@@ -17,11 +19,10 @@ class NewProfile():
         profile={'platform_ID':self.platform_ID,'platform_name':self.platform_name,'warning':self.warning,'room_cnt':self.room_cnt,'inactive_time':self.inactiveTime,'preferences':self.preferences,'location':self.location,'last_update':self.lastUpdate}
         return profile
 
-class ProfilesCatalog():
-    def __init__(self, db_filename):
-        self.db_filename=db_filename
-        self.profilesContent=json.load(open(self.db_filename,"r")) #store the database as a variable
-        self.delta=self.profilesContent['delta']
+class ProfilesCatalog(Generic_Service):
+    def __init__(self,conf_filename, db_filename):
+        Generic_Service.__init__(self,conf_filename,db_filename)
+        #self.delta=self.profilesContent['delta']
         #self.profilesListCreate()
 
     def profilesListCreate(self):

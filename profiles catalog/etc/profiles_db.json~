@@ -12,7 +12,7 @@
         "MP-A00000",
         "MP-A00010",
         "MP-A00013",
-        "MP-A00007"
+        "MP-A00014"
     ],
     "produced_list": [
         "MP-A00001",
@@ -26,32 +26,33 @@
         "MP-A00008",
         "MP-A00009",
         "MP-A00010",
-        "MP-A00013"
+        "MP-A00013",
+        "MP-A00014"
     ],
     "last_creation": 1607607430.684861,
     "profiles": [
         {
             "platform_ID": "MP-A00003",
-            "platform_name": "Casa mia",
+            "platform_name": "My House",
             "inactive_time": "43200",
             "warning": true,
             "room_cnt": 5,
             "preferences": [
                 {
                     "room_ID": "room_X1",
-                    "room_name": "Bagno",
+                    "room_name": "Kitchen",
                     "connection_flag": true,
                     "devices": [],
                     "connection_timestamp": 1614682054.9977033
                 },
                 {
                     "room_ID": "room_X2",
-                    "room_name": "Camera",
+                    "room_name": "Bedroom",
                     "connection_flag": true,
                     "devices": [
                         {
                             "device_ID": "revC",
-                            "last_update": 1621381012.1999176,
+                            "last_update": 1623600671.9765842,
                             "parameters": [
                                 {
                                     "parameter": "wind",
@@ -61,7 +62,7 @@
                         },
                         {
                             "device_ID": "max76675",
-                            "last_update": 1621381005.9581563,
+                            "last_update": 1623600684.2850008,
                             "parameters": [
                                 {
                                     "parameter": "temperature_g",
@@ -79,7 +80,7 @@
                         },
                         {
                             "device_ID": "dht11",
-                            "last_update": 1621381012.2023475,
+                            "last_update": 1623600691.3699212,
                             "parameters": [
                                 {
                                     "parameter": "humidity",
@@ -89,7 +90,7 @@
                         },
                         {
                             "device_ID": "ds18b20",
-                            "last_update": 1621380992.4229093,
+                            "last_update": 1623600685.1523633,
                             "parameters": [
                                 {
                                     "parameter": "temperature",
@@ -213,7 +214,7 @@
                     "devices": [
                         {
                             "device_ID": "ds18b20",
-                            "last_update": 1621375664.7404861,
+                            "last_update": 1623600534.1755285,
                             "parameters": [
                                 {
                                     "parameter": "temperature",
@@ -223,7 +224,7 @@
                         },
                         {
                             "device_ID": "dht22",
-                            "last_update": 1621375648.632505,
+                            "last_update": 1623600532.9009988,
                             "parameters": [
                                 {
                                     "parameter": "humidity",
@@ -233,7 +234,7 @@
                         },
                         {
                             "device_ID": "max76675",
-                            "last_update": 1621375640.6978312,
+                            "last_update": 1623600507.1095207,
                             "parameters": [
                                 {
                                     "parameter": "temperature_g",
@@ -251,7 +252,7 @@
                         },
                         {
                             "device_ID": "revC",
-                            "last_update": 1621375665.7546356,
+                            "last_update": 1623600511.3251383,
                             "parameters": [
                                 {
                                     "parameter": "wind",
@@ -267,20 +268,20 @@
             "last_update": "09/05/2021 14:43"
         },
         {
-            "platform_ID": "MP-A00007",
-            "platform_name": "Tester3",
+            "platform_ID": "MP-A00014",
+            "platform_name": "Test3",
             "warning": true,
             "room_cnt": 1,
-            "inactive_time": 1800,
+            "inactive_time": "1800",
             "preferences": [
                 {
                     "room_ID": "room_X1",
-                    "room_name": "Tester3",
+                    "room_name": "Test3",
                     "connection_flag": true,
                     "devices": [
                         {
                             "device_ID": "ds18b20",
-                            "last_update": 1621410304.9708014,
+                            "last_update": 1623082188.768292,
                             "parameters": [
                                 {
                                     "parameter": "temperature",
@@ -290,7 +291,7 @@
                         },
                         {
                             "device_ID": "dht22",
-                            "last_update": 1621410303.526313,
+                            "last_update": 1623082183.894883,
                             "parameters": [
                                 {
                                     "parameter": "humidity",
@@ -300,7 +301,7 @@
                         },
                         {
                             "device_ID": "revC",
-                            "last_update": 1621410292.8105583,
+                            "last_update": 1623082191.381439,
                             "parameters": [
                                 {
                                     "parameter": "wind",
@@ -310,7 +311,7 @@
                         },
                         {
                             "device_ID": "max76675",
-                            "last_update": 1621410292.7873983,
+                            "last_update": 1623082169.8598971,
                             "parameters": [
                                 {
                                     "parameter": "temperature_g",
@@ -327,11 +328,11 @@
                             ]
                         }
                     ],
-                    "connection_timestamp": 1621410028.9378974
+                    "connection_timestamp": 1621417468.7416985
                 }
             ],
             "location": "Torino",
-            "last_update": "19/05/2021 09:40"
+            "last_update": "19/05/2021 11:44"
         }
     ]
 }

@@ -5,8 +5,14 @@ class Service():
         self.service_name=service_name
         self.ip_address=ip_address
         self.ip_port=ip_port
+        self.url=self.create_url()
+    
+    def create_url(self):
+        url="http://"+self.ip_address+":"+str(self.ip_port)+"/"+self.service_name
+        return url
+    
     def jsonify(self):
-        service={'IP_address':self.ip_address,'port':self.ip_port,'service':'/'+self.service_name}
+        service={'IP_address':self.ip_address,'port':self.ip_port,'service':'/'+self.service_name,'url':self.url}
         return service
 
 class ServiceCatalog(object):
@@ -37,8 +43,9 @@ class ServiceCatalog(object):
                 self.removeService(new_service.service_name)
             
             self.content[name]=new_service.jsonify()
-            return True
-        except:
+            return new_service.jsonify()['service']
+        except Exception as e:
+            
             return False
     
     def removeService(self,service):
