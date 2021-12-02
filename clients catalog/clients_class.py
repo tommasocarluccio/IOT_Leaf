@@ -1,7 +1,8 @@
 import json
+from generic_service import Generic_Service
 
 class PlatformsCatalog():
-    def __init__(self, db_filename="database/platforms.json"):
+    def __init__(self,db_filename):
         self.db_filename=db_filename
         self.content=json.load(open(self.db_filename,"r"))
         
@@ -25,7 +26,7 @@ class PlatformsCatalog():
             json.dump(self.content,file, indent=4)
         
 class UsersCatalog():
-    def __init__(self, db_filename="database/users.json"):
+    def __init__(self, db_filename):
         self.db_filename=db_filename
         self.content=json.load(open(self.db_filename,"r"))
         self.createDict()
@@ -80,12 +81,13 @@ class UsersCatalog():
             json.dump(self.content,file, indent=4)
     
 
-class ClientsCatalog():
-    def __init__(self, db_filename):
-        self.db_filename=db_filename
-        self.clientsContent=json.load(open(self.db_filename,"r"))
-        self.users=UsersCatalog()
-        self.platforms=PlatformsCatalog()
+class ClientsCatalog(Generic_Service):
+    def __init__(self, conf_filename,users_filename="database/users.json",platforms_filename="database/platforms.json"):
+        Generic_Service.__init__(self,conf_filename)
+        self.users_filename=users_filename
+        self.platforms_filename=platforms_filename
+        self.users=UsersCatalog(self.users_filename)
+        self.platforms=PlatformsCatalog(self.platforms_filename)
         
     def check_registration(self,username,platform_ID):
         if self.users.find_user(username) is not False:

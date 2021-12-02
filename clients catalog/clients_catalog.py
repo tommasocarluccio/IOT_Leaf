@@ -11,22 +11,8 @@ class Registration_deployer(object):
     def __init__(self,filename):
         self.filename=filename
         self.catalog=ClientsCatalog(self.filename)
-        self.serviceCatalogAddress=self.catalog.clientsContent['service_catalog']
-        self.service_name=self.catalog.clientsContent['service_name']
-        self.clientsCatalogIP=self.catalog.clientsContent['IP_address']
-        self.clientsCatalogPort=self.catalog.clientsContent['IP_port']
-        self.service=self.registerRequest()
+        self.service=self.catalog.registerRequest()
         #self.flagNew=False
-
-    def registerRequest(self):
-        msg={"service":self.service_name,"IP_address":self.clientsCatalogIP,"port":self.clientsCatalogPort}
-        try:
-            service=requests.put(f'{self.serviceCatalogAddress}/register',json=msg).json()
-            return service
-        except Exception as e:
-            print(e)
-            print("Failure in  service registration.")
-            return False
 
     def GET(self,*uri,**params):
         if (len(uri))>0 and uri[0]=="reg":
@@ -139,8 +125,8 @@ if __name__ == '__main__':
         }
         """
         cherrypy.tree.mount(clientsCatalog, clientsCatalog.service, conf)
-        cherrypy.config.update({'server.socket_host':clientsCatalog.clientsCatalogIP})
-        cherrypy.config.update({'server.socket_port':clientsCatalog.clientsCatalogPort})
+        cherrypy.config.update({'server.socket_host':clientsCatalog.catalog.serviceIP})
+        cherrypy.config.update({'server.socket_port':clientsCatalog.catalog.servicePort})
         cherrypy.engine.start()
         """
         while True:
