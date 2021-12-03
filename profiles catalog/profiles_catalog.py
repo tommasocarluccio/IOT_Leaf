@@ -67,15 +67,15 @@ class catalogREST():
         #from bot
         elif command=='insertRoom':
             platform_ID=uri[1]
-            room_ID=json_body['room_ID']
             room_name=json_body['room_name']
-            newRoomFlag,newRoom=self.catalog.insertRoom(platform_ID,room_ID,json_body)
+            newRoomFlag=self.catalog.insertRoom(platform_ID,json_body)
             if newRoomFlag==True:
                 output="Room '{}' has been added to platform '{}'".format(room_name,platform_ID)
                 saveFlag=True
                 ack=newRoomFlag
             else:
                 output="Room '{}' cannot be added to platform '{}'".format(room_name,platform_ID)
+                
         elif command=='associateRoom':
             platform_ID=uri[1]
             associatedRoomFlag,associatedRoom=self.catalog.associateRoom(platform_ID,json_body['timestamp'])
@@ -89,6 +89,7 @@ class catalogREST():
 
         else:
             raise cherrypy.HTTPError(501, "No operation!")
+        
         if saveFlag==True:
             self.catalog.save()
         print(output)
@@ -106,15 +107,6 @@ class catalogREST():
             newSetting=self.catalog.setParameter(platform_ID,parameter,parameter_value)
             if newSetting==True:
                 output="Platform '{}': {} is now {}".format(platform_ID, parameter,parameter_value)
-                if parameter=="location":
-                    influx_IP,influx_port,influx_service=catalog.retrieveService('influx_db')
-                    url=self.catalog.buildWeatherURL(location)
-                    r=requests.get(url).json()
-            
-                    body=self.catalog.createBody(platform_ID,parameter_value,r)
-                    clientDB=InfluxDBClient(influx_IP,influx_port,'root','root',platform_ID)
-                    clientDB.write_points(body)
-                    
                 self.catalog.save()
             else:
                 output="Platform '{}': Can't change {} ".format(platform_ID, parameter)
@@ -127,10 +119,6 @@ class catalogREST():
             newSetting=self.catalog.setRoomParameter(platform_ID,room_ID,parameter,parameter_value)
             if newSetting==True:
                 output="Platform '{}' - Room '{}': {} is now {}".format(platform_ID,room_ID, parameter,parameter_value)
-                if parameter=="room_name":
-                     grafana_IP,grafana_port,grafana_service=catalog.retrieveService('grafana_catalog')
-                     update_body={"new_name":parameter_value}
-                     requests.post(self.buildAddress(grafana_IP,grafana_port,grafana_service)+"/changeDashboardName/"+platform_ID+'/'+room_ID,json=update_body)
                 self.catalog.save()
             else:
                 output="Platform '{}' Room '{}': Can't change {} ".format(platform_ID, room_ID,parameter)

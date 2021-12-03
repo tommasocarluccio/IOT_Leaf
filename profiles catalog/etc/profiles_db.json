@@ -5,10 +5,39 @@
             "platform_ID": "Leaf_002",
             "platform_name": "Leaf_002",
             "warning": false,
-            "room_cnt": 0,
+            "room_cnt": 1,
             "inactive_time": 3600,
             "location": null,
-            "rooms": [],
+            "rooms": [
+                {
+                    "room_name": "Kitchen",
+                    "connection_flag": false,
+                    "preferences": {
+                        "inactive_time": 3600,
+                        "optimal": {
+                            "temperature": {
+                                "min": 20,
+                                "max": 22
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 60
+                            }
+                        },
+                        "thresholds": {
+                            "temperature": {
+                                "min": 16,
+                                "max": 25
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 70
+                            }
+                        }
+                    },
+                    "connection_timestamp": 1638528419.1464617
+                }
+            ],
             "last_update": "03/12/2021 10:32"
         }
     ]

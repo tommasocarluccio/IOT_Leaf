@@ -18,29 +18,32 @@ class NewProfile():
         profile={"platform_ID":self.platform_ID,'platform_name':self.platform_name,'warning':self.warning,'room_cnt':self.room_cnt,'inactive_time':self.inactiveTime,'location':self.location,'rooms':self.rooms,'last_update':self.lastUpdate}
         return profile
 
+class NewRoom():
+    def __init__(self,room_ID,room_info,def_content):
+        room_info['connection_flag']=False
+        room_info['preferences']=self.load_def(def_content,room_info['room_name'])
+        timestamp=time.time()
+        room_info['connection_timestamp']=timestamp
+        self.room_info=room_info
+    
+    def load_def(self,json_content,room_name):
+        try:
+            info=json_content[room_name]
+        except:
+            info=json_content["default"]
+        return info
+        
+        
+        
+    def jsonify(self):
+        return self.room_info
+
 class ProfilesCatalog(Generic_Service):
-    def __init__(self,conf_filename, db_filename):
+    def __init__(self,conf_filename, db_filename,def_file="etc/default_profile.json"):
         Generic_Service.__init__(self,conf_filename,db_filename)
+        self.default_profile=json.load(open(def_file,"r"))
         #self.delta=self.profilesContent['delta']
         #self.profilesListCreate()
-
-    def findPos(self,platform_ID):
-        notFound=1
-        for i in range(len(self.profilesContent['profiles'])): 
-            if self.profilesContent['profiles'][i]['platform_ID']==platform_ID:
-                notFound=0
-                return i
-        if notFound==1:
-            return False
-        
-    def findRoomPos(self,rooms,room_ID):
-        notFound=1
-        for i in range(len(rooms)): 
-            if rooms[i]['room_ID']==room_ID:
-                notFound=0
-                return i
-        if notFound==1:
-            return False
 
     def retrieveProfileInfo(self,platform_ID):
         notFound=1
@@ -50,12 +53,13 @@ class ProfilesCatalog(Generic_Service):
                 return profile
         if notFound==1:
             return False
-        
+    """    
     def buildWeatherURL(self,city):
         basic_url=self.profilesContent["weather_api"]
         api_key=self.profilesContent['weather_key']
         url=basic_url+"?q="+city+"&appid="+api_key+"&units=metric"
         return url
+    """
     """
     def createBody(self,platform_ID,city,input_body):
         lat=input_body['coord'].get('lat')
@@ -99,28 +103,25 @@ class ProfilesCatalog(Generic_Service):
         else:
             return False
 
-    def insertRoom(self,platform_ID,room_ID,room_info):
-        pos=self.findPos(platform_ID)
+    def insertRoom(self,platform_ID,room_info):
+        profile=self.retrieveProfileInfo(platform_ID)
         roomNotFound=1
-        if pos is not False:
+        if profile is not False:
             room_cnt=self.retrieveProfileParameter(platform_ID,'room_cnt')+1
-            room_info['room_ID']=room_ID+str(room_cnt)
-            room_info['connection_flag']=False
-            room_info['devices']=[]
-            timestamp=time.time()
-            room_info['connection_timestamp']=timestamp
-            for room in self.profilesContent['profiles'][pos]['preferences']:
+            room_ID="room_"+str(room_cnt)
+            new_room=NewRoom(room_ID,room_info,self.default_profile)
+            for room in profile['rooms']:
                 if room['room_name']==room_info['room_name']:
                     roomNotFound=0
                     break
             if roomNotFound==1:
-                self.profilesContent['profiles'][pos]['preferences'].append(room_info)
+                profile['rooms'].append(new_room.jsonify())
                 self.setParameter(platform_ID,'room_cnt',room_cnt)
-                return True,room_info
+                return True
             else:
-                return False,False
+                return False
         else:
-            return False,False
+            return False
 
     def associateRoom(self,platform_ID,request_timestamp):
         pos=self.findPos(platform_ID)
@@ -158,11 +159,10 @@ class ProfilesCatalog(Generic_Service):
             return False
         
         
-
     def setParameter(self, platform_ID, parameter, parameter_value):
-        pos=self.findPos(platform_ID)
-        if pos is not False:
-            self.profilesContent['profiles'][pos][parameter]=parameter_value
+        profile=self.retrieveProfileInfo(platform_ID)
+        if profile is not False:
+            profile[parameter]=parameter_value
             return True
         else:
             return False
