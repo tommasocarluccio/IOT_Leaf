@@ -41,6 +41,8 @@ class ProfilesCatalog(Generic_Service):
     def __init__(self,conf_filename, db_filename,def_file="etc/default_profile.json"):
         Generic_Service.__init__(self,conf_filename,db_filename)
         self.default_profile=json.load(open(def_file,"r"))
+        #self.delta=self.profilesContent['delta']
+        #self.profilesListCreate()
 
     def retrieveProfileInfo(self,platform_ID):
         notFound=1
@@ -57,6 +59,26 @@ class ProfilesCatalog(Generic_Service):
         url=basic_url+"?q="+city+"&appid="+api_key+"&units=metric"
         return url
     """
+    """
+    def createBody(self,platform_ID,city,input_body):
+        lat=input_body['coord'].get('lat')
+        long=input_body['coord'].get('lon')
+        condition=input_body['weather'][0].get('main')
+        temp=float(input_body['main'].get('temp'))
+        temp_feel=float(input_body['main'].get('feels_like'))
+        hum=int(input_body['main'].get('humidity'))
+        wind_speed=float(input_body['wind'].get('speed'))
+        wind_deg=int(input_body['wind'].get('deg'))
+        
+        final_dict={"lat":lat,"lon":long,"condition":condition,"temp_ext":temp,"temp_ext_feel":temp_feel,"hum_ext":hum,"wind_speed":wind_speed,"wind_deg":wind_deg,"city":city}
+        
+        rfc=datetime.fromtimestamp(time.time())
+        rfc=rfc.strftime("%Y-%m-%dT%H:%M:%SZ")
+        
+        json_body = [{"measurement":"external","tags":{"user":platform_ID},"time":rfc,"fields":final_dict}]
+        return json_body
+    """
+
     def retrieveProfileParameter(self,platform_ID,parameter):
         profile=self.retrieveProfileInfo(platform_ID)
         try:
@@ -164,6 +186,30 @@ class ProfilesCatalog(Generic_Service):
                 return True
             else:
                 return False
+    """      
+    def createDevicesList(self,platform_ID,room_ID,devices_list):
+        pos=self.findPos(platform_ID)
+        if pos is not False:
+            rooms=self.profilesContent['profiles'][pos]["preferences"]
+            room=self.retrieveRoomInfo(rooms,room_ID)
+            room["devices"]=[]
+            if room is not False:
+                for device in devices_list:
+                    device_new={}
+                    device_new["device_ID"]=device["device_ID"]
+                    device_new["last_update"]=(device["timestamp"])
+                    device_new["parameters"]=[]
+                    for parameter in device['parameters']:
+                        parameter_new={}
+                        parameter_new["parameter"]=(parameter['parameter'])
+                        parameter_new["unit"]=(parameter['unit'])
+                        device_new["parameters"].append(parameter_new)
+                    room["devices"].append(device_new)
+                
+                return True
+            else:
+                return False
+    """
         
     def save(self):
         with open(self.db_filename,'w') as file:

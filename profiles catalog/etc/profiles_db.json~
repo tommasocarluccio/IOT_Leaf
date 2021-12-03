@@ -5,11 +5,11 @@
             "platform_ID": "Leaf_002",
             "platform_name": "Leaf_002",
             "warning": false,
-            "room_cnt": 0,
+            "room_cnt": 2,
             "inactive_time": 3600,
             "location": null,
             "rooms": [],
-            "last_update": "03/12/2021 10:21"
+            "last_update": "03/12/2021 10:32"
         }
     ]
 }

@@ -8,11 +8,9 @@
             "password": "Pas"
         },
         {
-            "username": "TOM",
-            "password": "a",
-            "platforms_list": [
-                "Leaf_002"
-            ]
+            "username": "Paolo",
+            "password": "p",
+            "platforms_list": []
         }
     ]
 }

@@ -11,6 +11,7 @@
             "rooms": [
                 {
                     "room_name": "Kitchen",
+                    "room_ID": "room_1",
                     "connection_flag": false,
                     "preferences": {
                         "inactive_time": 3600,
@@ -35,10 +36,10 @@
                             }
                         }
                     },
-                    "connection_timestamp": 1638528419.1464617
+                    "connection_timestamp": 1638547192.8785348
                 }
             ],
-            "last_update": "03/12/2021 10:32"
+            "last_update": "03/12/2021 16:59"
         }
     ]
 }
