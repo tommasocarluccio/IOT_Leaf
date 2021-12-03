@@ -1,0 +1,24 @@
+{
+  "default": {
+    "optimal": {
+      "temperature": {
+        "min": 20,
+        "max": 22
+      },
+      "humidity": {
+        "min": 40,
+        "max": 60
+      }
+    },
+    "thresholds": {
+      "temperature": {
+        "min": 16,
+        "max": 25
+      },
+      "humidity": {
+        "min": 40,
+        "max": 70
+      }
+    }
+  }
+}

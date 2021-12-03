@@ -1,5 +1,6 @@
 {
   "default": {
+  	"inactive_time": 3600,
     "optimal": {
       "temperature": {
         "min": 20,

@@ -36,11 +36,18 @@ class Registration_deployer(object):
                     })
                 try:
                     profiles_catalog=self.catalog.retrieveService("profiles_catalog")
+                    r=requests.put(profiles_catalog['url']+"/insertProfile",json={"platform_ID":params['platformID']}).json()
+                    if r['result'] is False:
+                        self.catalog.users.removeUser(params['usersID'])
+                        self.catalog.platforms.set_value(params['platformID'],"associated",False)
+                except:
+                    self.catalog.users.removeUser(params['userID'])
+                    self.catalog.platforms.set_value(params['platformID'],"associated",False)
+                    return open("etc/error.html")
                     
-                    #self.catalog.users.save()
-                    #self.catalog.platforms.save()
-                except Exception as e:
-                    print(e)
+                self.catalog.users.save()
+                self.catalog.platforms.save()
+                    
                 #self.checkpassword = cherrypy.lib.auth_basic.checkpassword_dict(self.catalog.userpassdict)
                 #self.flagNew=True
                 print("User '{}' correctly registered with platform '{}'\n".format(params['userID'],params['platformID']))

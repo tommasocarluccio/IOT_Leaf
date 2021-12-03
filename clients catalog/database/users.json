@@ -6,6 +6,13 @@
                 "Leaf_001"
             ],
             "password": "Pas"
+        },
+        {
+            "username": "Paolo",
+            "password": "prova",
+            "platforms_list": [
+                "Leaf_002"
+            ]
         }
     ]
 }

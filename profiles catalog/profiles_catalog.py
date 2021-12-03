@@ -38,13 +38,7 @@ class catalogREST():
                 else:
                     output=profile
             else:
-                if uri[0]=="checkExisting":
-                    output=self.catalog.checkExisting(uri[1],'produced_list')
-                elif uri[0]=="checkRegistered":
-                    output=self.catalog.checkExisting(uri[1],'profiles_list')
-                    
-                else:
-                    output=self.catalog.profilesContent.get(uri[0])
+                output=self.catalog.profilesContent.get(uri[0])
             if output==None:
                 raise cherrypy.HTTPError(404,"Information Not found")
 
@@ -61,18 +55,16 @@ class catalogREST():
         saveFlag=False
         if command=='insertProfile':
             platform_ID=json_body['platform_ID']
-            platform_name=json_body['platform_name']
-            inactiveTime=json_body['inactive_time']
-            preferences=[]
-            location=json_body['location'] 
-            newProfile=self.catalog.insertProfile(platform_ID,platform_name,inactiveTime,preferences,location)
+            platform_name=json_body['platform_ID']
+            newProfile=self.catalog.insertProfile(platform_ID,platform_name)
             if newProfile==True:
                 output="Profile '{}' has been added to Profiles Database".format(platform_ID)
                 saveFlag=True
                 ack=True
             else:
                 output="'{}' already exists!".format(platform_ID)
-        #from app
+                ack=False
+        #from bot
         elif command=='insertRoom':
             platform_ID=uri[1]
             room_ID=json_body['room_ID']
