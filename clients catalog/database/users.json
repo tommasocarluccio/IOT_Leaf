@@ -6,13 +6,6 @@
                 "Leaf_001"
             ],
             "password": "Pas"
-        },
-        {
-            "username": "TOM",
-            "password": "a",
-            "platforms_list": [
-                "Leaf_002"
-            ]
         }
     ]
 }

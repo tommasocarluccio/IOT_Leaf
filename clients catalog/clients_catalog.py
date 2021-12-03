@@ -34,8 +34,13 @@ class Registration_deployer(object):
                     "password":params['psw'],
                     "platforms_list":[params["platformID"]]
                     })
-                self.catalog.users.save()
-                self.catalog.platforms.save()
+                try:
+                    profiles_catalog=self.catalog.retrieveService("profiles_catalog")
+                    
+                    #self.catalog.users.save()
+                    #self.catalog.platforms.save()
+                except Exception as e:
+                    print(e)
                 #self.checkpassword = cherrypy.lib.auth_basic.checkpassword_dict(self.catalog.userpassdict)
                 #self.flagNew=True
                 print("User '{}' correctly registered with platform '{}'\n".format(params['userID'],params['platformID']))

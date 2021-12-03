@@ -2,12 +2,12 @@
     "platforms": [
         {
             "platform_ID": "Leaf_001",
-            "associated": True,
+            "associated": true,
             "keys": {}
         },
         {
             "platform_ID": "Leaf_002",
-            "associated": false,
+            "associated": true,
             "keys": {}
         }
     ]

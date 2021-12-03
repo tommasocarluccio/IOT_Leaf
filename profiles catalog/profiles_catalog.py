@@ -196,37 +196,38 @@ if __name__ == '__main__':
     conf=sys.argv[1]
     db=sys.argv[2]
     ProfilesCatalog=catalogREST(conf,db)
-    conf = {
-        '/': {
-            'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
-            'tools.sessions.on': True
+    if ProfilesCatalog.service is not False:
+        conf = {
+            '/': {
+                'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
+                'tools.sessions.on': True
+            }
         }
-    }
-    cherrypy.tree.mount(ProfilesCatalog, ProfilesCatalog.service, conf)
-    cherrypy.config.update({'server.socket_host': ProfilesCatalog.catalog.serviceIP})
-    cherrypy.config.update({'server.socket_port': ProfilesCatalog.catalog.servicePort})
-    cherrypy.engine.start()
-    """
-    while True:
-        influx_IP,influx_port,influx_service=catalog.retrieveService('influx_db')
-        for platform in catalog.catalog.profilesContent['profiles']:
-            platform_ID=platform.get("platform_ID")
-            location=platform.get("location")
-            url=catalog.catalog.buildWeatherURL(location)
-            try:
-                r=requests.get(url).json()
-            
-                body=catalog.catalog.createBody(platform_ID,location,r)
-                clientDB=InfluxDBClient(influx_IP,influx_port,'root','root',platform_ID)
+        cherrypy.tree.mount(ProfilesCatalog, ProfilesCatalog.service, conf)
+        cherrypy.config.update({'server.socket_host': ProfilesCatalog.catalog.serviceIP})
+        cherrypy.config.update({'server.socket_port': ProfilesCatalog.catalog.servicePort})
+        cherrypy.engine.start()
+        """
+        while True:
+            influx_IP,influx_port,influx_service=catalog.retrieveService('influx_db')
+            for platform in catalog.catalog.profilesContent['profiles']:
+                platform_ID=platform.get("platform_ID")
+                location=platform.get("location")
+                url=catalog.catalog.buildWeatherURL(location)
                 try:
-                    clientDB.write_points(body)
+                    r=requests.get(url).json()
+                
+                    body=catalog.catalog.createBody(platform_ID,location,r)
+                    clientDB=InfluxDBClient(influx_IP,influx_port,'root','root',platform_ID)
+                    try:
+                        clientDB.write_points(body)
+                    except:
+                        pass
                 except:
                     pass
-            except:
-                pass
-            time.sleep(5)
+                time.sleep(5)
+                
             
-        
-        time.sleep(catalog.catalog.delta)
-    """
-    cherrypy.engine.block()
+            time.sleep(catalog.catalog.delta)
+        """
+        cherrypy.engine.block()

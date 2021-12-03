@@ -4,19 +4,19 @@ from datetime import datetime
 from generic_service import *
 
 class NewProfile():
-    def __init__(self,username,platform_ID,platform_name,inactiveTime,preferences, location, lastUpdate):
+    def __init__(self,username,platform_ID,platform_name,inactiveTime, location, rooms,lastUpdate):
         self.username=username
         self.platform_ID=platform_ID
         self.platform_name=platform_name
         self.inactiveTime=inactiveTime
-        self.preferences=preferences
         self.location=location
         self.lastUpdate=lastUpdate
         self.warning="no"
         self.room_cnt=0
+        self.rooms=rooms
         
     def jsonify(self):
-        profile={'platform_ID':self.platform_ID,'platform_name':self.platform_name,'warning':self.warning,'room_cnt':self.room_cnt,'inactive_time':self.inactiveTime,'preferences':self.preferences,'location':self.location,'last_update':self.lastUpdate}
+        profile={'platform_ID':{'platform_name':self.platform_name,'warning':self.warning,'room_cnt':self.room_cnt,'inactive_time':self.inactiveTime,'location':self.location,'rooms':self.rooms,'last_update':self.lastUpdate}}
         return profile
 
 class ProfilesCatalog(Generic_Service):
@@ -24,19 +24,6 @@ class ProfilesCatalog(Generic_Service):
         Generic_Service.__init__(self,conf_filename,db_filename)
         #self.delta=self.profilesContent['delta']
         #self.profilesListCreate()
-
-    def profilesListCreate(self):
-        self.profilesList=[]
-        for profile in self.profilesContent['profiles']:
-            self.profilesList.append(profile['platform_ID'])
-        return self.profilesList
-    def checkExisting(self,plat_ID,name_list):
-        output=False
-        for plat in self.profilesContent[name_list]:
-            if plat==plat_ID:
-                output=True
-                break
-        return output
 
     def findPos(self,platform_ID):
         notFound=1
@@ -46,6 +33,7 @@ class ProfilesCatalog(Generic_Service):
                 return i
         if notFound==1:
             return False
+        
     def findRoomPos(self,rooms,room_ID):
         notFound=1
         for i in range(len(rooms)): 
@@ -57,17 +45,19 @@ class ProfilesCatalog(Generic_Service):
 
     def retrieveProfileInfo(self,platform_ID):
         notFound=1
-        for profile in self.profilesContent['profiles']:
+        for profile in self.db_content['profiles']:
             if profile['platform_ID']==platform_ID:
                 notFound=0
                 return profile
         if notFound==1:
             return False
+        
     def buildWeatherURL(self,city):
         basic_url=self.profilesContent["weather_api"]
         api_key=self.profilesContent['weather_key']
         url=basic_url+"?q="+city+"&appid="+api_key+"&units=metric"
         return url
+    """
     def createBody(self,platform_ID,city,input_body):
         lat=input_body['coord'].get('lat')
         long=input_body['coord'].get('lon')
@@ -85,6 +75,7 @@ class ProfilesCatalog(Generic_Service):
         
         json_body = [{"measurement":"external","tags":{"user":platform_ID},"time":rfc,"fields":final_dict}]
         return json_body
+    """
 
     def retrieveProfileParameter(self,platform_ID,parameter):
         profile=self.retrieveProfileInfo(platform_ID)
@@ -94,18 +85,17 @@ class ProfilesCatalog(Generic_Service):
             result=False
         return result
 
-    def insertProfile(self,platform_ID,platform_name,inactiveTime,preferences,location):
+    def insertProfile(self,platform_ID,platform_name,inactiveTime, thresholds,preferences, rooms, location):
         notExisting=1
         now=datetime.now()
         timestamp=now.strftime("%d/%m/%Y %H:%M")
-        profile=self.retrieveProfileInfo(platform_ID)
-        if profile is False:
-            createdProfile=NewProfile(platform_ID,platform_name,inactiveTime,preferences,location,timestamp).jsonify()
-            self.profilesContent['profiles'].append(createdProfile)
-            self.profilesContent['profiles_list'].append(platform_ID)
-            return True
-        else:
+        try:
+            profile=self.db_content['profiles'][platform_ID]
             return False
+        except:
+            createdProfile=NewProfile(platform_ID,platform_name,inactiveTime,location,timestamp).jsonify()
+            self.profilesContent['profiles'].append(createdProfile)
+            return True
 
     def insertRoom(self,platform_ID,room_ID,room_info):
         pos=self.findPos(platform_ID)

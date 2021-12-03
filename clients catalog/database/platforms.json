@@ -7,7 +7,12 @@
         },
         {
             "platform_ID": "Leaf_002",
-            "associated": true,
+            "associated": false,
+            "keys": {}
+        },
+        {
+            "platform_ID": "Leaf_003",
+            "associated": false,
             "keys": {}
         }
     ]
