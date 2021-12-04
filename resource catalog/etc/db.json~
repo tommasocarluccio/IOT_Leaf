@@ -1,0 +1,26 @@
+{
+    "description": "Welcome to resources server",
+    "platforms_list": [
+        {
+            "platform_ID": "Leaf_002",
+            "rooms": [
+                {
+                    "room_ID": "room_X",
+                    "room_name": "room_X",
+                    "devices": []
+                },
+                {
+                    "room_ID": "room_12",
+                    "room_name": "Kitchen",
+                    "devices": []
+                },
+                {
+                    "room_ID": "room_13",
+                    "room_name": "Kitchen",
+                    "devices": []
+                }
+            ],
+            "creation_date": "04/12/2021 18:30"
+        }
+    ]
+}

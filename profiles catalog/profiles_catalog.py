@@ -69,7 +69,7 @@ class catalogREST():
         elif command=='insertRoom':
             platform_ID=uri[1]
             room_name=json_body['room_name']
-            newRoomFlag=self.catalog.insertRoom(platform_ID,json_body)
+            newRoomFlag=self.catalog.insertRoom(platform_ID,room_name)
             if newRoomFlag==True:
                 output="Room '{}' has been added to platform '{}'".format(room_name,platform_ID)
                 saveFlag=True
@@ -79,14 +79,14 @@ class catalogREST():
                 
         elif command=='associateRoom':
             platform_ID=uri[1]
-            associatedRoomFlag,associatedRoom=self.catalog.associateRoom(platform_ID,json_body['timestamp'])
-            if associatedRoomFlag==True:
-                output="Room '{}' has been assoicated in platform '{}'".format(associatedRoom['room_name'],platform_ID)
-                ack=associatedRoom
+            associatedRoom=self.catalog.associateRoom(platform_ID,json_body['timestamp'])
+            if associatedRoom is not False:
+                output="Room '{}' has been associated in platform '{}'".format(associatedRoom['preferences']['room_name'],platform_ID)
+                ack={"room_ID": associatedRoom['room_ID'], "room_name": associatedRoom['preferences']['room_name'],"connection_timestamp":associatedRoom['connection_timestamp']}
                 saveFlag=True
             else:
                 output="Association failed in platform '{}'".format(platform_ID)
-
+                ack=False
 
         else:
             raise cherrypy.HTTPError(501, "No operation!")
@@ -115,15 +115,19 @@ class catalogREST():
         elif command=='setRoomParameter':
             platform_ID=uri[1]
             room_ID=uri[2]
-            parameter=json_body['parameter']
-            parameter_value=json_body['parameter_value']
-            newSetting=self.catalog.setRoomParameter(platform_ID,room_ID,parameter,parameter_value)
+            #parameter=json_body['parameter']
+            #parameter_value=json_body['parameter_value']
+            newSetting=self.catalog.setRoomParameter(platform_ID,room_ID,json_body)
             if newSetting==True:
-                output="Platform '{}' - Room '{}': {} is now {}".format(platform_ID,room_ID, parameter,parameter_value)
+                #output="Platform '{}' - Room '{}': {} is now {}".format(platform_ID,room_ID, parameter,parameter_value)
+                output="Platform '{}' - Room '{}': parameter updated".format(platform_ID,room_ID)
                 self.catalog.save()
+                flag=True
             else:
-                output="Platform '{}' Room '{}': Can't change {} ".format(platform_ID, room_ID,parameter)
+                output="Platform '{}' Room '{}': Can't change parameter".format(platform_ID, room_ID)
+                flag=False
             print(output)
+            return json.dumps({"result":flag})
 
             
         else:
@@ -170,16 +174,14 @@ class catalogREST():
                     pass
                 """
                 self.catalog.save()
-                output="Room '{}' from platform '{}' removed".format(room_ID,platform_ID)
+                output="Room '{}' removed from platform '{}' removed".format(room_ID,platform_ID)
                 #self.catalog.save()
                 result={"result":True}
             else:
-                output="Room '{}' from platform '{}' ".format(room_ID,platform_ID)
+                output="Can't remove room '{}' from platform '{}' ".format(room_ID,platform_ID)
                 result={"result":False}
             print(output)
             return json.dumps(result)
-            
-            
             
         else:
             raise cherrypy.HTTPError(501, "No operation!")

@@ -63,6 +63,10 @@ class Registration_deployer(object):
                 return json.dumps(data)
             except:
                 raise cherrypy.HTTPError(403,"Login failed")
+        elif(len(uri))>0 and uri[0]=="checkAssociation":
+            result=self.catalog.check_association(uri[1])
+            return json.dumps({"result":result})
+            
         else:
             raise cherrypy.HTTPError(501, "No operation!")
             

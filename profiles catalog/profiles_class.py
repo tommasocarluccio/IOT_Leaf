@@ -19,10 +19,12 @@ class NewProfile():
         return profile
 
 class NewRoom():
-    def __init__(self,room_ID,room_info,def_content):
+    def __init__(self,room_ID,room_name,def_content):
+        room_info={}
         room_info['room_ID']=room_ID
         room_info['connection_flag']=False
-        room_info['preferences']=self.load_def(def_content,room_info['room_name'])
+        room_info['preferences']=self.load_def(def_content,room_name)
+        room_info['preferences']['room_name']=room_name
         timestamp=time.time()
         room_info['connection_timestamp']=timestamp
         self.room_info=room_info
@@ -80,15 +82,15 @@ class ProfilesCatalog(Generic_Service):
         else:
             return False
 
-    def insertRoom(self,platform_ID,room_info):
+    def insertRoom(self,platform_ID,room_name):
         profile=self.retrieveProfileInfo(platform_ID)
         roomNotFound=1
         if profile is not False:
             room_cnt=self.retrieveProfileParameter(platform_ID,'room_cnt')+1
             room_ID="room_"+str(room_cnt)
-            new_room=NewRoom(room_ID,room_info,self.default_profile)
+            new_room=NewRoom(room_ID,room_name,self.default_profile)
             for room in profile['rooms']:
-                if room['room_name']==room_info['room_name']:
+                if room['preferences']['room_name']==room_name:
                     roomNotFound=0
                     break
             if roomNotFound==1:
@@ -101,18 +103,18 @@ class ProfilesCatalog(Generic_Service):
             return False
 
     def associateRoom(self,platform_ID,request_timestamp):
-        pos=self.findPos(platform_ID)
+        platform=self.retrieveProfileInfo(platform_ID)
         notFound=1
-        if pos is not False:
-            for pref in self.profilesContent['profiles'][pos]['preferences']:
-                if pref['connection_flag'] is False and (request_timestamp-pref['connection_timestamp'])<300:
-                    pref['connection_flag']=True
+        if platform is not False:
+            for room in platform['rooms']:
+                if room['connection_flag'] is False and (request_timestamp-room['connection_timestamp'])<300:
+                    room['connection_flag']=True
                     notFound=0
-                    return True,pref
+                    return room
             if notFound==1:
-                return False,False
+                return False
         else:
-            return False,False
+            return False
 
 
     def removeProfile(self,platform_ID):
@@ -154,16 +156,24 @@ class ProfilesCatalog(Generic_Service):
         if notFound==1:
             return False
         
-    def setRoomParameter(self,platform_ID,room_ID,parameter,parameter_value):
+    def setRoomParameter(self,platform_ID,room_ID,body):
         profile=self.retrieveProfileInfo(platform_ID)
         if profile is not False:
             rooms=profile['rooms']
             room=self.retrieveRoomInfo(rooms,room_ID)
             if room is not False:
-                room[parameter]=parameter_value
-                return True
+                for key in body.keys():
+                    try:
+                        for subkey in body[key]:
+                            room['preferences'][key][subkey]=body[key][subkey]
+                        return True
+                    except:
+                        room['preferences'][key]=body[key]
+                        return True
             else:
                 return False
+        else:
+            return False
         
     def save(self):
         with open(self.db_filename,'w') as file:

@@ -100,6 +100,18 @@ class ClientsCatalog(Generic_Service):
                 return False
         else:
             return "platform"
+        
+    def check_association(self,platform_ID):
+        platform=self.platforms.find_platform(platform_ID)
+        if platform is not False:
+            if platform['associated']:
+                return True
+            else:
+                return False
+        else:
+            return False
+            
+        
             
             
         

@@ -1,0 +1,12 @@
+{
+    "description": "Room settings",
+    "hub_port": 9090,
+    "hub_catalog": null,
+    "room_info": {
+        "room_ID": "room_X",
+        "room_name": "room_X",
+        "connection_flag": false,
+        "devices": [],
+        "connection_timestamp": null
+    }
+}

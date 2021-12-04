@@ -3,16 +3,15 @@
     "profiles": [
         {
             "platform_ID": "Leaf_002",
-            "platform_name": "Leaf_002",
+            "platform_name": "Home",
             "warning": false,
-            "room_cnt": 1,
+            "room_cnt": 13,
             "inactive_time": 3600,
             "location": null,
             "rooms": [
                 {
-                    "room_name": "Kitchen",
-                    "room_ID": "room_1",
-                    "connection_flag": false,
+                    "room_ID": "room_13",
+                    "connection_flag": true,
                     "preferences": {
                         "inactive_time": 3600,
                         "optimal": {
@@ -34,9 +33,10 @@
                                 "min": 40,
                                 "max": 70
                             }
-                        }
+                        },
+                        "room_name": "Kitchen"
                     },
-                    "connection_timestamp": 1638547192.8785348
+                    "connection_timestamp": 1638639712.9719746
                 }
             ],
             "last_update": "03/12/2021 16:59"
