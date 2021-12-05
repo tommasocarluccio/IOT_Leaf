@@ -1,9 +1,11 @@
 {
 	"sensorID": "mq135_X1",
-	"end_points": "MQTT/REST",
+	"end_points": "MQTT",
+	"inactive_time":10,
 	"parameters": [{
 		"parameter": "AQI",
 		"value": null,
-		"unit": "ppm"
+		"unit": "ppm",
+		"timestamp":null
 	}]
 }
