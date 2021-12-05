@@ -3,7 +3,8 @@ from datetime import datetime
 import time
 from rooms_catalog import RoomsCatalog
 from devices_catalog import DevicesCatalog
-from generic_service import *
+from conf.generic_service import *
+from conf.MyMQTT import *
 
 class NewPlatform():
     def __init__(self,platform_ID,rooms,last_update):
@@ -15,22 +16,49 @@ class NewPlatform():
     def jsonify(self):
         platform={'platform_ID':self.platform_ID,'rooms':self.rooms,'creation_date':self.lastUpdate}
         return platform
+
+class DataCollector():
+    def __init__(self,clientID,brokerIP,brokerPort,notifier):
+        self.clientID=clientID
+        self.brokerIP=brokerIP
+        self.brokerPort=brokerPort
+        self.notifier=notifier
+        self.client=MyMQTT(self.clientID,self.brokerIP,self.brokerPort,self.notifier)
+    def run(self):
+        self.client.start()
+        print('{} has started'.format(self.clientID))
+    def end(self):
+        self.client.stop()
+        print('{} has stopped'.format(self.clientID))
+    def follow(self,topic):
+        self.client.mySubscribe(topic)
+    def unfollow(self,topic):
+        self.client.unsubscribe(topic)
+        
     
 class ResourceService(Generic_Service):
     def __init__(self,conf_filename,db_filename):
         Generic_Service.__init__(self,conf_filename,db_filename)
         
-    """
-    def findPos(self,platform_ID):
-        notFound=1
-        for i in range(len(self.db_content['platforms_list'])): 
-            if self.db_content['platforms_list'][i]['platform_ID']==platform_ID:
-                notFound=0
-                return i
-        if notFound==1:
-            return False
-    """
-
+    def notify(self,topic,msg):
+        payload=json.loads(msg)
+        #print(payload)
+        platform_ID=payload['bn'].split("/")[0]
+        room_ID=payload['bn'].split("/")[1]
+        device_ID=payload['bn'].split("/")[2]
+        e=payload['e']
+        self.insertValue(platform_ID,room_ID,device_ID,payload)
+        
+    def insertValue(self,platform_ID,room_ID,device_ID,msg):
+        room=self.retrieveRoomInfo(platform_ID,room_ID)
+        if room is not False:
+            catalog=DevicesCatalog(room['devices'])
+            msg['bn']=device_ID
+            result=catalog.insertValue(device_ID,msg)
+            if result:
+                print(platform_ID+": " + device_ID+" updated in " + room_ID)
+                self.save()
+                
     def retrievePlatformsList(self):
         platformsList=[]
         for platform in self.db_content['platforms_list']:
@@ -114,17 +142,12 @@ class ResourceService(Generic_Service):
         existingFlag=self.roomsCatalog.insertRoom(room_ID,room)
         return existingFlag
 
-    def insertDevice(self,platform_ID,room_ID,device_ID,device):
-        i=self.findPos(platform_ID)
-        existingFlag=False
-        if i is not False:
-            self.roomsCatalog=RoomsCatalog(self.db_content['platforms_list'][i]['rooms'])
-            j=self.roomsCatalog.findPos(room_ID)
-            self.devicesCatalog=DevicesCatalog(self.db_content['platforms_list'][i]['rooms'][j]['devices'])
-            existingFlag=self.devicesCatalog.insertDevice(device_ID,device)
-        i=True
-        return i,j,existingFlag
-
+    
+    def insertDevice(self,room,device_ID,device):
+        self.devicesCatalog=DevicesCatalog(room['devices'])
+        new_device=self.devicesCatalog.insertDevice(device_ID,device)
+        
+        return new_device
 
     def insertDeviceValue(self, platform_ID, room_ID, device_ID, dictionary):
         i=self.findPos(platform_ID)
@@ -133,59 +156,7 @@ class ResourceService(Generic_Service):
             j=self.roomsCatalog.findPos(room_ID)
             self.devicesCatalog=DevicesCatalog(self.db_content['platforms_list'][i]['rooms'][j]['devices'])
             self.devicesCatalog.insertValue(device_ID,dictionary)
-    """
-    
-    def parse_warning(self,platform_ID,room_ID):
-        
-        req=self.findParameter(platform_ID,room_ID,"PMV")
-        hot_flag=False
-        suggestion="TIP: "
-        cold_flag=False
-        if req['value']<=-2:
-            status="COLD"
-            cold_flag=True
-        elif req['value']>-2 and req['value'] <=-1:
-            status="COOL"
-            cold_flag=True
-        elif req['value']>-1 and req['value']<-0.5:
-            status="SLIGHTLY COOL"
-            cold_flag=True
-        elif req['value']>0.5 and req['value']<1:
-            status="SLIGHTLY WARM"
-            hot_flag=True
-        elif req['value']>=1 and req['value']<2:
-            status="WARM"
-            hot_flag=True
-        elif req['value']>=2:
-            status="HOT"
-            hot_flag=True
-        if hot_flag:
-            req_c=self.findParameter(platform_ID,room_ID,"Icl_clo")
-            req_w=self.findParameter(platform_ID,room_ID,"wind")
-            if req_c['value']>0.5:
-                suggestion=suggestion+"Your actual clothing may be not suitable " + "("+str(req_c['value'])+" clo)"+". Try lighter clothes!"
-            elif req_w['value']<1:
-                suggestion=suggestion+"Air flow speed is low " + "("+str(req_w['value'])+" Km/H)"+". Try opening windows!"
-            else:
-                suggestion=suggestion+"You should use your cooling system"
-                
-        if cold_flag:
-            req_c=self.findParameter(platform_ID,room_ID,"Icl_clo")
-            req_w=self.findParameter(platform_ID,room_ID,"wind")
-            req_h=self.findParameter(platform_ID,room_ID,"humidity")
-            if req_c['value']<1 and req_w['value']<3 :
-                suggestion=suggestion+"Your actual clothing may be not suitable " + "("+str(req_c['value'])+" clo)"+". try warmer clothes!"
-            elif req_w['value']>1.5:
-                suggestion=suggestion+"Air flow speed is high " + "("+str(req_w['value'])+" Km/H)"+". Check for air currents sources! "
-            elif req_h['value']>65:
-                 suggestion=suggestion+"Humidity level is high " + "("+str(req_h['value'])+"%)"+". Use a dehumidifier or open the window!"
-            else:
-                suggestion=suggestion+"You should use your heating system"
-                
-        return status,suggestion
-    """
-        
-
+   
     def setRoomParameter(self,platform_ID,room_ID,parameter,parameter_value):
         i=self.findPos(platform_ID)
         if i is not False:

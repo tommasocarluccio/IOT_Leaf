@@ -38,7 +38,9 @@ class SensorPublisher(MyPublisher):
                 if element['parameter']==result['parameter']:
                     e=[{"n":result["parameter"],"u":element["unit"],"t":result["time"],"v":result["value"]}]
                     data={"bn":self.platform_ID+'/'+self.room_ID+'/'+self.device_ID,"e":e}
+                    #data={"bn":self.device_ID,"e":e}
                     topic=self.topic+'/'+element['parameter']
+                    #print(topic)
                     self.myPublish(topic,json.dumps(data))
                     print (str(result['value'])+' '+ element['unit'])
                     

@@ -5,14 +5,26 @@ import time
 import datetime
 import sys
 from serverClass import *
-from generic_service import *
-#from conf.simplePublisher import *
 
 class ResourcesServerREST(object):
     exposed=True
     def __init__(self,conf_filename,db_filename):
         self.catalog=ResourceService(conf_filename,db_filename)
         self.service=self.catalog.registerRequest()
+    
+    def setup(self,clientID):
+        try:
+            broker=requests.get(self.catalog.serviceCatalogAddress+'/broker').json()
+            broker_IP=broker.get('IP_address')
+            broker_port=broker.get('port')
+            self.catalog.subscriber=DataCollector(clientID,broker_IP,broker_port,self.catalog)
+            self.catalog.subscriber.run()
+            for platform in self.catalog.retrievePlatformsList():
+                server.catalog.subscriber.follow(platform+'/#')
+        except Exception as e:
+            print(e)
+            print("MQTT Subscriber not created")
+            
 
     def GET(self,*uri,**params):
         uriLen=len(uri)
@@ -101,6 +113,7 @@ class ResourcesServerREST(object):
                 if(requests.get(requestClients['url']+'/checkAssociation/'+platform_ID).json()["result"]):
                     rooms=[]
                     newPlatform=self.catalog.insertPlatform(platform_ID,rooms)
+                    self.catalog.subscriber.follow(platform_ID+'/#')
                 else:
                     res={"result":False}
                     raise cherrypy.HTTPError(400,"Platform Not valid")
@@ -112,44 +125,6 @@ class ResourcesServerREST(object):
                 output="Platform '{}' - Room '{}' has been added to Server".format(platform_ID, room_ID)
             res={"result":True}
             saveFlag=True
-        """
-                    
-        elif command=='insertDevice':
-            platform_ID=uri[1]
-            room_ID=uri[2]
-            device_ID=json_body['device_ID']
-            platformFlag, roomFlag, newDevice=self.catalog.insertDevice(platform_ID,room_ID,device_ID,json_body)
-            if platformFlag is False:
-                raise cherrypy.HTTPError(404,"Platform Not found")
-            if roomFlag is False:
-                raise cherrypy.HTTPError(404,"Room Not found")
-            else:
-                if newDevice==True:
-                    output="Platform '{}' - Room '{}' - Device '{}' has been added to Server".format(platform_ID, room_ID,device_ID)
-                    self.catalog.dateUpdate(self.catalog.retrieveRoomInfo(platform_ID,room_ID))
-                    saveFlag=True
-                else:
-                    output="Platform '{}' - Room '{}' - Device '{}' already exists. Updating...".format(platform_ID,room_ID,device_ID)
-        elif command=='insertValue':
-            platform_ID=uri[1]
-            room_ID=uri[2]
-            device_ID=uri[3]
-            try:
-                newValue=self.catalog.insertDeviceValue(platform_ID, room_ID, device_ID,json_body)
-                output="Platform '{}' - Room '{}' - Device '{}': parameters updated".format(platform_ID, room_ID, device_ID)
-                request=requests.get(server.serviceCatalogAddress+"/broker").json()
-                IP=request.get('IP_address')
-                port=request.get('port')
-                publisher=MyPublisher("server_v",platform_ID+"/"+room_ID,IP,port)
-                publisher.start()
-                msg={"parameter":"pmv","value":self.catalog.retrieveRoomInfo(platform_ID,room_ID).get("PMV"),"unit":"","timestamp":json_body['timestamp']}
-                publisher.myPublish(json.dumps(msg))
-                time.sleep(0.4)
-                publisher.stop()
-            except:
-                output=None
-            saveFlag=True
-        """
 
         else:
             raise cherrypy.HTTPError(501, "No operation!")
@@ -270,6 +245,7 @@ if __name__ == '__main__':
     conf=sys.argv[1]
     db=sys.argv[2]
     server=ResourcesServerREST(conf,db)
+    server.setup("Resourse_subscriber")
     conf = {
         '/': {
             'request.dispatch': cherrypy.dispatch.MethodDispatcher(),

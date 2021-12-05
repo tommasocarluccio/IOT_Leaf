@@ -11,9 +11,9 @@ if __name__ == '__main__':
     sensor=sensor_class(settingFile,device_ID,pin)
 
     if not sensor.load():
-        print("Server connection failed.")
+        print("Broker connection failed.")
     else:
-        print("Server connection performed.")
+        print("Broker connection performed.")
         last_time=time.time()
     time.sleep(1)
     sensor.start()

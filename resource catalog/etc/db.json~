@@ -5,19 +5,29 @@
             "platform_ID": "Leaf_002",
             "rooms": [
                 {
-                    "room_ID": "room_X",
-                    "room_name": "room_X",
-                    "devices": []
-                },
-                {
-                    "room_ID": "room_12",
-                    "room_name": "Kitchen",
-                    "devices": []
-                },
-                {
                     "room_ID": "room_13",
                     "room_name": "Kitchen",
-                    "devices": []
+                    "devices": [
+                        {
+                            "bn": "dht11",
+                            "e": [
+                                {
+                                    "n": "humidity",
+                                    "u": "%",
+                                    "t": 1638726042.7853594,
+                                    "v": 69
+                                },
+                                {
+                                    "n": "temperature",
+                                    "u": "C",
+                                    "t": 1638726042.7853594,
+                                    "v": 21
+                                }
+                            ],
+                            "last_update": 1638726042.7964005,
+                            "last_update_date": "05/12/2021 18:40"
+                        }
+                    ]
                 }
             ],
             "creation_date": "04/12/2021 18:30"

@@ -9,11 +9,17 @@ class dht11(SensorPublisher):
                     
     def retrieveData(self):
         try:
+            outputResult=[]
             humidity=self.DHT11.humidity
             temperature = self.DHT11.temperature
             timestamp=time.time()
-            outputResult=[{'parameter':'humidity','value':humidity,'time':timestamp},{'parameter':'temperature','value':temperature,'time':timestamp}]
+            if humidity is not None:
+                outputResult.append({'parameter':'humidity','value':humidity,'time':timestamp})  
+            if temperature is not None:
+                outputResult.append({'parameter':'temperature','value':temperature,'time':timestamp})  
+            
             return outputResult
-        except:
+        except Exception as e:
+            #print(e)
             pass
             
