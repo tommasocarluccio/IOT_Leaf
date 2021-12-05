@@ -3,7 +3,7 @@ import json
 import requests
 import time
 import sys
-from profiles_class import ProfilesCatalog
+from etc.profiles_class import ProfilesCatalog
 
 class catalogREST():
     exposed=True

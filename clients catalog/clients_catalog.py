@@ -4,7 +4,7 @@ import os
 import sys
 import requests
 import time
-from clients_class import *
+from etc.clients_class import *
 
 class Registration_deployer(object):
     exposed=True

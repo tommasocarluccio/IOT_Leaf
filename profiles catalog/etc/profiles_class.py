@@ -1,7 +1,7 @@
 import json
 import time
 from datetime import datetime
-from generic_service import *
+from etc.generic_service import *
 
 class NewProfile():
     def __init__(self,platform_ID,platform_name,inactiveTime, location, rooms,lastUpdate):
@@ -40,7 +40,7 @@ class NewRoom():
         return self.room_info
 
 class ProfilesCatalog(Generic_Service):
-    def __init__(self,conf_filename, db_filename,def_file="etc/default_profile.json"):
+    def __init__(self,conf_filename, db_filename,def_file="data/default_profile.json"):
         Generic_Service.__init__(self,conf_filename,db_filename)
         self.default_profile=json.load(open(def_file,"r"))
 

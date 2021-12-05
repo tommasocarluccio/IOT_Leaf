@@ -1,16 +1,15 @@
 import json
 from datetime import datetime
 import time
-from rooms_catalog import RoomsCatalog
-from devices_catalog import DevicesCatalog
-from conf.generic_service import *
-from conf.MyMQTT import *
+from etc.rooms_catalog import RoomsCatalog
+from etc.devices_catalog import DevicesCatalog
+from etc.generic_service import *
+from etc.MyMQTT import *
 
 class NewPlatform():
     def __init__(self,platform_ID,rooms,last_update):
         self.platform_ID=platform_ID
         self.rooms=rooms
-        #self.local_IP=local_IP
         self.lastUpdate=last_update
         
     def jsonify(self):
@@ -48,16 +47,6 @@ class ResourceService(Generic_Service):
         device_ID=payload['bn'].split("/")[2]
         e=payload['e']
         self.insertValue(platform_ID,room_ID,device_ID,payload)
-        
-    def insertValue(self,platform_ID,room_ID,device_ID,msg):
-        room=self.retrieveRoomInfo(platform_ID,room_ID)
-        if room is not False:
-            catalog=DevicesCatalog(room['devices'])
-            msg['bn']=device_ID
-            result=catalog.insertValue(device_ID,msg)
-            if result:
-                print(platform_ID+": " + device_ID+" updated in " + room_ID)
-                self.save()
                 
     def retrievePlatformsList(self):
         platformsList=[]
@@ -88,7 +77,7 @@ class ResourceService(Generic_Service):
         notFound=1
         room=self.retrieveRoomInfo(platform_ID,room_ID)
         for device in room['devices']:
-            if device['device_ID']==device_ID:
+            if device['bn']==device_ID:
                 notFound=0
                 return device
         if notFound==1:
@@ -97,8 +86,8 @@ class ResourceService(Generic_Service):
     def retrieveParameterInfo(self,platform_ID,room_ID,device_ID,parameter_name):
         notFound=1
         device=self.retrieveDeviceInfo(platform_ID,room_ID,device_ID)
-        for parameter in device['parameters']:
-            if parameter['parameter']==parameter_name:
+        for parameter in device['e']:
+            if parameter['n']==parameter_name:
                 notFound=0
                 return parameter
         if notFound==1:
@@ -113,12 +102,12 @@ class ResourceService(Generic_Service):
             return parameter
         except:
             for device in room['devices']:
-                parameter=self.retrieveParameterInfo(platform_ID,room_ID,device['device_ID'],parameter_name)
+                parameter=self.retrieveParameterInfo(platform_ID,room_ID,device['bn'],parameter_name)
                 if parameter is not False:
                     notFound=0
                     new_parameter=parameter.copy()
-                    new_parameter['device_ID']=device['device_ID']
-                    return parameter
+                    new_parameter['bn']=device['bn']
+                    return new_parameter
             if notFound==1:
                 return False
 
@@ -142,64 +131,47 @@ class ResourceService(Generic_Service):
         existingFlag=self.roomsCatalog.insertRoom(room_ID,room)
         return existingFlag
 
-    
-    def insertDevice(self,room,device_ID,device):
-        self.devicesCatalog=DevicesCatalog(room['devices'])
-        new_device=self.devicesCatalog.insertDevice(device_ID,device)
-        
-        return new_device
-
-    def insertDeviceValue(self, platform_ID, room_ID, device_ID, dictionary):
-        i=self.findPos(platform_ID)
-        if i is not False:
-            self.roomsCatalog=RoomsCatalog(self.db_content['platforms_list'][i]['rooms'])
-            j=self.roomsCatalog.findPos(room_ID)
-            self.devicesCatalog=DevicesCatalog(self.db_content['platforms_list'][i]['rooms'][j]['devices'])
-            self.devicesCatalog.insertValue(device_ID,dictionary)
+    def insertValue(self,platform_ID,room_ID,device_ID,msg):
+        room=self.retrieveRoomInfo(platform_ID,room_ID)
+        if room is not False:
+            catalog=DevicesCatalog(room['devices'])
+            msg['bn']=device_ID
+            result=catalog.insertValue(device_ID,msg)
+            if result:
+                print(platform_ID+": " + device_ID+" updated in " + room_ID)
+                self.save()
    
-    def setRoomParameter(self,platform_ID,room_ID,parameter,parameter_value):
-        i=self.findPos(platform_ID)
-        if i is not False:
-            self.roomsCatalog=RoomsCatalog(self.db_content['platforms_list'][i]['rooms'])
-            result=self.roomsCatalog.setParameter(room_ID,parameter,parameter_value)
-            return result
-        else:
+    def removePlatform(self,platform_ID):
+        notFound=True
+        for i in self.db_content['platforms_list']:
+            if self.db_content['platforms_list'][i]['platform_ID']==platform_ID:
+                self.db_content['platforms_list'].pop(i)
+                notFound=False
+                return True
+        if notFound:
             return False
 
-    def removePlatform(self,platform_ID):
-        i=self.findPos(platform_ID)
-        if i is not False:
-            self.db_content['platforms_list'].pop(i) 
-            return True
-        else:
-            return i
-
     def removeRoom(self,platform_ID,room_ID):
-        i=self.findPos(platform_ID)
-        if i is not False:
-            self.roomsCatalog=RoomsCatalog(self.db_content['platforms_list'][i]['rooms'])
-            result=self.roomsCatalog.removeRoom(room_ID)
+        platform=self.retrievePlatform(platform_ID)
+        if platform is not False:
+            roomsCatalog=RoomsCatalog(platform['rooms'])
+            result=roomsCatalog.removeRoom(room_ID)
             return result
         else:
             return False
 
     def removeDevice(self,platform_ID,room_ID,device_ID):
-        i=self.findPos(platform_ID)
-        if i is not False:
-            self.roomsCatalog=RoomsCatalog(self.db_content['platforms_list'][i]['rooms'])
-            j=self.roomsCatalog.findPos(room_ID)
-            self.devicesCatalog=DevicesCatalog(self.db_content['platforms_list'][i]['rooms'][j]['devices'])
-            result=self.devicesCatalog.removeDevice(device_ID)
+        room=self.retrieveRoomInfo(platform_ID,room_ID)
+        if room is not False:
+            devicesCatalog=DevicesCatalog(room['devices'])
+            result=devicesCatalog.removeDevice(device_ID)
             return result
         else:
             return False
 
     def removeInactive(self,devices,inactiveTime):
-        self.devicesCatalog=DevicesCatalog(devices)
-        if self.devicesCatalog.removeInactive(inactiveTime):
-            return True
-        else:
-            return False
+        devicesCatalog=DevicesCatalog(devices)
+        return devicesCatalog.removeInactive(inactiveTime)
 
     def dateUpdate(self,element):
         now=datetime.now()

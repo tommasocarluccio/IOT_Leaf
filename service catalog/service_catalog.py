@@ -4,7 +4,7 @@ import requests
 import time
 import sys
 
-from service_class import ServiceCatalog
+from etc.service_class import ServiceCatalog
 
     
 class ServiceCatalogREST():

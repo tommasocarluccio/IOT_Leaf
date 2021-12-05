@@ -1,5 +1,5 @@
 import json
-from generic_service import Generic_Service
+from etc.generic_service import Generic_Service
 
 class PlatformsCatalog():
     def __init__(self,db_filename):
