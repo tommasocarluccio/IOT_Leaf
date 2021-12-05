@@ -1,13 +1,15 @@
 	{
-		"sensorID": "dht11_X1",
-		"end_points": "MQTT/REST",
+		"sensorID": "dht11",
+		"end_points": "MQTT",
 		"parameters": [{
 			"parameter": "temperature",
 			"value":null,
-			"unit": "C"
+			"unit": "C",
+			"timestamp":null
 		}, {
 			"parameter": "humidity",
 			"value":null,
-			"unit": "%"
+			"unit": "%",
+			"timestamp":null
 		}]
 	}

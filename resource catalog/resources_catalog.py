@@ -112,6 +112,7 @@ class ResourcesServerREST(object):
                 output="Platform '{}' - Room '{}' has been added to Server".format(platform_ID, room_ID)
             res={"result":True}
             saveFlag=True
+        """
                     
         elif command=='insertDevice':
             platform_ID=uri[1]
@@ -148,7 +149,7 @@ class ResourcesServerREST(object):
             except:
                 output=None
             saveFlag=True
-
+        """
 
         else:
             raise cherrypy.HTTPError(501, "No operation!")
