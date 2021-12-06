@@ -66,7 +66,18 @@ class Registration_deployer(object):
         elif(len(uri))>0 and uri[0]=="checkAssociation":
             result=self.catalog.check_association(uri[1])
             return json.dumps({"result":result})
-            
+        elif(len(uri))==3 and uri[0]=="info":
+            platform=self.catalog.platforms.find_platform(uri[1])
+            if platform is not False:
+                try:
+                    result=json.dumps(platform['specs'][uri[2]])
+                    return result
+                except:
+                    raise cherrypy.HTTPError(400, "Bad request!")
+            else:
+                raise cherrypy.HTTPError(404, "Platform not found!")
+                
+                
         else:
             raise cherrypy.HTTPError(501, "No operation!")
             

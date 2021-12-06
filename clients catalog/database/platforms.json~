@@ -1,14 +1,30 @@
 {
-    "platforms": [
-        {
-            "platform_ID": "Leaf_001",
-            "associated": true,
-            "keys": {}
-        },
-        {
-            "platform_ID": "Leaf_002",
-            "associated": true,
-            "keys": {}
+  "platforms": [
+    {
+      "platform_ID": "Leaf_001",
+      "associated": true,
+      "specs": {}
+    },
+    {
+      "platform_ID": "Leaf_002",
+      "associated": true,
+      "specs": {
+        "thingspeak": {
+          "room": null,
+          "write_key": "X5YXZ86YDB4I41W3",
+          "read_key":"D270Y6P75N0TG7UA",
+          "fields": {
+            "field5": "humidity",
+            "field1": "AQI",
+            "field3": "temperature"
+          }
         }
-    ]
+      }
+    },
+    {
+      "platform_ID": "Leaf_003",
+      "associated": false,
+      "specs": {}
+    }
+  ]
 }

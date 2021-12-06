@@ -30,45 +30,48 @@ class ResourcesServerREST(object):
         uriLen=len(uri)
         if uriLen!=0:
             info=uri[0]
-            platform= self.catalog.retrievePlatform(info)
-            if platform is not False:
-                if uriLen>1:
-                    roomInfo= self.catalog.retrieveRoomInfo(info,uri[1])
-                    if roomInfo is not False:
-                        if uriLen>2:
-                            deviceInfo=self.catalog.retrieveDeviceInfo(info,uri[1],uri[2])
-                            if deviceInfo is not False:
-                                if uriLen>3:
-                                    output=deviceInfo.get(uri[3])
-                                elif len(params)!=0:
-                                    parameter=str(params['parameter'])
-                                    parameterInfo=self.catalog.retrieveParameterInfo(info,uri[1],uri[2],parameter)
-                                    if parameterInfo is False:
-                                        output=None
+            if info=="platformsList":
+                output=self.catalog.retrievePlatformsList()
+            else:    
+                platform= self.catalog.retrievePlatform(info)
+                if platform is not False:
+                    if uriLen>1:
+                        roomInfo= self.catalog.retrieveRoomInfo(info,uri[1])
+                        if roomInfo is not False:
+                            if uriLen>2:
+                                deviceInfo=self.catalog.retrieveDeviceInfo(info,uri[1],uri[2])
+                                if deviceInfo is not False:
+                                    if uriLen>3:
+                                        output=deviceInfo.get(uri[3])
+                                    elif len(params)!=0:
+                                        parameter=str(params['parameter'])
+                                        parameterInfo=self.catalog.retrieveParameterInfo(info,uri[1],uri[2],parameter)
+                                        if parameterInfo is False:
+                                            output=None
+                                        else:
+                                            output=parameterInfo
                                     else:
-                                        output=parameterInfo
+                                        output=deviceInfo
+
                                 else:
-                                    output=deviceInfo
+                                    output=roomInfo.get(uri[2])
+
+                            elif len(params)!=0:
+                                parameter=str(params['parameter'])
+                                parameterInfo=self.catalog.findParameter(info,uri[1],parameter)
+                                if parameterInfo is False:
+                                    output=None
+                                else:
+                                    output=parameterInfo
 
                             else:
-                                output=roomInfo.get(uri[2])
-
-                        elif len(params)!=0:
-                            parameter=str(params['parameter'])
-                            parameterInfo=self.catalog.findParameter(info,uri[1],parameter)
-                            if parameterInfo is False:
-                                output=None
-                            else:
-                                output=parameterInfo
-
+                                output=roomInfo
                         else:
-                            output=roomInfo
+                            output=platform.get(uri[1])
                     else:
-                        output=platform.get(uri[1])
+                        output=platform
                 else:
-                    output=platform
-            else:
-                output=self.catalog.db_content.get(info)
+                    output=self.catalog.db_content.get(info)
             if output==None:
                 raise cherrypy.HTTPError(404,"Information Not found")
 

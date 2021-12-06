@@ -15,12 +15,6 @@
         "port": 9090,
         "service": "/clients_service"
     },
-    "clients_catalog": {
-        "IP_address": "192.168.1.130",
-        "port": 9090,
-        "service": "/clients_catalog",
-        "url": "http://192.168.1.130:9090/clients_catalog"
-    },
     "profiles_catalog": {
         "IP_address": "192.168.1.130",
         "port": 8081,
@@ -32,5 +26,11 @@
         "port": 8083,
         "service": "/resource_catalog",
         "url": "http://192.168.1.130:8083/resource_catalog"
+    },
+    "clients_catalog": {
+        "IP_address": "192.168.1.130",
+        "port": 9090,
+        "service": "/clients_catalog",
+        "url": "http://192.168.1.130:9090/clients_catalog"
     }
 }
