@@ -21,10 +21,13 @@ class Adapter():
         room_ID=clients_result['room']
         for field in clients_result['fields']:
             parameter=clients_result['fields'].get(field)
-            resource_result=requests.get("{}/{}/{}?parameter={}".format(resource_catalog,platform,room_ID,parameter)).json()
-            if not self.check_time(resource_result['t']):
+            try:
+                resource_result=requests.get("{}/{}/{}?parameter={}".format(resource_catalog,platform,room_ID,parameter)).json()
+                if not self.check_time(resource_result['t']):
+                    resource_result["v"]=None
+                #print(resource_result)
+            except:
                 resource_result["v"]=None
-            print(resource_result)
             params[field]=resource_result["v"]
         return params
             
@@ -37,7 +40,10 @@ class Adapter():
             
     def send(self,clients,command,params):
         try:
+            print("Sending data for {}".format(clients['room']))
             r=requests.post("{}{}".format(self.thingspeak_url,command),params=params)
+            self.last_update=time.time()
+            print("Success!\n")
         except Exception as e:
             print(e)
     
@@ -49,13 +55,12 @@ if __name__ == '__main__':
         clients_catalog=adapter.retrieveService(adapter.conf_content['clients catalog'])
         platforms_list=requests.get(resource_catalog+"/platformsList").json()
         for platform in platforms_list:
+            print(platform)
             clients_result=requests.get(clients_catalog+"/info/"+platform+"/thingspeak").json()
             params=adapter.retrieveParams(clients_result,resource_catalog)
             command="update"
             adapter.send(clients_result,command,params)
             
-            
-        
         time.sleep(adapter.time_sleep)
         
         
