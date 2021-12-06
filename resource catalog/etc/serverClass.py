@@ -138,7 +138,7 @@ class ResourceService(Generic_Service):
             msg['bn']=device_ID
             result=catalog.insertValue(device_ID,msg)
             if result:
-                #print(platform_ID+": " + device_ID+" updated in " + room_ID)
+                print(platform_ID+": " + device_ID+" updated in " + room_ID)
                 self.save()
    
     def removePlatform(self,platform_ID):
