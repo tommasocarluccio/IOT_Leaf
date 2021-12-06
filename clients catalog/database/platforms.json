@@ -11,8 +11,8 @@
       "specs": {
         "thingspeak": {
           "room": "room_13",
-          "write_key": "X5YXZ86YDB4I41W3",
-          "read_key":"D270Y6P75N0TG7UA",
+          "write_key": "58EQ7229TU9O5RXP",
+          "read_key":"D27OY6P75NOTG7UA",
           "fields": {
             "field5": "humidity",
             "field1": "AQI",
