@@ -4,8 +4,8 @@ import serial
 import sys
 
 class mq5(SensorPublisher):
-    def __init__(self,configuration_filename='mq5_settings.json',device_ID="mq5",serialPort='/dev/ttyACM0'):
-        SensorPublisher.__init__(self,configuration_filename,device_ID)
+    def __init__(self,configuration_filename,broker_ip,broker_port,platform_ID,room_ID,device_ID='mq5',pin='/dev/ttyACM0'):
+        SensorPublisher.__init__(self,configuration_filename,platform_ID,room_ID,device_ID,broker_ip,broker_port)
         self.ser = serial.Serial(serialPort, 9600, timeout=0.5)
        
     def retrieveData(self):

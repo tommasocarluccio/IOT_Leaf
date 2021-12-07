@@ -32,21 +32,21 @@ class DevicesCatalog():
                 date=datetime.now().strftime("%d/%m/%Y %H:%M")
                 device['timestamp']=timestamp
                 device['date']=date
-                print("Device {} updated.".format(device_ID))
+                print("Device {} updated.\n".format(device_ID))
                 return True
 
 
     def addDevice(self, device_ID, device_info):
         try:
             device=Device(device_ID,device_info['endpoints'],device_info['e']).jsonify()
-            print(device)
+            #print(device)
             self.devices.append(device)
             
-            print("New device {} added.".format(device_ID))
+            print("New device {} added.\n".format(device_ID))
             return True
         except Exception as e:
             print(e)
-            print("New device {} can't be added.".format(device_ID))
+            print("New device {} can't be added.\n".format(device_ID))
             return False
         
     def removeInactive(self,timeInactive):

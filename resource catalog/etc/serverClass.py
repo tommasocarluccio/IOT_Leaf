@@ -107,11 +107,11 @@ class ResourceService(Generic_Service):
             output="Platform '{}' - Room '{}' already exists. Resetted...".format(platform_ID,room_ID)
 
     def insertDevice(self,platform_ID,room_ID,msg):
-        print(platform_ID+"-"+room_ID)
+        print(platform_ID+"-->"+room_ID)
         room=self.retrieveRoomInfo(platform_ID,room_ID)
         if room is not False:
             catalog=DevicesCatalog(room['devices'])
-            print(msg)
+            #print(msg)
             device_ID=msg['bn']
             result=catalog.insertValue(device_ID,msg)
             if result is False:

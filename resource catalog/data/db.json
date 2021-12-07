@@ -8,7 +8,24 @@
                     "room_ID": "room_13",
                     "room_name": "Kitchen",
                     "devices": [
-                        
+                        {
+                            "deviceID": "dht11",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "temperature",
+                                    "u": "C",
+                                    "topic": "Leaf_002/room_13/dht11/temperature"
+                                },
+                                {
+                                    "n": "humidity",
+                                    "u": "%",
+                                    "topic": "Leaf_002/room_13/dht11/humidity"
+                                }
+                            ],
+                            "timestamp": 1638896698.313379,
+                            "date": "07/12/2021 18:04"
+                        }
                     ]
                 }
             ],

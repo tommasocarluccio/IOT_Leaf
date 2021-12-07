@@ -2,20 +2,17 @@ import paho.mqtt.client as PahoMQTT
 import time
 
 class MyPublisher:
-    def __init__(self, clientID):
+    def __init__(self, clientID,broker,port):
         self.clientID = clientID
         print(self.clientID + " is running...")
-
-        # create an instance of paho.mqtt.client
-        self._paho_mqtt = PahoMQTT.Client(self.clientID, False)
- 
-    def setup(self,broker,port):
+        self.rc=1
         self.messageBroker = broker
         self.port=port
+        # create an instance of paho.mqtt.client
+        self._paho_mqtt = PahoMQTT.Client(self.clientID, False)
         # register the callback
         self._paho_mqtt.on_connect = self.myOnConnect
-        
-
+ 
     def start (self):
         #manage connection to broker
         self._paho_mqtt.connect(self.messageBroker, self.port)
@@ -31,4 +28,5 @@ class MyPublisher:
         print(topic)
 
     def myOnConnect (self, paho_mqtt, userdata, flags, rc):
+        self.rc=rc
         print ("Connected to %s with result code: %d" % (self.messageBroker, rc))
