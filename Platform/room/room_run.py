@@ -13,8 +13,6 @@ class RoomConfiguration(object):
         self.room_ID=self.content['room_info']['room_ID']
         self.room_name=self.content['room_info']['room_name']
         self.content["platform_ID"]=self.platform_ID
-        
-        #self.hubAddress="http://"+ get_ip_address()+":"+str(self.content["hub_port"]) +"/hub"
         self.save()
         self.timestamp=time.time()
             

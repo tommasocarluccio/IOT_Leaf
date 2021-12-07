@@ -15,38 +15,10 @@ class NewPlatform():
     def jsonify(self):
         platform={'platform_ID':self.platform_ID,'rooms':self.rooms,'creation_date':self.lastUpdate}
         return platform
-
-class DataCollector():
-    def __init__(self,clientID,brokerIP,brokerPort,notifier):
-        self.clientID=clientID
-        self.brokerIP=brokerIP
-        self.brokerPort=brokerPort
-        self.notifier=notifier
-        self.client=MyMQTT(self.clientID,self.brokerIP,self.brokerPort,self.notifier)
-    def run(self):
-        self.client.start()
-        print('{} has started'.format(self.clientID))
-    def end(self):
-        self.client.stop()
-        print('{} has stopped'.format(self.clientID))
-    def follow(self,topic):
-        self.client.mySubscribe(topic)
-    def unfollow(self,topic):
-        self.client.unsubscribe(topic)
-        
     
 class ResourceService(Generic_Service):
     def __init__(self,conf_filename,db_filename):
         Generic_Service.__init__(self,conf_filename,db_filename)
-        
-    def notify(self,topic,msg):
-        payload=json.loads(msg)
-        #print(payload)
-        platform_ID=payload['bn'].split("/")[0]
-        room_ID=payload['bn'].split("/")[1]
-        device_ID=payload['bn'].split("/")[2]
-        e=payload['e']
-        self.insertValue(platform_ID,room_ID,device_ID,payload)
                 
     def retrievePlatformsList(self):
         platformsList=[]
@@ -129,17 +101,26 @@ class ResourceService(Generic_Service):
         existingFlag=False
         self.roomsCatalog=RoomsCatalog(platform['rooms'])
         existingFlag=self.roomsCatalog.insertRoom(room_ID,room)
-        return existingFlag
+        if existingFlag:
+            output="Platform '{}' - Room '{}' has been added to Server".format(platform_ID, room_ID)
+        else:
+            output="Platform '{}' - Room '{}' already exists. Resetted...".format(platform_ID,room_ID)
 
-    def insertValue(self,platform_ID,room_ID,device_ID,msg):
+    def insertDevice(self,platform_ID,room_ID,msg):
+        print(platform_ID+"-"+room_ID)
         room=self.retrieveRoomInfo(platform_ID,room_ID)
         if room is not False:
             catalog=DevicesCatalog(room['devices'])
-            msg['bn']=device_ID
+            print(msg)
+            device_ID=msg['bn']
             result=catalog.insertValue(device_ID,msg)
-            if result:
-                print(platform_ID+": " + device_ID+" updated in " + room_ID)
-                self.save()
+            if result is False:
+                print("Not saving..")
+                return False
+            else:
+                return True
+        else:
+            return False
    
     def removePlatform(self,platform_ID):
         notFound=True

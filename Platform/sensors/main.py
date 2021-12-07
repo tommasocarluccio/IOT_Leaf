@@ -17,12 +17,16 @@ if __name__ == '__main__':
         last_time=time.time()
     time.sleep(1)
     sensor.start()
-    while True:
-        output=sensor.retrieveData()
-        try:
-            sensor.publishData(output)
-            time.sleep(sensor.time_sleep)
-        except:
-            time.sleep(1)
+    configuration_data=sensor.create_info()
+    if sensor.pingCatalog(configuration_data):
+        while True:
+            output=sensor.retrieveData()
+            try:
+                sensor.publishData(output)
+                time.sleep(sensor.time_sleep)
+            except:
+                time.sleep(1)
+    else:
+        print("Error in catalog communication")
     sensor.stop()
     

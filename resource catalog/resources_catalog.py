@@ -10,21 +10,7 @@ class ResourcesServerREST(object):
     exposed=True
     def __init__(self,conf_filename,db_filename):
         self.catalog=ResourceService(conf_filename,db_filename)
-        self.service=self.catalog.registerRequest()
-    
-    def setup(self,clientID):
-        try:
-            broker=requests.get(self.catalog.serviceCatalogAddress+'/broker').json()
-            broker_IP=broker.get('IP_address')
-            broker_port=broker.get('port')
-            self.catalog.subscriber=DataCollector(clientID,broker_IP,broker_port,self.catalog)
-            self.catalog.subscriber.run()
-            for platform in self.catalog.retrievePlatformsList():
-                server.catalog.subscriber.follow(platform+'/#')
-        except Exception as e:
-            print(e)
-            print("MQTT Subscriber not created")
-            
+        self.service=self.catalog.registerRequest()            
 
     def GET(self,*uri,**params):
         uriLen=len(uri)
@@ -85,27 +71,7 @@ class ResourcesServerREST(object):
         json_body=json.loads(body.decode('utf-8'))
         command=str(uri[0])
         saveFlag=False
-        """
-        if command=='insertPlatform':
-            requestClients=requests.get(self.catalog.serviceCatalogAddress+"/clients_catalog").json()
-            platform_ID=json_body['platform_ID']
-            if(requests.get(requestClients['url']+'/checkAssociation/'+platform_ID).json()):
-                rooms=[]
-                newPlatform=self.catalog.insertPlatform(platform_ID,rooms)
-                if newPlatform==True:
-                    output="Platform '{}' has been added to Resource Catalog\n".format(platform_ID)
-                    res={"result":True}
-                    saveFlag=True
-                        
-                else:
-                    output="'{}' already exists!".format(platform_ID)
-                    res={"result":True}
-                    #platform=self.catalog.retrievePlatform(platform_ID)
-                    #platform['local_IP']=json_body['local_IP']
-            else:
-                output="'{}' cannot be connected".format(platform_ID)
-                res={"result":False}
-        """    
+
         if command=='insertRoom':
             platform_ID=uri[1]
             room_ID=json_body['room_ID']
@@ -118,24 +84,22 @@ class ResourcesServerREST(object):
                     newPlatform=self.catalog.insertPlatform(platform_ID,rooms)
                     self.catalog.subscriber.follow(platform_ID+'/#')
                 else:
-                    res={"result":False}
                     raise cherrypy.HTTPError(400,"Platform Not valid")
                     
-            room=self.catalog.insertRoom(platform_ID,room_ID,json_body)
-            if room is False:
-                output="Platform '{}' - Room '{}' already exists. Resetted...".format(platform_ID,room_ID)
-            else:
-                output="Platform '{}' - Room '{}' has been added to Server".format(platform_ID, room_ID)
-            res={"result":True}
+            self.catalog.insertRoom(platform_ID,room_ID,json_body)
             saveFlag=True
-
+        elif command=="insertDevice":
+            platform_ID=uri[1]
+            room_ID=uri[2]
+            device=self.catalog.insertDevice(platform_ID,room_ID,json_body)
+            if device is False:
+                raise cherrypy.HTTPError(500, "Error!")
+            else:
+                saveFlag=True
         else:
             raise cherrypy.HTTPError(501, "No operation!")
         if saveFlag:
             self.catalog.save()
-        if output is not None:
-            print(output)
-        return json.dumps(res)
 
     def DELETE(self,*uri):
         saveFlag=False
@@ -182,7 +146,6 @@ if __name__ == '__main__':
     conf=sys.argv[1]
     db=sys.argv[2]
     server=ResourcesServerREST(conf,db)
-    server.setup("Resourse_subscriber")
     conf = {
         '/': {
             'request.dispatch': cherrypy.dispatch.MethodDispatcher(),

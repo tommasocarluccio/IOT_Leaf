@@ -9,39 +9,19 @@
                     "room_name": "Kitchen",
                     "devices": [
                         {
-                            "bn": "dht11",
-                            "e": [
+                            "deviceID": "dht11",
+                            "endpoints": "MQTT",
+                            "resources": [
                                 {
                                     "n": "humidity",
                                     "u": "%",
-                                    "t": 1638732484.1454613,
-                                    "v": 61
-                                },
-                                {
-                                    "n": "temperature",
-                                    "u": "C",
-                                    "t": 1638732484.1454613,
-                                    "v": 21
+                                    "topic": "Leaf_002/room_13/dht11/humidity"
                                 }
                             ],
-                            "last_update": 1638732484.149293,
-                            "last_update_date": "05/12/2021 20:28"
-                        },
-                        {
-                            "bn": "mq5",
-                            "e": [
-                                {
-                                    "n": "AQI",
-                                    "u": "ppm",
-                                    "t": 1638737781.549332,
-                                    "v": 741
-                                }
-                            ],
-                            "last_update": 1638737781.5516427,
-                            "last_update_date": "05/12/2021 21:56"
+                            "timestamp": 1638877306.5302606,
+                            "date": "07/12/2021 12:41"
                         }
-                    ],
-                    "last_update": "05/12/2021/19/52"
+                    ]
                 }
             ],
             "creation_date": "04/12/2021 18:30"

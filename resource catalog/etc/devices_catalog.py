@@ -2,52 +2,52 @@ import json
 from datetime import datetime
 import time
 
-"""
 #it could be useless if a specific structure is not imposed.
 class Device():
-    def __init__(self,sensorID,endPoints,parameters,timestamp):
-        self.sensorID=sensorID
-        self.endPoints=endPoints
-        self.parameters=parameters
-        self.timestamp=timestamp
+    def __init__(self,deviceID,endpoints,info):
+        self._deviceID=deviceID
+        self.endpoints=endpoints
+        self.info=info
+        self.timestamp=time.time()
+        self.date=datetime.now().strftime("%d/%m/%Y %H:%M")
     
     def jsonify(self):
-        device={'device_ID':self.sensorID,'end_points':self.endPoints,'parameters':self.parameters,'timestamp':self.timestamp}
+        device={'deviceID':self._deviceID,'endpoints':self.endpoints,'resources':self.info,'timestamp':self.timestamp,'date':self.date}
         return device
-"""
+
 class DevicesCatalog():
     def __init__(self,devices_list):
         self.devices=devices_list
 
     def insertValue(self,device_ID,info):
-        if not any(dev['bn']==device_ID for dev in self.devices):
+        if not any(dev['deviceID']==device_ID for dev in self.devices):
             return self.addDevice(device_ID,info)
         else:
             return self.updateDevice(device_ID,info)
     
     def updateDevice(self,device_ID,info):
         for device in self.devices:
-            if device['bn']==device_ID:
-                for meas in info['e']:
-                    if not any(p['n']==meas['n'] for p in device['e']):
-                        device['e'].append(meas)
-                    else:
-                        for i in range(len(device['e'])):
-                            if device['e'][i]['n']==meas['n']:
-                                device['e'][i]=meas
-                    device['last_update'],device['last_update_date']=self.last_update()
-        return True
-                
-            
-    def last_update(self):
-        timestamp=time.time()
-        date=datetime.now().strftime("%d/%m/%Y %H:%M")
-        return timestamp,date
+            if device['deviceID']==device_ID:
+                timestamp=time.time()
+                date=datetime.now().strftime("%d/%m/%Y %H:%M")
+                device['timestamp']=timestamp
+                device['date']=date
+                print("Device {} updated.".format(device_ID))
+                return True
+
 
     def addDevice(self, device_ID, device_info):
-        device_info['last_update'],device_info['last_update_date']=self.last_update()
-        self.devices.append(device_info)
-        return True
+        try:
+            device=Device(device_ID,device_info['endpoints'],device_info['e']).jsonify()
+            print(device)
+            self.devices.append(device)
+            
+            print("New device {} added.".format(device_ID))
+            return True
+        except Exception as e:
+            print(e)
+            print("New device {} can't be added.".format(device_ID))
+            return False
         
     def removeInactive(self,timeInactive):
         output=False

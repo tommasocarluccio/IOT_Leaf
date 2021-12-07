@@ -19,18 +19,18 @@ class SensorPublisher(MyPublisher):
     
     def load(self):
         try:
-            self.broker_IP,self.broker_port=self.retrieve_service("broker")
+            broker=self.retrieve_service("broker")
+            self.broker_IP=broker.get('IP_address')
+            self.broker_port=broker.get('port')
             self.setup(self.broker_IP,self.broker_port)
             return True
         except Exception as e:
             print(e)
             return False
-        
+
     def retrieve_service(self,service):
-        broker=requests.get(self.serviceCatalogAddress+'/broker').json()
-        broker_IP=broker.get('IP_address')
-        broker_port=broker.get('port')
-        return broker_IP,broker_port
+        r=requests.get(self.serviceCatalogAddress+'/'+service).json()
+        return r
         
     def publishData(self,result_list):
         for result in  result_list:
@@ -43,4 +43,21 @@ class SensorPublisher(MyPublisher):
                     #print(topic)
                     self.myPublish(topic,json.dumps(data))
                     print (str(result['value'])+' '+ element['unit'])
+                    
+    def create_info(self):
+        for element in self.settings['parameters']:
+            e=[{"n":element["parameter"],"u":element["unit"],"topic":self.topic+"/"+element['parameter']}]
+        data={"bn":self.device_ID,"endpoints":self.settings['end_points'],"e":e}
+        return data
+    
+    def pingCatalog(self,data):
+        try:
+            catalog=self.retrieve_service("resource_catalog")['url']
+            r=requests.put("{}/insertDevice/{}/{}".format(catalog,self.platform_ID,self.room_ID),data=json.dumps(data))
+            if r.status_code==200:
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(e)
                     
