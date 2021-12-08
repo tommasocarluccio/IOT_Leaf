@@ -78,6 +78,7 @@ if __name__ == '__main__':
             sensor.start()
             mqtt_flag=True
         except Exception as e:
+            print(e)
             print("Can't connect to mqtt broker. New attempt...")
             time.sleep(10)
     time.sleep(1)

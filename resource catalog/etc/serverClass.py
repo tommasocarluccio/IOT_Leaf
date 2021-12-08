@@ -49,7 +49,7 @@ class ResourceService(Generic_Service):
         notFound=1
         room=self.retrieveRoomInfo(platform_ID,room_ID)
         for device in room['devices']:
-            if device['bn']==device_ID:
+            if device['deviceID']==device_ID:
                 notFound=0
                 return device
         if notFound==1:
@@ -58,7 +58,7 @@ class ResourceService(Generic_Service):
     def retrieveParameterInfo(self,platform_ID,room_ID,device_ID,parameter_name):
         notFound=1
         device=self.retrieveDeviceInfo(platform_ID,room_ID,device_ID)
-        for parameter in device['e']:
+        for parameter in device['resources']:
             if parameter['n']==parameter_name:
                 notFound=0
                 return parameter

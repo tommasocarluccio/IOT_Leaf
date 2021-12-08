@@ -23,8 +23,21 @@
                                     "topic": "Leaf_002/room_13/dht11/humidity"
                                 }
                             ],
-                            "timestamp": 1638896698.313379,
-                            "date": "07/12/2021 18:04"
+                            "timestamp": 1638950623.4744742,
+                            "date": "08/12/2021 09:03"
+                        },
+                        {
+                            "deviceID": "mq5",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "AQI",
+                                    "u": "ppm",
+                                    "topic": "Leaf_002/room_13/mq5/AQI"
+                                }
+                            ],
+                            "timestamp": 1638950018.6127954,
+                            "date": "08/12/2021 08:53"
                         }
                     ]
                 }
