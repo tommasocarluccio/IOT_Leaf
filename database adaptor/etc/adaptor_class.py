@@ -81,6 +81,7 @@ class Adaptor(Generic_Service):
 					params[field]=platform['measurements'][clients_result['fields'].get(field)]
 				except:
 					params[field]=None
+			print(platform['measurements'])
 			return params
 		except Exception as e:
 			print(e)
@@ -101,7 +102,7 @@ class Adaptor(Generic_Service):
 
 	def create_platform_entry(self,platform_ID,e):
 		if not any(plat['platform_ID']==platform_ID for plat in self.platforms_last):
-			self.platforms_last.append({"platform_ID":platform_ID,"measurements":{}})
+			self.platforms_last.append({"platform_ID":platform_ID,"last_msg_time":time.time(),"measurements":{}})
 		else:
 			for platform in self.platforms_last:
 				if platform["platform_ID"]==platform_ID:
@@ -111,10 +112,16 @@ class Adaptor(Generic_Service):
 						platform['measurements'][n]=value
 
 	def reset(self,platform_ID):
+		index=self.find_pos(platform_ID)
+		#self.platforms_last.pop(index)
+		self.platforms_last[index]["last_msg_time"]=time.time()
+		self.platforms_last[index]["measurements"]={}
+
+	def find_pos(self,platform_ID):
 		for index in range(len(self.platforms_last)):
 				if self.platforms_last[index]["platform_ID"]==platform_ID:
-					self.platforms_last.pop(index)
-							
+					return index
+
 	def notify(self,topic,msg):
 		try:
 			payload=json.loads(msg)
@@ -125,7 +132,7 @@ class Adaptor(Generic_Service):
 			e=payload['e']
 
 			self.create_platform_entry(platform_ID,e)
-			if time.time()-self.last_msg_time>self.delta:
+			if time.time()-self.platforms_last[self.find_pos(platform_ID)]['last_msg_time']>self.delta:
 				params=self.retrieve_info2(platform_ID)
 				if params is not False:
 					print("Sending data for {}-{}".format(platform_ID,room_ID))
@@ -137,9 +144,6 @@ class Adaptor(Generic_Service):
 						print("Failed!\n")
 				else:
 					print("Failed!\n")
-			print(self.platforms_last)
-
-
 				
 		except Exception as e:
 			print(e)
