@@ -1,0 +1,49 @@
+{
+    "description": "Welcome to resources server",
+    "platforms_list": [
+        {
+            "platform_ID": "Leaf_002",
+            "rooms": [
+                {
+                    "room_ID": "room_13",
+                    "room_name": "Kitchen",
+                    "devices": [
+                        {
+                            "bn": "dht11",
+                            "e": [
+                                {
+                                    "n": "humidity",
+                                    "u": "%",
+                                    "t": 1638813547.9101195,
+                                    "v": 61
+                                },
+                                {
+                                    "n": "temperature",
+                                    "u": "C",
+                                    "t": 1638813547.9101195,
+                                    "v": 21
+                                }
+                            ],
+                            "last_update": 1638813547.9145854,
+                            "last_update_date": "06/12/2021 18:59"
+                        },
+                        {
+                            "bn": "mq5",
+                            "e": [
+                                {
+                                    "n": "AQI",
+                                    "u": "ppm",
+                                    "t": 1638813540.5466323,
+                                    "v": 755
+                                }
+                            ],
+                            "last_update": 1638813540.5485895,
+                            "last_update_date": "06/12/2021 18:59"
+                        }
+                    ]
+                }
+            ],
+            "creation_date": "04/12/2021 18:30"
+        }
+    ]
+}
