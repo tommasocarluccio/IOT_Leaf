@@ -74,7 +74,8 @@ if __name__ == '__main__':
             broker=requests.get(serviceCatalogAddress+'/broker').json()
             broker_IP=broker.get('IP_address')
             broker_port=broker.get('port')
-            sensor=sensor_class(settingFile,broker_IP,broker_port,platform_ID,room_ID,device_ID,pin)
+            data_topic=broker['topic'].get('data')
+            sensor=sensor_class(settingFile,broker_IP,broker_port,data_topic,platform_ID,room_ID,device_ID,pin)
             sensor.start()
             mqtt_flag=True
         except Exception as e:
@@ -82,8 +83,9 @@ if __name__ == '__main__':
             print("Can't connect to mqtt broker. New attempt...")
             time.sleep(10)
     time.sleep(1)
-    configuration_data=sensor.create_info()
-    thread1=pingThread(1,sensor.platform_ID,sensor.room_ID,configuration_data,serviceCatalogAddress)
+    sensor.create_info()
+    thread1=pingThread(1,sensor.platform_ID,sensor.room_ID,sensor._data,serviceCatalogAddress)
+    time.sleep(1)
     thread1.start()
     thread2=SendDataThread(2,sensor)
     thread2.start()

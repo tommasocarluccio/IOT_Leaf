@@ -31,7 +31,6 @@ class OLED():
         self.aqi=0
         self.AQI="NONE"
         self.clientID=clientID
-        
         self.client=MyMQTT(self.clientID,self.broker_IP,self.broker_port,self)
     def run(self):
         self.client.start()
@@ -53,24 +52,24 @@ class OLED():
                 unit=element['u']
                 timestamp=element['t']
                     
-            print(f'{parameter}:{value} {unit} - {timestamp}')
-            if(parameter=="temperature"):
-                self.temp=round(value,2)
-                #self.draw.text((self.x+6, self.top+8),     str("Temp.")+ "   " + str(value)+"°"+unit, font=self.font, fill=255)
+                print(f'{parameter}:{value} {unit} - {timestamp}')
+                if(parameter=="temperature"):
+                    self.temp=round(value,2)
+                    #self.draw.text((self.x+6, self.top+8),     str("Temp.")+ "   " + str(value)+"°"+unit, font=self.font, fill=255)
 
-            if(parameter=="humidity"):
-                self.hum=round(value,2)
-                #self.draw.text((self.x+6, self.top+16),    str("Hum.")+ "    " + str(value)+unit,  font=self.font, fill=255)
-            if(parameter=="AQI"):
-                self.aqi=round(value,2)
-                if(value <=600):
-                    self.AQI="GOOD"
-                elif(value>600 and value <=750):
-                    self.AQI="BAD"
-                elif(value>750):
-                    self.AQI="UNSAFE"
-                else:
-                    self.AQI="NONE"
+                if(parameter=="humidity"):
+                    self.hum=round(value,2)
+                    #self.draw.text((self.x+6, self.top+16),    str("Hum.")+ "    " + str(value)+unit,  font=self.font, fill=255)
+                if(parameter=="AQI"):
+                    self.aqi=round(value,2)
+                    if(value <=600):
+                        self.AQI="GOOD"
+                    elif(value>600 and value <=750):
+                        self.AQI="BAD"
+                    elif(value>750):
+                        self.AQI="UNSAFE"
+                    else:
+                        self.AQI="NONE"
             self.draw.rectangle((0,0,self.disp.width,self.disp.height), outline=0, fill=0)
             self.draw.text((self.x+55, self.top),     "LEAF", font=self.font, fill=255)
             self.draw.text((self.x+6, self.top+16),     str("Temp.")+ "   " + str(self.temp)+"°C", font=self.font, fill=255)
@@ -144,6 +143,7 @@ if __name__=='__main__':
             broker=requests.get(serviceCatalogAddress+'/broker').json()
             broker_IP=broker.get('IP_address')
             broker_port=broker.get('port')
+            data_topic=broker['topic'].get('data')
             myOLED=OLED("DISPLAY",broker_IP,broker_port)
             myOLED.initializeDisplay()
             myOLED.run()
@@ -153,7 +153,7 @@ if __name__=='__main__':
             time.sleep(30)
             
     time.sleep(1)
-    myOLED.follow(platform_ID+"/"+room_ID+"/#")
+    myOLED.follow(data_topic+platform_ID+"/"+room_ID+"/#")
     while True:
         time.sleep(3)
     myOLED.draw.rectangle((0,0,myOLED.disp.width,myOLED.disp.height), outline=0, fill=0)

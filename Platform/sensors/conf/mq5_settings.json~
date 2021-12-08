@@ -1,7 +1,7 @@
 {
-	"sensorID": "mq135_X1",
+	"sensorID": "mq5",
 	"end_points": "MQTT",
-	"inactive_time":10,
+	"time_sleep":5,
 	"parameters": [{
 		"parameter": "AQI",
 		"value": null,
