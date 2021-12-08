@@ -62,25 +62,7 @@ class Adaptor(Generic_Service):
 				for field in clients_result['fields']:
 					if clients_result['fields'].get(field)==parameter['n']:
 						params[field]=parameter["v"]
-			return params
-		except Exception as e:
-			print(e)
-			return False
-
-	def retrieve_info2(self,platform_ID):
-		for platform in self.platforms_last:
-			if platform['platform_ID']==platform_ID:
-				break
-		try:
-			clients_catalog=self.retrieveService('clients_catalog')
-			clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+"/thingspeak").json()
-			room_ID=clients_result['room']
-			params={"api_key":clients_result["write_key"]}
-			for field in clients_result['fields']:
-				try:
-					params[field]=platform['measurements'][clients_result['fields'].get(field)]
-				except:
-					params[field]=None
+						self.last_p=parameter['n']
 			return params
 		except Exception as e:
 			print(e)
@@ -99,22 +81,6 @@ class Adaptor(Generic_Service):
 			print(e)
 			return False
 
-	def create_platform_entry(self,platform_ID,e):
-		if not any(plat['platform_ID']==platform_ID for plat in self.platforms_last):
-			self.platforms_last.append({"platform_ID":platform_ID,"measurements":{}})
-		else:
-			for platform in self.platforms_last:
-				if platform["platform_ID"]==platform_ID:
-					for parameter in e:
-						n=parameter['n']
-						value=parameter['v']
-						platform['measurements'][n]=value
-
-	def reset(self,platform_ID):
-		for index in range(len(self.platforms_last)):
-				if self.platforms_last[index]["platform_ID"]==platform_ID:
-					self.platforms_last.pop(index)
-							
 	def notify(self,topic,msg):
 		try:
 			payload=json.loads(msg)
@@ -124,21 +90,17 @@ class Adaptor(Generic_Service):
 			device_ID=payload['bn'].split("/")[2]
 			e=payload['e']
 
-			self.create_platform_entry(platform_ID,e)
 			if time.time()-self.last_msg_time>self.delta:
-				params=self.retrieve_info2(platform_ID)
+				params=self.retrieve_info(e,platform_ID)
 				if params is not False:
 					print("Sending data for {}-{}".format(platform_ID,room_ID))
 					if self.send("update",params):
-						#print(e)
+						print(e)
 						print("Success!\n")
-						self.reset(platform_ID)
 					else:
 						print("Failed!\n")
 				else:
 					print("Failed!\n")
-			print(self.platforms_last)
-
 
 				
 		except Exception as e:
