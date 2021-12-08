@@ -11,7 +11,7 @@
       "specs": {
         "thingspeak": {
           "room": "room_13",
-          "ChannelID:":"1021300",
+          "channelID:":"1021300",
           "write_key": "58EQ7229TU9O5RXP",
           "read_key":"D27OY6P75NOTG7UA",
           "fields": {
