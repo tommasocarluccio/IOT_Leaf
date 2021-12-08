@@ -1,0 +1,7 @@
+{
+    "description": "Welcome to the adaptor database",
+    "service_catalog": "http://192.168.1.130:8080/service_catalog",
+    "service_name":"database_adaptor",
+    "IP_address": "192.168.1.130",
+    "IP_port": 8085
+}
