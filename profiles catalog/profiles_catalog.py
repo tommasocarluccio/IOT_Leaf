@@ -20,6 +20,7 @@ class catalogREST():
                 if uriLen>1:
                     profileInfo= self.catalog.retrieveProfileParameter(uri[0],uri[1])
                     if uriLen>2:
+                        print(profileInfo)
                         roomInfo=self.catalog.retrieveRoomInfo(profileInfo,uri[2])
                         if uriLen>3:
                             if uri[3]=="preferences":
@@ -29,7 +30,7 @@ class catalogREST():
                                     output=False
 
                     if profileInfo is not False:
-                        output=json.loads(profileInfo)
+                        output=profileInfo
                     else:
                         output=profile.get(uri[1])
                 else:
