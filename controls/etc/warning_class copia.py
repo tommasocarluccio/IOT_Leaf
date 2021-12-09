@@ -10,24 +10,21 @@ class warningControl():
 		self.serviceCatalogAddress=self.conf_content['service_catalog']
 	def setup(self,clientID):
 		try:
-			broker=requests.get(self.serviceCatalogAddress+'/broker').json()
-			self.broker_IP=broker.get('IP_address')
-			self.broker_port=broker.get('port')
-			self.data_topic=broker['topic'].get('data')
-			self.clientID=clientID
-			self.subscriber=DataCollector(self.clientID,self.broker_IP,self.broker_port,self)
-			self.subscriber.run()
-			self.subscriber.follow(self.data_topic+'#')
-			self.pub=sendWarning(self.clientID+"_pub",self.broker_IP,self.broker_port,self)
-			self.pub.run()
-
-			return True
+		    broker=requests.get(self.serviceCatalogAddress+'/broker').json()
+		    self.broker_IP=broker.get('IP_address')
+		    self.broker_port=broker.get('port')
+		    self.data_topic=broker['topic'].get('data')
+		    self.warning_topic=broker['topic'].get('warning')
+		    self.clientID=clientID
+		    self.subscriber=DataCollector(self.clientID,self.broker_IP,self.broker_port,self)
+		    self.subscriber.run()
+		    self.subscriber.follow(self.data_topic+'#')
+		    return True
 		except Exception as e:
-			print(e)
-			print("MQTT Subscriber not created")
-			self.subscriber.end()
-			self.pub.end()
-			return False
+		    print(e)
+		    print("MQTT Subscriber not created")
+		    self.subscriber.end()
+		    return False
 
 	def notify(self,topic,msg):
 		payload=json.loads(msg)
@@ -41,22 +38,36 @@ class warningControl():
 			th_dict=response.json()
 			for meas in e:
 				parameter=meas['n']
-				#if parameter=='AQI':
 				try:
-					warning_cmd=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])	
-					self.pub.publish("{}{}/{}/LED".format(self.data_topic,platform_ID,room_ID),json.dumps(warning_cmd))
-					if warning_cmd:
-						print("Warning sent to {}-{}".format(platform_ID,room_ID))		
+					warning_msg=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
+					if warning_msg is not False:
+						warning_msg["parameter"]=parameter
+						print(warning_msg)
+						pub=sendWarning(self.clientID+"_pub",self.broker_IP,self.broker_port,self)
+						pub.run()
+						pub.publish("{}{}".format(self.warning_topic,payload['bn']),json.dumps(warning_msg))
+						
+						pub.end()
+					else:
+						pub=sendWarning(self.clientID+"_pub",self.broker_IP,self.broker_port,self)
+						pub.run()
+
+						pub.publish("{}{}".format(self.warning_topic,payload['bn']),json.dumps({"command":"LOW"}))
+						
+						pub.end()
+
+
 				except Exception as e:
 					print(e)
-
+					pass
 
 	def compare_value(self,minimum,maximum,value):
-		if value<minimum or value>maximum:
-			return True
-			
-		else:
-			return False
+		msg=False
+		if value<minimum:
+			msg={"value":value,"threshold":minimum,"status": "LOW","command":"HIGH"}
+		elif value > maximum:
+			msg={"value":value,"threshold":maximum,"status": "HIGH","command":"HIGH"}
+		return msg
 
 
 class DataCollector():

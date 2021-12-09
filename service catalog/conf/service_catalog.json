@@ -10,7 +10,7 @@
         "port": 1883,
         "service": "/broker",
         "topic": {
-            "data": "data/"
+            "data": "Leaf_monitoring/"
         }
     },
     "clients_service": {
@@ -18,28 +18,28 @@
         "port": 9090,
         "service": "/clients_service"
     },
-    "resource_catalog": {
-        "IP_address": "192.168.1.130",
-        "port": 8083,
-        "service": "/resource_catalog",
-        "url": "http://192.168.1.130:8083/resource_catalog"
-    },
     "clients_catalog": {
         "IP_address": "192.168.1.130",
         "port": 9090,
         "service": "/clients_catalog",
         "url": "http://192.168.1.130:9090/clients_catalog"
     },
-    "database_adaptor": {
-        "IP_address": "192.168.1.89",
-        "port": 8085,
-        "service": "/database_adaptor",
-        "url": "http://192.168.1.89:8085/database_adaptor"
-    },
     "profiles_catalog": {
         "IP_address": "192.168.1.130",
         "port": 8081,
         "service": "/profiles_catalog",
         "url": "http://192.168.1.130:8081/profiles_catalog"
+    },
+    "database_adaptor": {
+        "IP_address": "192.168.1.130",
+        "port": 8085,
+        "service": "/database_adaptor",
+        "url": "http://192.168.1.130:8085/database_adaptor"
+    },
+    "resource_catalog": {
+        "IP_address": "192.168.1.130",
+        "port": 8083,
+        "service": "/resource_catalog",
+        "url": "http://192.168.1.130:8083/resource_catalog"
     }
 }
