@@ -13,25 +13,29 @@ class catalogREST():
         
     def GET(self,*uri):
         uriLen=len(uri)
+        output=False
         if uriLen!=0:
             profile= self.catalog.retrieveProfileInfo(uri[0])
             if profile is not False:
                 if uriLen>1:
                     profileInfo= self.catalog.retrieveProfileParameter(uri[0],uri[1])
                     if uriLen>2:
-                        try:
-                            profileInfo=self.catalog.retrieveRoomInfo(profileInfo,uri[2])
-                        except:
-                            pass
+                        roomInfo=self.catalog.retrieveRoomInfo(profileInfo,uri[2])
+                        if uriLen>3:
+                            if uri[3]=="preferences":
+                                try:
+                                    output=room_info["preferences"][uri[4]][uri[5]]
+                                except:
+                                    output=False
+
                     if profileInfo is not False:
                         output=profileInfo
                     else:
                         output=profile.get(uri[1])
                 else:
                     output=profile
-            else:
-                output=self.catalog.profilesContent.get(uri[0])
-            if output==None:
+
+            if not output:
                 raise cherrypy.HTTPError(404,"Information Not found")
 
         else:
