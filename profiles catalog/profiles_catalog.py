@@ -29,7 +29,7 @@ class catalogREST():
                                     output=False
 
                     if profileInfo is not False:
-                        output=profileInfo
+                        output=json.loads(profileInfo)
                     else:
                         output=profile.get(uri[1])
                 else:
