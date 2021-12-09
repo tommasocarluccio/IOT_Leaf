@@ -62,7 +62,7 @@ class ProfilesCatalog(Generic_Service):
     def retrieveProfileParameter(self,platform_ID,parameter):
         profile=self.retrieveProfileInfo(platform_ID)
         try:
-            result= profile[parameter]
+            result= json.dumps(profile[parameter])
         except:
             result=False
         return result
