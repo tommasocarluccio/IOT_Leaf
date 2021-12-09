@@ -34,8 +34,35 @@ class AdaptorREST():
         else:
             raise cherrypy.HTTPError(501, "No operation!")
 
+    def PUT(self, *uri):
+        body=cherrypy.request.body.read()
+        json_body=json.loads(body.decode('utf-8'))
+        print(json_body)
+        try:
+            platform_ID=uri[0]
+            #room_ID=uri[1]
+            command=uri[1]
+            try:
+                clients_catalog=self.adaptor.retrieveService('clients_catalog')
+                clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+"/thingspeak").json()
+                channelID=clients_result["channelID"]
+                put_key=clients_result["put_key"]
+            except Exception as e:
+                print(e)
+                raise cherrypy.HTTPError(500,"Ops! Try later..")
 
+        except:
+            raise cherrypy.HTTPError(400,"Check your request and try again!")    
         
+        if command=='uploadLocation':
+            thingspeak_url="{}/channels/{}.json".format(self.adaptor.thingspeak_url,channelID)
+            headers={"content-type":"application/x-www-form-urlencoded"}
+            json_body['api_key']=put_key
+            result=requests.put(thingspeak_url, headers=headers, data=json_body)
+            print(result.json())
+        else:
+            raise cherrypy.HTTPError(501, "No operation!")
+   
 if __name__ == '__main__':
     conf=sys.argv[1]
     adaptorREST=AdaptorREST(conf)

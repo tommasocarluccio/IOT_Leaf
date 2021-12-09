@@ -63,6 +63,16 @@ class Registration_deployer(object):
                 return json.dumps(data)
             except:
                 raise cherrypy.HTTPError(403,"Login failed")
+        elif(len(uri))>0 and uri[0]=="platforms_list":
+            #username=str(cherrypy.request.login)
+            username=params['username']
+            try:
+                data=self.catalog.users.find_user(username).copy()
+                print(data)
+                #del data['password']
+                return json.dumps(data['platforms_list'])
+            except:
+                raise cherrypy.HTTPError(400,"Bad Request!")
         elif(len(uri))>0 and uri[0]=="checkAssociation":
             result=self.catalog.check_association(uri[1])
             return json.dumps({"result":result})
