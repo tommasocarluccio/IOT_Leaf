@@ -14,6 +14,7 @@ class warningControl():
 		    self.broker_IP=broker.get('IP_address')
 		    self.broker_port=broker.get('port')
 		    self.data_topic=broker['topic'].get('data')
+		    self.warning_topic=broker['topic'].get('warning')
 		    self.clientID=clientID
 		    self.subscriber=DataCollector(self.clientID,self.broker_IP,self.broker_port,self)
 		    self.subscriber.run()
@@ -37,20 +38,36 @@ class warningControl():
 			th_dict=response.json()
 			for meas in e:
 				parameter=meas['n']
-				warning_cmd=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
-				print(parameter)
-				pub=sendWarning(self.clientID+"_pub",self.broker_IP,self.broker_port,self)
-				pub.run()
-				pub.publish("{}{}/{}/LED".format(self.data_topic,platform_ID,room_ID),json.dumps(warning_msg))		
-				pub.end()
+				try:
+					warning_msg=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
+					if warning_msg is not False:
+						warning_msg["parameter"]=parameter
+						print(warning_msg)
+						pub=sendWarning(self.clientID+"_pub",self.broker_IP,self.broker_port,self)
+						pub.run()
+						pub.publish("{}{}".format(self.warning_topic,payload['bn']),json.dumps(warning_msg))
+						
+						pub.end()
+					else:
+						pub=sendWarning(self.clientID+"_pub",self.broker_IP,self.broker_port,self)
+						pub.run()
 
+						pub.publish("{}{}".format(self.warning_topic,payload['bn']),json.dumps({"command":"LOW"}))
+						
+						pub.end()
+
+
+				except Exception as e:
+					print(e)
+					pass
 
 	def compare_value(self,minimum,maximum,value):
-		if value<minimum or value>max:
-			return True
-			
-		else:
-			return False
+		msg=False
+		if value<minimum:
+			msg={"value":value,"threshold":minimum,"status": "LOW","command":"HIGH"}
+		elif value > maximum:
+			msg={"value":value,"threshold":maximum,"status": "HIGH","command":"HIGH"}
+		return msg
 
 
 class DataCollector():
