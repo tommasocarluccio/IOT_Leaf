@@ -19,7 +19,7 @@
       "humidity": {
         "min": 40,
         "max": 70
-      },
+      }
       "AQI":{
       	"min": 0,
         "max": 650  	

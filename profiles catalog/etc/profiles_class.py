@@ -10,7 +10,7 @@ class NewProfile():
         self.inactiveTime=inactiveTime
         self.location=location
         self.lastUpdate=lastUpdate
-        self.warning=False
+        self.warning=True
         self.room_cnt=0
         self.rooms=rooms
         

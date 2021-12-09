@@ -4,7 +4,7 @@
         {
             "platform_ID": "Leaf_002",
             "platform_name": "Home",
-            "warning": false,
+            "warning": true,
             "room_cnt": 13,
             "inactive_time": 3600,
             "location": null,
@@ -32,6 +32,10 @@
                             "humidity": {
                                 "min": 40,
                                 "max": 70
+                            },
+                            "AQI": {
+                                "min": 0,
+                                "max": 650
                             }
                         },
                         "room_name": "Kitchen"
@@ -39,7 +43,11 @@
                     "connection_timestamp": 1638639712.9719746
                 }
             ],
-            "last_update": "03/12/2021 16:59"
+            "last_update": "03/12/2021 16:59",
+            "coord": {
+                "lat": 12,
+                "long": 13
+            }
         }
     ]
 }
