@@ -48,6 +48,14 @@ class warningControl():
 						pub.publish("{}{}".format(self.warning_topic,payload['bn']),json.dumps(warning_msg))
 						
 						pub.end()
+					else:
+						pub=sendWarning(self.clientID+"_pub",self.broker_IP,self.broker_port,self)
+						pub.run()
+
+						pub.publish("{}{}".format(self.warning_topic,payload['bn']),json.dumps({"command":"LOW"}))
+						
+						pub.end()
+
 
 				except Exception as e:
 					print(e)
@@ -56,9 +64,9 @@ class warningControl():
 	def compare_value(self,minimum,maximum,value):
 		msg=False
 		if value<minimum:
-			msg={"value":value,"threshold":minimum,"status": "LOW"}
+			msg={"value":value,"threshold":minimum,"status": "LOW","command":"HIGH"}
 		elif value > maximum:
-			msg={"value":value,"threshold":maximum,"status": "HIGH"}
+			msg={"value":value,"threshold":maximum,"status": "HIGH","command":"HIGH"}
 		return msg
 
 
