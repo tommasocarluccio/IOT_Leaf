@@ -38,14 +38,14 @@ class Adaptor(Generic_Service):
 		    #resource_catalog=requests.get(self.adaptor.serviceCatalogAddress+'/resource_catalog').json()
 		    broker_IP=broker.get('IP_address')
 		    broker_port=broker.get('port')
-		    data:topic=broker['topic'].get('data')
+		    data_topic=broker['topic'].get('data')
 		    self.subscriber=DataCollector(clientID,broker_IP,broker_port,self)
 		    self.subscriber.run()
 		    """
 		    for platform in requests.get(resource_catalog['url']+"/platformsList").json():
 		        self.adaptor.subscriber.follow(platform+'/#')
 		    """
-		    self.subscriber.follow('data/#')
+		    self.subscriber.follow(data_topic+'#')
 		    return True
 		except Exception as e:
 		    print(e)
