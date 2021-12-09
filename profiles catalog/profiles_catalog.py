@@ -19,20 +19,23 @@ class catalogREST():
             if profile is not False:
                 if uriLen>1:
                     profileInfo= self.catalog.retrieveProfileParameter(uri[0],uri[1])
+                    output=profileInfo
                     if uriLen>2:
                         roomInfo=self.catalog.retrieveRoomInfo(profileInfo,uri[2])
                         if uriLen>3:
-                            if uri[3]=="preferences":
-                                try:
-                                    output=room_info["preferences"][uri[4]][uri[5]]
-                                    print(output)
-                                except:
-                                    output=False
+                            try:
+                                output=roomInfo[uri[3]]
+                                if uriLen>4:
+                                    try:
+                                        output=roomInfo["preferences"][uri[4]]
+                                    except Exception as e:
+                                        print(e)
+                                        output=False
+                            except:
+                                output=False
+                        else:
+                            output=roomInfo
 
-                    if profileInfo is not False:
-                        output=profileInfo
-                    else:
-                        output=profile.get(uri[1])
                 else:
                     output=profile
 
@@ -112,11 +115,8 @@ class catalogREST():
         elif command=='setRoomParameter':
             platform_ID=uri[1]
             room_ID=uri[2]
-            #parameter=json_body['parameter']
-            #parameter_value=json_body['parameter_value']
             newSetting=self.catalog.setRoomParameter(platform_ID,room_ID,json_body)
             if newSetting==True:
-                #output="Platform '{}' - Room '{}': {} is now {}".format(platform_ID,room_ID, parameter,parameter_value)
                 output="Platform '{}' - Room '{}': parameter updated".format(platform_ID,room_ID)
                 self.catalog.save()
                 flag=True
@@ -172,7 +172,7 @@ class catalogREST():
                 """
                 self.catalog.save()
                 output="Room '{}' removed from platform '{}' removed".format(room_ID,platform_ID)
-                #self.catalog.save()
+                self.catalog.save()
                 result={"result":True}
             else:
                 output="Can't remove room '{}' from platform '{}' ".format(room_ID,platform_ID)
