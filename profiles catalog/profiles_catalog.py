@@ -17,8 +17,8 @@ class catalogREST():
             profile= self.catalog.retrieveProfileInfo(uri[0])
             if profile is not False:
                 if uriLen>1:
-                    if uri[1]=="preferences":
-                        for room in profile["preferences"]:
+                    if uri[1]=="rooms":
+                        for room in profile["rooms"]:
                             try:
                                 devices=self.serverRequest(uri[0],room["room_ID"],"devices")
                                 self.catalog.createDevicesList(uri[0],room["room_ID"],devices)
