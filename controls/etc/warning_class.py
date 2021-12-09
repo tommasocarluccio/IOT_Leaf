@@ -10,20 +10,24 @@ class warningControl():
 		self.serviceCatalogAddress=self.conf_content['service_catalog']
 	def setup(self,clientID):
 		try:
-		    broker=requests.get(self.serviceCatalogAddress+'/broker').json()
-		    self.broker_IP=broker.get('IP_address')
-		    self.broker_port=broker.get('port')
-		    self.data_topic=broker['topic'].get('data')
-		    self.clientID=clientID
-		    self.subscriber=DataCollector(self.clientID,self.broker_IP,self.broker_port,self)
-		    self.subscriber.run()
-		    self.subscriber.follow(self.data_topic+'#')
-		    return True
+			broker=requests.get(self.serviceCatalogAddress+'/broker').json()
+			self.broker_IP=broker.get('IP_address')
+			self.broker_port=broker.get('port')
+			self.data_topic=broker['topic'].get('data')
+			self.clientID=clientID
+			self.subscriber=DataCollector(self.clientID,self.broker_IP,self.broker_port,self)
+			self.subscriber.run()
+			self.subscriber.follow(self.data_topic+'#')
+			self.pub=sendWarning(self.clientID+"_pub",self.broker_IP,self.broker_port,self)
+			self.pub.run()
+
+			return True
 		except Exception as e:
-		    print(e)
-		    print("MQTT Subscriber not created")
-		    self.subscriber.end()
-		    return False
+			print(e)
+			print("MQTT Subscriber not created")
+			self.subscriber.end()
+			self.pub.end()
+			return False
 
 	def notify(self,topic,msg):
 		payload=json.loads(msg)
@@ -38,13 +42,11 @@ class warningControl():
 			for meas in e:
 				parameter=meas['n']
 				#if parameter=='AQI':
-				print(parameter)
 				try:
-					warning_cmd=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
-					pub=sendWarning(self.clientID+"_pub",self.broker_IP,self.broker_port,self)
-					pub.run()
-					pub.publish("{}{}/{}/LED".format(self.data_topic,platform_ID,room_ID),json.dumps(warning_cmd))		
-					pub.end()
+					warning_cmd=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])	
+					self.pub.publish("{}{}/{}/LED".format(self.data_topic,platform_ID,room_ID),json.dumps(warning_cmd))
+					if warning_cmd:
+						print("Warning sent to {}-{}".format(platform_ID,room_ID))		
 				except Exception as e:
 					print(e)
 
