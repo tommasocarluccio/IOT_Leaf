@@ -37,16 +37,20 @@ class warningControl():
 			th_dict=response.json()
 			for meas in e:
 				parameter=meas['n']
-				warning_cmd=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
+				#if parameter=='AQI':
 				print(parameter)
-				pub=sendWarning(self.clientID+"_pub",self.broker_IP,self.broker_port,self)
-				pub.run()
-				pub.publish("{}{}/{}/LED".format(self.data_topic,platform_ID,room_ID),json.dumps(warning_msg))		
-				pub.end()
+				try:
+					warning_cmd=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
+					pub=sendWarning(self.clientID+"_pub",self.broker_IP,self.broker_port,self)
+					pub.run()
+					pub.publish("{}{}/{}/LED".format(self.data_topic,platform_ID,room_ID),json.dumps(warning_cmd))		
+					pub.end()
+				except Exception as e:
+					print(e)
 
 
 	def compare_value(self,minimum,maximum,value):
-		if value<minimum or value>max:
+		if value<minimum or value>maximum:
 			return True
 			
 		else:
