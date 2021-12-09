@@ -10,8 +10,12 @@
         "port": 1883,
         "service": "/broker",
         "topic": {
+<<<<<<< HEAD
             "data": "data/",
             "warning": "warning/"
+=======
+            "data": "Leaf_monitoring/"
+>>>>>>> 0e4bd9edbd0f6842cca1b0064b2de6802eef8abe
         }
     },
     "clients_service": {
