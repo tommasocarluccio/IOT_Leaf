@@ -47,8 +47,8 @@ class ReceiveCommandThread(threading.Thread):
     def run(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
-        GPIO.setup(sensor.pin,GPIO.OUT)
-        sensor.follow(self.sensor.topic)
+        GPIO.setup(self.sensor.pin,GPIO.OUT)
+        self.sensor.follow(self.sensor.topic)
         while True:
             time.sleep(1)
         self.sensor.end()
@@ -123,6 +123,7 @@ if __name__=='__main__':
     thread1=pingThread(1,platform_ID,room_ID,myLED._data,serviceCatalogAddress)
     thread1.start()
     time.sleep(1)
-    thread2=ReceiveCommandThread(2,myLED)
-    thread2.start()
+    if thread1.connection_flag:
+        thread2=ReceiveCommandThread(2,myLED)
+        thread2.start()
 
