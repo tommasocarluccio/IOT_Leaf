@@ -69,6 +69,7 @@ class LED():
         self._data={"bn":self.clientID,"endpoints":"MQTT","e":e}
     
     def setup(self):
+        print("Connecting...")
         self.create_info()
         self.client=MyMQTT(self.clientID,self.broker_IP,self.broker_port,self)
     def run(self):
@@ -91,21 +92,25 @@ class LED():
             
 if __name__=='__main__':
     filename=sys.argv[1]
-    pin=sys.argv[2]
-    parameter=sys.argv[3]
+    platform_ID=sys.argv[2]
+    room_ID=sys.argv[3]
+    pin=sys.argv[4]
     mqtt_flag=False
-    roomContent=json.load(open(filename,"r"))
-    room_ID=roomContent['room_info']['room_ID']
-    platform_ID=roomContent['platform_ID']
-    serviceCatalogAddress=roomContent['service_catalog']
-        
+    
+    file_content=json.load(open(filename,"r"))
+    serviceCatalogAddress=file_content['service_catalog']
+    clientID=file_content['clientID']
+    parameter=file_content['parameter']
     while not mqtt_flag:
         try:
             broker=requests.get(serviceCatalogAddress+'/broker').json()
             broker_IP=broker.get('IP_address')
             broker_port=broker.get('port')
             data_topic=broker['topic'].get('data')
-            myLED=LED("LED",broker_IP,broker_port,parameter,pin)
+            base_topic="{}{}/{}".format(data_topic,platform_ID,room_ID)
+            myLED=LED(clientID,base_topic,broker_IP,broker_port,parameter,pin)
+            myLED.setup()
+            time.sleep(1)
             myLED.run()
             mqtt_flag=True
         except Exception as e:
@@ -115,7 +120,7 @@ if __name__=='__main__':
             
     time.sleep(1)
     myLED.create_info()
-    thread1=pingThread(1,platform_ID,room_ID,sensor._data,serviceCatalogAddress)
+    thread1=pingThread(1,platform_ID,room_ID,myLED._data,serviceCatalogAddress)
     thread1.start()
     time.sleep(1)
     thread2=ReceiveCommandThread(2,myLED)

@@ -41,14 +41,23 @@ class warningControl():
 			th_dict=response.json()
 			for meas in e:
 				parameter=meas['n']
-				#if parameter=='AQI':
 				try:
-					warning_cmd=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])	
-					self.pub.publish("{}{}/{}/LED".format(self.data_topic,platform_ID,room_ID),json.dumps(warning_cmd))
+					warning_cmd=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
+					topic=self.retrieve_topic(platform_ID,room_ID,parameter+"_warning")	
+					if topic is not False:
+						self.pub.publish(topic,json.dumps(warning_cmd))
 					if warning_cmd:
 						print("Warning sent to {}-{}".format(platform_ID,room_ID))		
 				except Exception as e:
 					print(e)
+
+	def retrieve_topic(self,platform_ID,room_ID,parameter):
+		resource_catalog=requests.get(self.serviceCatalogAddress+'/resource_catalog').json()['url']
+		response=requests.get("{}/{}/{}?parameter={}".format(resource_catalog,platform_ID,room_ID,parameter))
+		if response.status_code==200:
+			return response.json()['topic']
+		else: 
+			return False
 
 
 	def compare_value(self,minimum,maximum,value):
