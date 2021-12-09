@@ -17,18 +17,10 @@ class catalogREST():
             profile= self.catalog.retrieveProfileInfo(uri[0])
             if profile is not False:
                 if uriLen>1:
-                    if uri[1]=="rooms":
-                        for room in profile["rooms"]:
-                            try:
-                                devices=self.serverRequest(uri[0],room["room_ID"],"devices")
-                                self.catalog.createDevicesList(uri[0],room["room_ID"],devices)
-                            except:
-                                pass
                     profileInfo= self.catalog.retrieveProfileParameter(uri[0],uri[1])
-                    if uriLen==3:
+                    if uriLen>2:
                         try:
-                            pos=self.catalog.findRoomPos(profileInfo,uri[2])
-                            profileInfo=profileInfo[pos]
+                            profileInfo=self.catalog.retrieveRoomInfo(profileInfo,uri[2])
                         except:
                             pass
                     if profileInfo is not False:
