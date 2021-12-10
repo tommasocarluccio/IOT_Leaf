@@ -31,6 +31,11 @@ class AdaptorREST():
             result=requests.get(thingspeak_url).json()
             print(result)
             return json.dumps(result)
+        elif command=='station':
+            thingspeak_url="{}/channels/{}/feeds.json?metadata=true".format(self.adaptor.thingspeak_url,channelID)
+            result=requests.get(thingspeak_url).json()
+            print(result)
+            return json.dumps(result['channel']['metadata'])
         else:
             raise cherrypy.HTTPError(501, "No operation!")
 

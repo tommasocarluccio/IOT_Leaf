@@ -74,11 +74,11 @@ class ResourceService(Generic_Service):
             return parameter
         except:
             for device in room['devices']:
-                parameter=self.retrieveParameterInfo(platform_ID,room_ID,device['bn'],parameter_name)
+                parameter=self.retrieveParameterInfo(platform_ID,room_ID,device['deviceID'],parameter_name)
                 if parameter is not False:
                     notFound=0
                     new_parameter=parameter.copy()
-                    new_parameter['bn']=device['bn']
+                    new_parameter['deviceID']=device['deviceID']
                     return new_parameter
             if notFound==1:
                 return False
