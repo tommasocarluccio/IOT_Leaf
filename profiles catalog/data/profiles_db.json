@@ -3,7 +3,7 @@
     "profiles": [
         {
             "platform_ID": "Leaf_002",
-            "platform_name": "Home",
+            "platform_name": "Mansion",
             "warning": true,
             "room_cnt": 13,
             "inactive_time": 3600,
@@ -45,8 +45,8 @@
             ],
             "last_update": "03/12/2021 16:59",
             "coord": {
-                "lat": 45.104332,
-                "long": 7.6964231
+                "lat": 45.470501,
+                "long": 9.19746075
             }
         }
     ]
