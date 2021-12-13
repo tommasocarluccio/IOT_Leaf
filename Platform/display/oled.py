@@ -22,6 +22,39 @@ DC = 23
 SPI_PORT = 0
 SPI_DEVICE = 0
 
+class pingThread(threading.Thread):
+    def __init__(self,threadID,platform_ID,room_ID,data,catalog_url):
+        threading.Thread.__init__(self)
+        self.threadID=threadID
+        self.platform_ID=platform_ID
+        self.room_ID=room_ID
+        self.data=data
+        self.connection_flag=False
+        self.serviceCatalogAddress=catalog_url
+        
+    def run(self):
+        while True:
+            print("Pinging the Catalog...")
+            while self.pingCatalog() is False:
+                print("Failed. New attempt...")
+                time.sleep(10)
+            print("Device has been registered/updated on Catalog")
+            self.connection_flag=True
+            time.sleep(60)
+    
+    
+    def pingCatalog(self):
+        try:
+            catalog=requests.get(self.serviceCatalogAddress+'/resource_catalog').json()['url']
+            r=requests.put("{}/insertDevice/{}/{}".format(catalog,self.platform_ID,self.room_ID),data=json.dumps(self.data))
+            if r.status_code==200:
+                return True
+            else:
+                return False
+        except Exception as e:
+            #print(e)
+            return False
+        
 class OLED():
     def __init__(self,clientID,broker_IP,broker_port):
         self.broker_IP=broker_IP
@@ -31,6 +64,14 @@ class OLED():
         self.aqi=0
         self.AQI="NONE"
         self.clientID=clientID
+    def create_info(self):
+        e=[]
+        resource={"n":parameter+"_warning","u":None,"topic":self.topic}
+        e.append(resource)
+        self._data={"bn":self.clientID,"endpoints":"MQTT","e":e}
+    def setup(self):
+        print("Connecting...")
+        self.create_info()
         self.client=MyMQTT(self.clientID,self.broker_IP,self.broker_port,self)
     def run(self):
         self.client.start()
@@ -131,12 +172,13 @@ class OLED():
         
 if __name__=='__main__':
     filename=sys.argv[1]
+    platform_ID=sys.argv[2]
+    room_ID=sys.argv[3]
     mqtt_flag=False
+    file_content=json.load(open(filename,"r"))
+    serviceCatalogAddress=file_content['service_catalog']
     
-    roomContent=json.load(open("../room/conf/room_settings.json","r"))
-    room_ID=roomContent['room_info']['room_ID']
-    platform_ID=roomContent['platform_ID']
-    serviceCatalogAddress=roomContent['service_catalog']
+    clientID=file_content['clientID']
         
     while not mqtt_flag:
         try:
@@ -144,7 +186,7 @@ if __name__=='__main__':
             broker_IP=broker.get('IP_address')
             broker_port=broker.get('port')
             data_topic=broker['topic'].get('data')
-            myOLED=OLED("DISPLAY",broker_IP,broker_port)
+            myOLED=OLED(CLIENTid,broker_IP,broker_port)
             myOLED.initializeDisplay()
             myOLED.run()
             mqtt_flag=True
@@ -153,6 +195,10 @@ if __name__=='__main__':
             time.sleep(30)
             
     time.sleep(1)
+    myLED.create_info()
+    thread1=pingThread(1,platform_ID,room_ID,myLED._data,serviceCatalogAddress)
+    thread1.start()
+
     myOLED.follow(data_topic+platform_ID+"/"+room_ID+"/#")
     while True:
         time.sleep(3)

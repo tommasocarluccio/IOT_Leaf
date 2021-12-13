@@ -52,8 +52,8 @@ class DevicesCatalog():
     def removeInactive(self,timeInactive):
         output=False
         for device in self.devices:
-            device_ID=device['bn']
-            if self.timestamp - device['timestamp']>timeInactive:
+            device_ID=device['deviceID']
+            if time.time() - device['timestamp']>timeInactive:
                 self.devices.remove(device)
                 #self.devices['last_update']=self.actualTime
                 print(f'Device {device_ID} removed')
@@ -63,7 +63,7 @@ class DevicesCatalog():
     def findPos(self,device_ID):
         notFound=1
         for i in range(len(self.devices)):
-            if self.devices[i]['bn']==device_ID:
+            if self.devices[i]['deviceID']==device_ID:
                 notFound=0
                 return i
         if notFound==1:

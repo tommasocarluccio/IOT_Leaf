@@ -152,7 +152,7 @@ class ResourceService(Generic_Service):
             return False
 
     def removeInactive(self,inactiveTime):
-        for platform in self.db_content['platforms']:
+        for platform in self.db_content['platforms_list']:
             for room in platform['rooms']:
                 devices=room['devices']
                 devicesCatalog=DevicesCatalog(devices)

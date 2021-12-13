@@ -147,11 +147,13 @@ class InactiveThread(threading.Thread):
     def __init__(self, ThreadID,catalog):
         threading.Thread.__init__(self)
         self.ThreadID = ThreadID
+        self.catalog=catalog
 
     def run(self):
         while True:
-            catalog.catalog.removeInactive(catalog.delta)
-            time.sleep(catalog.delta)
+            self.catalog.removeInactive(self.catalog.delta)
+            self.catalog.save()
+            time.sleep(self.catalog.delta)
 
 if __name__ == '__main__':
     conf=sys.argv[1]
@@ -171,12 +173,3 @@ if __name__ == '__main__':
     cherrypy.config.update({'server.socket_port': server.catalog.servicePort})
     cherrypy.engine.start()
     cherrypy.engine.block()
-<<<<<<< HEAD
-    while True:
-        print("ciao")
-        server.catalog.removeInactive(server.delta)
-        time.sleep(server.delta)
-
-=======
-    
->>>>>>> 7ecb1785903411fc701857a04bc217d693c36ee8
