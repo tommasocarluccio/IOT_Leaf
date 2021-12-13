@@ -109,7 +109,7 @@ class Registration_deployer(object):
                 self.catalog.platforms.save()
                 print("{} - {}".format(json_body['platformID'],json_body['roomID']))
                 print(output)
-                return json.dumps({"result":output})
+                return json.dumps({'result':output})
             else:
                 raise cherrypy.HTTPError(404, "Platform not found!")
 
