@@ -107,7 +107,7 @@ class Registration_deployer(object):
             output=self.catalog.platforms.associate_room_thingspeak(json_body['platformID'],json_body['roomID'])
             if output is not False:
                 self.catalog.platforms.save()
-                print("{} - {}".format(json_body['platformID'],json_body['room_ID']))
+                print("{} - {}".format(json_body['platformID'],json_body['roomID']))
                 print(output)
                 return {"result":output}
             else:
