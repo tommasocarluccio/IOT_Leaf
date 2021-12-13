@@ -99,7 +99,14 @@ class Registration_deployer(object):
         else:
             raise cherrypy.HTTPError(501, "No operation!")
             
-    
+    def PUT(self,*uri):
+        command=str(uri[0])
+        if command=="newRoom":
+            
+
+        else:
+            raise cherrypy.HTTPError(501, "No operation!")
+
     def DELETE(self,*uri):
         command=str(uri[0])
         if command=='removePlatform':

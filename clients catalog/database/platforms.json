@@ -21,6 +21,20 @@
             "field1": "AQI",
             "field3": "temperature"
           }
+        },
+        {
+          "room": null,
+          "channelID":"1021300",
+          "write_key": "58EQ7229TU9O5RXP",
+          "read_key":"D27OY6P75NOTG7UA",
+          "put_key":"B6PLW4MR0Z7AEJ2C",
+
+          "fields": {
+            "field5": "humidity",
+            "field1": "AQI",
+            "field3": "temperature"
+          }
+
         }
       ]
       }
