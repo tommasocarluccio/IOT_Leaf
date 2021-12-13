@@ -69,11 +69,17 @@ class catalogREST():
         elif command=='insertRoom':
             platform_ID=uri[1]
             room_name=json_body['room_name']
-            newRoomFlag=self.catalog.insertRoom(platform_ID,room_name)
-            if newRoomFlag==True:
+            newRoom=self.catalog.insertRoom(platform_ID,room_name)
+            if newRoom is not False:
                 output="Room '{}' has been added to platform '{}'".format(room_name,platform_ID)
-                saveFlag=True
-                ack=newRoomFlag
+                clients_service=self.catalog.retrieveService('clients_catalog')
+                msg={"platformID":platform_ID,"roomID":newRoom.get('room_ID')}
+                thingspeak_association=requests.put(clients_service+"/newRoom",json=msg)
+                if thingspeak_association.status_code==200:
+                    saveFlag=True
+                    ack=True
+                else:
+                    self.catalog.removeRoom(platform_ID,room_ID)
             else:
                 output="Room '{}' cannot be added to platform '{}'".format(room_name,platform_ID)
                 
