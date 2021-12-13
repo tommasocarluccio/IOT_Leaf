@@ -5,7 +5,7 @@
             "platform_ID": "Leaf_002",
             "platform_name": "Mansion",
             "warning": true,
-            "room_cnt": 13,
+            "room_cnt": 19,
             "inactive_time": 3600,
             "location": null,
             "rooms": [
@@ -41,6 +41,204 @@
                         "room_name": "Kitchen"
                     },
                     "connection_timestamp": 1638639712.9719746
+                },
+                {
+                    "room_ID": "room_14",
+                    "connection_flag": false,
+                    "preferences": {
+                        "inactive_time": 3600,
+                        "optimal": {
+                            "temperature": {
+                                "min": 20,
+                                "max": 22
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 60
+                            }
+                        },
+                        "thresholds": {
+                            "temperature": {
+                                "min": 16,
+                                "max": 25
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 70
+                            },
+                            "AQI": {
+                                "min": 0,
+                                "max": 650
+                            }
+                        },
+                        "room_name": "prova1"
+                    },
+                    "connection_timestamp": 1639391197.4151146
+                },
+                {
+                    "room_ID": "room_15",
+                    "connection_flag": false,
+                    "preferences": {
+                        "inactive_time": 3600,
+                        "optimal": {
+                            "temperature": {
+                                "min": 20,
+                                "max": 22
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 60
+                            }
+                        },
+                        "thresholds": {
+                            "temperature": {
+                                "min": 16,
+                                "max": 25
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 70
+                            },
+                            "AQI": {
+                                "min": 0,
+                                "max": 650
+                            }
+                        },
+                        "room_name": "prova2"
+                    },
+                    "connection_timestamp": 1639391722.1369765
+                },
+                {
+                    "room_ID": "room_16",
+                    "connection_flag": false,
+                    "preferences": {
+                        "inactive_time": 3600,
+                        "optimal": {
+                            "temperature": {
+                                "min": 20,
+                                "max": 22
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 60
+                            }
+                        },
+                        "thresholds": {
+                            "temperature": {
+                                "min": 16,
+                                "max": 25
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 70
+                            },
+                            "AQI": {
+                                "min": 0,
+                                "max": 650
+                            }
+                        },
+                        "room_name": "prova4"
+                    },
+                    "connection_timestamp": 1639391777.7379038
+                },
+                {
+                    "room_ID": "room_17",
+                    "connection_flag": false,
+                    "preferences": {
+                        "inactive_time": 3600,
+                        "optimal": {
+                            "temperature": {
+                                "min": 20,
+                                "max": 22
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 60
+                            }
+                        },
+                        "thresholds": {
+                            "temperature": {
+                                "min": 16,
+                                "max": 25
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 70
+                            },
+                            "AQI": {
+                                "min": 0,
+                                "max": 650
+                            }
+                        },
+                        "room_name": "pr3"
+                    },
+                    "connection_timestamp": 1639391899.1862717
+                },
+                {
+                    "room_ID": "room_18",
+                    "connection_flag": false,
+                    "preferences": {
+                        "inactive_time": 3600,
+                        "optimal": {
+                            "temperature": {
+                                "min": 20,
+                                "max": 22
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 60
+                            }
+                        },
+                        "thresholds": {
+                            "temperature": {
+                                "min": 16,
+                                "max": 25
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 70
+                            },
+                            "AQI": {
+                                "min": 0,
+                                "max": 650
+                            }
+                        },
+                        "room_name": "pr3"
+                    },
+                    "connection_timestamp": 1639391901.5953236
+                },
+                {
+                    "room_ID": "room_19",
+                    "connection_flag": false,
+                    "preferences": {
+                        "inactive_time": 3600,
+                        "optimal": {
+                            "temperature": {
+                                "min": 20,
+                                "max": 22
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 60
+                            }
+                        },
+                        "thresholds": {
+                            "temperature": {
+                                "min": 16,
+                                "max": 25
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 70
+                            },
+                            "AQI": {
+                                "min": 0,
+                                "max": 650
+                            }
+                        },
+                        "room_name": "pr3"
+                    },
+                    "connection_timestamp": 1639391906.6876824
                 }
             ],
             "last_update": "03/12/2021 16:59",

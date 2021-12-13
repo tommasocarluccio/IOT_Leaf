@@ -88,11 +88,11 @@ class ProfilesCatalog(Generic_Service):
         if profile is not False:
             room_cnt=self.retrieveProfileParameter(platform_ID,'room_cnt')+1
             room_ID="room_"+str(room_cnt)
-            new_room=NewRoom(room_ID,room_name,self.default_profile)
             for room in profile['rooms']:
                 if room['preferences']['room_name']==room_name:
                     roomNotFound=0
                     break
+            new_room=NewRoom(room_ID,room_name,self.default_profile)
             if roomNotFound==1:
                 profile['rooms'].append(new_room.jsonify())
                 self.setParameter(platform_ID,'room_cnt',room_cnt)
