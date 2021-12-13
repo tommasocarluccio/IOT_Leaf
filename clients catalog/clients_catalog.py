@@ -76,6 +76,14 @@ class Registration_deployer(object):
             result=self.catalog.check_association(uri[1])
             return json.dumps({"result":result})
 
+        elif(len(uri))>0 and uri[0]=="tokens":
+            result=self.catalog.platforms.content['tokens']
+            return json.dumps(result)
+
+        elif(len(uri))>0 and uri[0]=="temp_tokens":
+            result=json.load(open('database/temp_token.json',"r"))
+            return json.dumps(result)
+
         elif(len(uri))==3 and uri[0]=="info":
             platform=self.catalog.platforms.find_platform(uri[1])
             if platform is not False:

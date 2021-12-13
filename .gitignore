@@ -132,3 +132,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 *.json
+
+# .gitignore 
+temp_token.json
