@@ -53,6 +53,26 @@
                             "date": "09/12/2021 21:17"
                         }
                     ]
+                },
+                {
+                    "room_ID": "room_23",
+                    "room_name": "Bedroom",
+                    "devices": []
+                },
+                {
+                    "room_ID": "room_25",
+                    "room_name": "Bathhroom",
+                    "devices": []
+                },
+                {
+                    "room_ID": "room_26",
+                    "room_name": "Cantina",
+                    "devices": []
+                },
+                {
+                    "room_ID": "room_22",
+                    "room_name": "Bathroom",
+                    "devices": []
                 }
             ],
             "creation_date": "04/12/2021 18:30"

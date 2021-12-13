@@ -3,14 +3,48 @@
     "profiles": [
         {
             "platform_ID": "Leaf_002",
-            "platform_name": "Mansion",
+            "platform_name": "Home",
             "warning": true,
-            "room_cnt": 18,
+            "room_cnt": 22,
             "inactive_time": 3600,
             "location": null,
             "rooms": [
                 {
                     "room_ID": "room_13",
+                    "connection_flag": true,
+                    "preferences": {
+                        "inactive_time": 3600,
+                        "optimal": {
+                            "temperature": {
+                                "min": 20,
+                                "max": 22
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 60
+                            }
+                        },
+                        "thresholds": {
+                            "temperature": {
+                                "min": "19",
+                                "max": "24"
+                            },
+                            "humidity": {
+                                "min": "40",
+                                "max": "60"
+                            },
+                            "AQI": {
+                                "min": 0,
+                                "max": 650
+                            }
+                        },
+                        "room_name": "Kitchen",
+                        "parameter": "room_name"
+                    },
+                    "connection_timestamp": 1638639712.9719746
+                },
+                {
+                    "room_ID": "room_23",
                     "connection_flag": true,
                     "preferences": {
                         "inactive_time": 3600,
@@ -38,13 +72,13 @@
                                 "max": 650
                             }
                         },
-                        "room_name": "Kitchen"
+                        "room_name": "Bedroom"
                     },
                     "connection_timestamp": 1638639712.9719746
                 },
                 {
-                    "room_ID": "room_14",
-                    "connection_flag": false,
+                    "room_ID": "room_22",
+                    "connection_flag": true,
                     "preferences": {
                         "inactive_time": 3600,
                         "optimal": {
@@ -71,147 +105,15 @@
                                 "max": 650
                             }
                         },
-                        "room_name": "p2"
+                        "room_name": "Bathroom"
                     },
-                    "connection_timestamp": 1639393334.3237262
-                },
-                {
-                    "room_ID": "room_15",
-                    "connection_flag": false,
-                    "preferences": {
-                        "inactive_time": 3600,
-                        "optimal": {
-                            "temperature": {
-                                "min": 20,
-                                "max": 22
-                            },
-                            "humidity": {
-                                "min": 40,
-                                "max": 60
-                            }
-                        },
-                        "thresholds": {
-                            "temperature": {
-                                "min": 16,
-                                "max": 25
-                            },
-                            "humidity": {
-                                "min": 40,
-                                "max": 70
-                            },
-                            "AQI": {
-                                "min": 0,
-                                "max": 650
-                            }
-                        },
-                        "room_name": "p3"
-                    },
-                    "connection_timestamp": 1639393381.7031996
-                },
-                {
-                    "room_ID": "room_16",
-                    "connection_flag": false,
-                    "preferences": {
-                        "inactive_time": 3600,
-                        "optimal": {
-                            "temperature": {
-                                "min": 20,
-                                "max": 22
-                            },
-                            "humidity": {
-                                "min": 40,
-                                "max": 60
-                            }
-                        },
-                        "thresholds": {
-                            "temperature": {
-                                "min": 16,
-                                "max": 25
-                            },
-                            "humidity": {
-                                "min": 40,
-                                "max": 70
-                            },
-                            "AQI": {
-                                "min": 0,
-                                "max": 650
-                            }
-                        },
-                        "room_name": "p11111"
-                    },
-                    "connection_timestamp": 1639393444.1991227
-                },
-                {
-                    "room_ID": "room_17",
-                    "connection_flag": false,
-                    "preferences": {
-                        "inactive_time": 3600,
-                        "optimal": {
-                            "temperature": {
-                                "min": 20,
-                                "max": 22
-                            },
-                            "humidity": {
-                                "min": 40,
-                                "max": 60
-                            }
-                        },
-                        "thresholds": {
-                            "temperature": {
-                                "min": 16,
-                                "max": 25
-                            },
-                            "humidity": {
-                                "min": 40,
-                                "max": 70
-                            },
-                            "AQI": {
-                                "min": 0,
-                                "max": 650
-                            }
-                        },
-                        "room_name": "p11121"
-                    },
-                    "connection_timestamp": 1639393523.9690146
-                },
-                {
-                    "room_ID": "room_18",
-                    "connection_flag": false,
-                    "preferences": {
-                        "inactive_time": 3600,
-                        "optimal": {
-                            "temperature": {
-                                "min": 20,
-                                "max": 22
-                            },
-                            "humidity": {
-                                "min": 40,
-                                "max": 60
-                            }
-                        },
-                        "thresholds": {
-                            "temperature": {
-                                "min": 16,
-                                "max": 25
-                            },
-                            "humidity": {
-                                "min": 40,
-                                "max": 70
-                            },
-                            "AQI": {
-                                "min": 0,
-                                "max": 650
-                            }
-                        },
-                        "room_name": "p11122"
-                    },
-                    "connection_timestamp": 1639393530.6339924
+                    "connection_timestamp": 1639396959.8305438
                 }
             ],
             "last_update": "03/12/2021 16:59",
             "coord": {
-                "lat": 45.470501,
-                "long": 9.19746075
+                "lat": 45.104332,
+                "long": 7.6964231
             }
         }
     ]
