@@ -5,7 +5,7 @@
             "platform_ID": "Leaf_002",
             "platform_name": "Home",
             "warning": true,
-            "room_cnt": 13,
+            "room_cnt": 15,
             "location": null,
             "rooms": [
                 {
@@ -40,6 +40,70 @@
                         "parameter": "room_name"
                     },
                     "connection_timestamp": 1638639712.9719746
+                },
+                {
+                    "room_ID": "room_14",
+                    "connection_flag": false,
+                    "preferences": {
+                        "optimal": {
+                            "temperature": {
+                                "min": 20,
+                                "max": 22
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 60
+                            }
+                        },
+                        "thresholds": {
+                            "temperature": {
+                                "min": 16,
+                                "max": 25
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 70
+                            },
+                            "AQI": {
+                                "min": 0,
+                                "max": 650
+                            }
+                        },
+                        "room_name": "prova_thing"
+                    },
+                    "connection_timestamp": 1639418862.7674124
+                },
+                {
+                    "room_ID": "room_15",
+                    "connection_flag": false,
+                    "preferences": {
+                        "optimal": {
+                            "temperature": {
+                                "min": 20,
+                                "max": 22
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 60
+                            }
+                        },
+                        "thresholds": {
+                            "temperature": {
+                                "min": 16,
+                                "max": 25
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 70
+                            },
+                            "AQI": {
+                                "min": 0,
+                                "max": 650
+                            }
+                        },
+                        "room_name": "prova_thing2"
+                    },
+                    "connection_timestamp": 1639419034.0770307
                 }
             ],
             "last_update": "03/12/2021 16:59",

@@ -1,7 +1,7 @@
 {
     "description": "Welcome to the Leaf Service Catalog",
     "service_catalog": {
-        "IP_address": "172.29.4.158",
+        "IP_address": "192.168.1.130",
         "port": 8080,
         "service": "/service_catalog"
     },
@@ -30,16 +30,16 @@
         "service": "/resource_catalog",
         "url": "http://192.168.1.130:8083/resource_catalog"
     },
-    "profiles_catalog": {
-        "IP_address": "172.29.4.158",
-        "port": 8081,
-        "service": "/profiles_catalog",
-        "url": "http://172.29.4.158:8081/profiles_catalog"
-    },
     "clients_catalog": {
-        "IP_address": "172.29.4.158",
+        "IP_address": "192.168.1.130",
         "port": 9090,
         "service": "/clients_catalog",
-        "url": "http://172.29.4.158:9090/clients_catalog"
+        "url": "http://192.168.1.130:9090/clients_catalog"
+    },
+    "profiles_catalog": {
+        "IP_address": "192.168.1.130",
+        "port": 8081,
+        "service": "/profiles_catalog",
+        "url": "http://192.168.1.130:8081/profiles_catalog"
     }
 }
