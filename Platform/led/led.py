@@ -64,7 +64,7 @@ class LED():
     
     def create_info(self):
         e=[]
-        resource={"n":parameter+"_warning","u":None,"topic":self.topic}
+        resource={"n":self.parameter+"_warning","u":None,"topic":self.topic}
         e.append(resource)
         self._data={"bn":self.clientID,"endpoints":"MQTT","e":e}
     

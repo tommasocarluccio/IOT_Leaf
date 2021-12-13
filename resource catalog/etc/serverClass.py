@@ -19,6 +19,7 @@ class NewPlatform():
 class ResourceService(Generic_Service):
     def __init__(self,conf_filename,db_filename):
         Generic_Service.__init__(self,conf_filename,db_filename)
+        self.delta=self.conf_content.get('delta')
                 
     def retrievePlatformsList(self):
         platformsList=[]
@@ -150,9 +151,12 @@ class ResourceService(Generic_Service):
         else:
             return False
 
-    def removeInactive(self,devices,inactiveTime):
-        devicesCatalog=DevicesCatalog(devices)
-        return devicesCatalog.removeInactive(inactiveTime)
+    def removeInactive(self,inactiveTime):
+        for platform in self.db_content['platforms_list']:
+            for room in platform['rooms']:
+                devices=room['devices']
+                devicesCatalog=DevicesCatalog(devices)
+            return devicesCatalog.removeInactive(inactiveTime)
 
     def dateUpdate(self,element):
         now=datetime.now()

@@ -24,12 +24,6 @@
         "service": "/resource_catalog",
         "url": "http://172.29.4.158:8083/resource_catalog"
     },
-    "clients_catalog": {
-        "IP_address": "172.29.4.158",
-        "port": 9090,
-        "service": "/clients_catalog",
-        "url": "http://172.29.4.158:9090/clients_catalog"
-    },
     "database_adaptor": {
         "IP_address": "172.29.4.158",
         "port": 8085,
@@ -41,5 +35,11 @@
         "port": 8081,
         "service": "/profiles_catalog",
         "url": "http://172.29.4.158:8081/profiles_catalog"
+    },
+    "clients_catalog": {
+        "IP_address": "172.29.4.158",
+        "port": 9090,
+        "service": "/clients_catalog",
+        "url": "http://172.29.4.158:9090/clients_catalog"
     }
 }

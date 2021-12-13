@@ -4,6 +4,7 @@ import requests
 import time
 import datetime
 import sys
+import threading
 from etc.serverClass import *
 
 class ResourcesServerREST(object):
@@ -141,11 +142,26 @@ class ResourcesServerREST(object):
         print(output)
         return{"result":saveFlag}
 
+class InactiveThread(threading.Thread):
+
+    def __init__(self, ThreadID,catalog):
+        threading.Thread.__init__(self)
+        self.ThreadID = ThreadID
+        self.catalog=catalog
+
+    def run(self):
+        while True:
+            self.catalog.removeInactive(self.catalog.delta)
+            self.catalog.save()
+            time.sleep(self.catalog.delta)
 
 if __name__ == '__main__':
     conf=sys.argv[1]
     db=sys.argv[2]
     server=ResourcesServerREST(conf,db)
+    thread1=InactiveThread(1,server.catalog)
+    thread1.start()
+    time.sleep(1)
     conf = {
         '/': {
             'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
@@ -157,4 +173,3 @@ if __name__ == '__main__':
     cherrypy.config.update({'server.socket_port': server.catalog.servicePort})
     cherrypy.engine.start()
     cherrypy.engine.block()
-
