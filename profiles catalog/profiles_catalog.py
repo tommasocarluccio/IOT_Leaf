@@ -74,8 +74,9 @@ class catalogREST():
                 output="Room '{}' has been added to platform '{}'".format(room_name,platform_ID)
                 clients_service=self.catalog.retrieveService('clients_catalog')
                 msg={"platformID":platform_ID,"roomID":newRoom.room_info['room_ID']}
-                thingspeak_association=requests.put(clients_service+"/newRoom",json=msg)
+                thingspeak_association=requests.put(clients_service['url']+"/newRoom",json=msg)
                 if thingspeak_association.status_code==200:
+                    output=output+"\n"+thingspeak_association.json()['result']
                     saveFlag=True
                     ack=True
                 else:
