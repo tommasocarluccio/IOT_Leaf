@@ -147,6 +147,34 @@ class Adaptor(Generic_Service):
 				
 		except Exception as e:
 			print(e)
+
+	def get_average_values(self, platform_ID, room_ID, data):
+		clients_catalog=self.retrieveService('clients_catalog')
+		client_results=requests.get(clients_catalog['url']+"/info/"+platform_ID+"/thingspeak").json()
+		
+		room_results=next((item for item in client_results if item["room"] == room_ID), False)
+		if room_results:
+			print("Room results:", room_results)
+			channelID=room_results['channelID']
+			thingspeak_field=list(room_results['fields'].keys())[list(room_results['fields'].values()).index(data['parameter'])]
+			print(thingspeak_field)
+		thingspeak_url="{}/channels/{}/feeds.json?average=60".format(self.thingspeak_url, channelID)
+		average_data=requests.get(thingspeak_url).json()
+		return float(average_data['feeds'][0][thingspeak_field])
+	
+	def check_thresholds(self, platform_ID, room_ID, data, average):
+		profiles_catalog=self.retrieveService('profiles_catalog')
+		profile_results=requests.get(profiles_catalog['url']+'/'+platform_ID+'/rooms/'+room_ID).json()
+		print(profile_results)
+		min_th=float(profile_results['preferences']['thresholds'][data['parameter']]['min'])
+		max_th=float(profile_results['preferences']['thresholds'][data['parameter']]['max'])
+		print("average", average)
+		if data['value']<min_th and average<min_th:
+			return "low"
+		elif data['value']>max_th and average>max_th:
+			return "high"
+		else:
+			return False
    
 
 

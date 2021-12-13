@@ -47,9 +47,7 @@ class Registration_deployer(object):
                     
                 self.catalog.users.save()
                 self.catalog.platforms.save()
-                    
-                #self.checkpassword = cherrypy.lib.auth_basic.checkpassword_dict(self.catalog.userpassdict)
-                #self.flagNew=True
+
                 print("User '{}' correctly registered with platform '{}'\n".format(params['userID'],params['platformID']))
                 return open("etc/correct_reg.html")
         elif(len(uri))>0 and uri[0]=="login":
@@ -73,9 +71,11 @@ class Registration_deployer(object):
                 return json.dumps(data['platforms_list'])
             except:
                 raise cherrypy.HTTPError(400,"Bad Request!")
+
         elif(len(uri))>0 and uri[0]=="checkAssociation":
             result=self.catalog.check_association(uri[1])
             return json.dumps({"result":result})
+
         elif(len(uri))==3 and uri[0]=="info":
             platform=self.catalog.platforms.find_platform(uri[1])
             if platform is not False:
@@ -137,68 +137,10 @@ if __name__ == '__main__':
                 'tools.sessions.on': True
             }
         }
-        """
-        conf = {
-          'global' : {
-            'server.socket_host' : clientsCatalog.clientsCatalogIP,
-            'server.socket_port' : clientsCatalog.clientsCatalogPort,
-            #'server.thread_pool' : 8
-          },
-          '/' : {
-            # HTTP verb dispatcher
-            'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
-            'tools.staticdir.root': os.path.abspath(os.getcwd()),
-            'tools.sessions.on': True,
-            # Basic Auth
-            'tools.auth_basic.on'      : True,
-            'tools.auth_basic.realm'   : 'Francis Drake',
-            'tools.auth_basic.checkpassword' : clientsCatalog.checkpassword
-            # Digest Auth
-            #'tools.auth_digest.on'      : True,
-            #'tools.auth_digest.realm'   : 'Francis Drake',
-            #'tools.auth_digest.get_ha1' : get_ha1,
-            #'tools.auth_digest.key'     : 'f565c27146793cfb',
-          }
-        }
-        """
+
         cherrypy.tree.mount(clientsCatalog, clientsCatalog.service, conf)
         cherrypy.config.update({'server.socket_host':clientsCatalog.catalog.serviceIP})
         cherrypy.config.update({'server.socket_port':clientsCatalog.catalog.servicePort})
         cherrypy.engine.start()
-        """
-        while True:
-            if clientsCatalog.flagNew:
-                clientsCatalog.flagNew=False
-                cherrypy.engine.stop()
-                cherrypy.server.httpserver=None
-                clientsCatalog.catalog.createDict()
-                conf = {
-                  'global' : {
-                    'server.socket_host' : clientsCatalog.clientsCatalogIP,
-                    'server.socket_port' : clientsCatalog.clientsCatalogPort,
-                    #'server.thread_pool' : 8
-                  },
-                  '/' : {
-                    # HTTP verb dispatcher
-                    'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
-                    'tools.staticdir.root': os.path.abspath(os.getcwd()),
-                    'tools.sessions.on': True,
-                    # Basic Auth
-                    'tools.auth_basic.on'      : True,
-                    'tools.auth_basic.realm'   : 'Francis Drake',
-                    'tools.auth_basic.checkpassword' : clientsCatalog.checkpassword
-                    # Digest Auth
-                    #'tools.auth_digest.on'      : True,
-                    #'tools.auth_digest.realm'   : 'Francis Drake',
-                    #'tools.auth_digest.get_ha1' : get_ha1,
-                    #'tools.auth_digest.key'     : 'f565c27146793cfb',
-                  }
-                }
-                
-                cherrypy.tree.mount(clientsCatalog, clientsCatalog.service, conf)
-                cherrypy.config.update({'server.socket_host':clientsCatalog.clientsCatalogIP})
-                cherrypy.config.update({'server.socket_port':clientsCatalog.clientsCatalogPort})
-                cherrypy.engine.start()
-            time.sleep(1)
-            """
+
         cherrypy.engine.block()

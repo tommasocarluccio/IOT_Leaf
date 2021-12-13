@@ -7,6 +7,74 @@
                 {
                     "room_ID": "room_13",
                     "room_name": "Kitchen",
+<<<<<<< HEAD
+=======
+                    "devices": [
+                        {
+                            "deviceID": "dht11",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "temperature",
+                                    "u": "C",
+                                    "topic": "Leaf_002/room_13/dht11/temperature"
+                                },
+                                {
+                                    "n": "humidity",
+                                    "u": "%",
+                                    "topic": "Leaf_002/room_13/dht11/humidity"
+                                }
+                            ],
+                            "timestamp": 1639399300.547908,
+                            "date": "13/12/2021 13:41"
+                        },
+                        {
+                            "deviceID": "mq5",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "AQI",
+                                    "u": "ppm",
+                                    "topic": "Leaf_002/room_13/mq5/AQI"
+                                }
+                            ],
+                            "timestamp": 1639399319.6328435,
+                            "date": "13/12/2021 13:41"
+                        },
+                        {
+                            "deviceID": "LED_AQI",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "AQI_warning",
+                                    "u": null,
+                                    "topic": "Leaf_monitoring/Leaf_002/room_13/LED_AQI"
+                                }
+                            ],
+                            "timestamp": 1639081052.4846876,
+                            "date": "09/12/2021 21:17"
+                        }
+                    ]
+                },
+                {
+                    "room_ID": "room_23",
+                    "room_name": "Bedroom",
+                    "devices": []
+                },
+                {
+                    "room_ID": "room_25",
+                    "room_name": "Bathhroom",
+                    "devices": []
+                },
+                {
+                    "room_ID": "room_26",
+                    "room_name": "Cantina",
+                    "devices": []
+                },
+                {
+                    "room_ID": "room_22",
+                    "room_name": "Bathroom",
+>>>>>>> d2b782b22cfba7ccb52e2d364bf58bf6c510dd20
                     "devices": []
                 }
             ],

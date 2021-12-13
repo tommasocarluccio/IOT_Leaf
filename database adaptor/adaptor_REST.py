@@ -38,6 +38,35 @@ class AdaptorREST():
             return json.dumps(result['channel']['metadata'])
         else:
             raise cherrypy.HTTPError(501, "No operation!")
+    
+    def POST(self, *uri):
+        body=cherrypy.request.body.read()
+        json_body=json.loads(body.decode('utf-8'))
+        platform_ID=uri[0]
+        room_ID=uri[1]
+        command=str(uri[2])
+        if command=='check_warning':
+            data=json_body['data']
+            average=self.adaptor.get_average_values(platform_ID, room_ID, data)
+            if self.adaptor.check_thresholds(platform_ID, room_ID, data, average)=="low":
+                print("Warning low value")
+                warning_body={
+                    "parameter":data['parameter'],
+                    "value":data['value'],
+                    "alert":"is too low"
+                }
+                bot_url=' '
+                requests.post(bot_url+'/'+platform_ID+'/'+room_ID+'/warning', json=warning_body)
+            elif self.adaptor.check_thresholds(platform_ID, room_ID, data, average)=="high":
+                warning_body={
+                    "parameter":data['parameter'],
+                    "value":data['value'],
+                    "alert":"is too high"
+                }
+                print("Warning high value")
+                requests.post(bot_url+'/'+platform_ID+'/'+room_ID+'/warning', json=warning_body)
+            else:
+                print("No warning")
 
     def PUT(self, *uri):
         body=cherrypy.request.body.read()
