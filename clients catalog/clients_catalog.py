@@ -104,7 +104,7 @@ class Registration_deployer(object):
         body=cherrypy.request.body.read()
         json_body=json.loads(body.decode('utf-8'))
         if command=="newRoom":
-            output=self.catalog.platforms.associate_room_thingspeak(json_body['platformID'],json_body['room_ID'])
+            output=self.catalog.platforms.associate_room_thingspeak(json_body['platformID'],json_body['roomID'])
             if output is not False:
                 self.catalog.platforms.save()
                 print("{} - {}".format(json_body['platformID'],json_body['room_ID']))
