@@ -73,7 +73,7 @@ class catalogREST():
             if newRoom is not False:
                 output="Room '{}' has been added to platform '{}'".format(room_name,platform_ID)
                 clients_service=self.catalog.retrieveService('clients_catalog')
-                msg={"platformID":platform_ID,"roomID":newRoom.room_ID}
+                msg={"platformID":platform_ID,"roomID":newRoom.room_info['room_ID']}
                 thingspeak_association=requests.put(clients_service+"/newRoom",json=msg)
                 if thingspeak_association.status_code==200:
                     saveFlag=True
