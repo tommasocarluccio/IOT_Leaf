@@ -90,7 +90,7 @@ class ProfilesCatalog(Generic_Service):
             if roomNotFound==1:
                 profile['rooms'].append(new_room.jsonify())
                 self.setParameter(platform_ID,'room_cnt',room_cnt)
-                return True
+                return new_room
             else:
                 return False
         else:

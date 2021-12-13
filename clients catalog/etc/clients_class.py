@@ -10,7 +10,6 @@ class PlatformsCatalog():
         platform=self.find_platform(platform_ID)
         platform[field]=value
         
-        
     def find_platform(self,platform_ID):
         notFound=1
         for platform in self.content['platforms']:
@@ -21,6 +20,39 @@ class PlatformsCatalog():
             return False
         else:
             return platform
+
+    def associate_room_thingspeak(self,platform_ID,room_ID):
+        platform=self.find_platform(platform_ID)
+        notFound=1
+        if platform is not False:
+            for spec in platform['specs']['thingspeak']:
+                if spec['room'] is None:
+                    spec['room']=room_ID
+                    output="Available thingspeak channel found! Registered..."
+                    notFound=0
+                    break
+
+            if notFound==1:
+                output="No Available thingspeak channel!" 
+            return output
+        else:
+            return False
+
+    def removeRoom(self,platform_ID,room_ID):
+        notFound=1
+        platform=self.find_platform(platform_ID)
+        if platform is not False:
+            for spec in platform['specs']['thingspeak']:
+                if spec['room'] ==room_ID:
+                    spec['room']=None
+                    notFound=0
+                    return True
+            if notFound==1:
+                return False
+        else:
+            return False
+
+
     def save(self):
         with open(self.db_filename,'w') as file:
             json.dump(self.content,file, indent=4)

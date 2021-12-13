@@ -1,38 +1,50 @@
 {
-  "platforms": [
-    {
-      "platform_ID": "Leaf_001",
-      "associated": true,
-      "specs": {}
-    },
-    {
-      "platform_ID": "Leaf_002",
-      "associated": true,
-      "specs": {
-        "thingspeak": [{
-          "room": "room_13",
-          "channelID":"1021300",
-          "write_key": "58EQ7229TU9O5RXP",
-          "read_key":"D27OY6P75NOTG7UA",
-          "put_key":"B6PLW4MR0Z7AEJ2C",
-
-          "fields": {
-            "field5": "humidity",
-            "field1": "AQI",
-            "field3": "temperature"
-          }
+    "platforms": [
+        {
+            "platform_ID": "Leaf_001",
+            "associated": true,
+            "specs": {}
+        },
+        {
+            "platform_ID": "Leaf_002",
+            "associated": true,
+            "specs": {
+                "thingspeak": [
+                    {
+                        "room": "room_13",
+                        "channelID": "1021300",
+                        "write_key": "58EQ7229TU9O5RXP",
+                        "read_key": "D27OY6P75NOTG7UA",
+                        "put_key": "B6PLW4MR0Z7AEJ2C",
+                        "fields": {
+                            "field5": "humidity",
+                            "field1": "AQI",
+                            "field3": "temperature"
+                        }
+                    },
+                    {
+                        "room": "room_14",
+                        "channelID": "1021300",
+                        "write_key": "58EQ7229TU9O5RXP",
+                        "read_key": "D27OY6P75NOTG7UA",
+                        "put_key": "B6PLW4MR0Z7AEJ2C",
+                        "fields": {
+                            "field5": "humidity",
+                            "field1": "AQI",
+                            "field3": "temperature"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "platform_ID": "Leaf_003",
+            "associated": false,
+            "specs": {}
         }
-      ]
-      }
-    },
-    {
-      "platform_ID": "Leaf_003",
-      "associated": false,
-      "specs": {}
+    ],
+    "tokens": {
+        "telegram_token": "prova",
+        "weather_api_token": "8b03b422d0b7122fefecf85cf73b81eddcd7a589"
     }
-  ],
-  "tokens":{
-    "telegram_token":"prova",
-    "weather_api_token":"prova2"
-  }
 }

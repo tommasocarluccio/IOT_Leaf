@@ -69,11 +69,18 @@ class catalogREST():
         elif command=='insertRoom':
             platform_ID=uri[1]
             room_name=json_body['room_name']
-            newRoomFlag=self.catalog.insertRoom(platform_ID,room_name)
-            if newRoomFlag==True:
+            newRoom=self.catalog.insertRoom(platform_ID,room_name)
+            if newRoom is not False:
                 output="Room '{}' has been added to platform '{}'".format(room_name,platform_ID)
-                saveFlag=True
-                ack=newRoomFlag
+                clients_service=self.catalog.retrieveService('clients_catalog')
+                msg={"platformID":platform_ID,"roomID":newRoom.room_info['room_ID']}
+                thingspeak_association=requests.put(clients_service['url']+"/newRoom",json=msg)
+                if thingspeak_association.status_code==200:
+                    output=output+". "+thingspeak_association.json()['result']
+                    saveFlag=True
+                    ack=output
+                else:
+                    self.catalog.removeRoom(platform_ID,room_ID)
             else:
                 output="Room '{}' cannot be added to platform '{}'".format(room_name,platform_ID)
                 
@@ -163,13 +170,6 @@ class catalogREST():
             room_ID=uri[2]
             removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
             if removedRoom==True:
-                """
-                try:
-                    self.serverDelete(platform_ID+'/'+room_ID)
-                    pass
-                except:
-                    pass
-                """
                 self.catalog.save()
                 output="Room '{}' removed from platform '{}' removed".format(room_ID,platform_ID)
                 self.catalog.save()
