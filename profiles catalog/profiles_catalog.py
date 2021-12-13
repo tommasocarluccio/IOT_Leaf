@@ -76,7 +76,7 @@ class catalogREST():
                 msg={"platformID":platform_ID,"roomID":newRoom.room_info['room_ID']}
                 thingspeak_association=requests.put(clients_service['url']+"/newRoom",json=msg)
                 if thingspeak_association.status_code==200:
-                    output=output+"\n"+thingspeak_association.json()['result']
+                    output=output+". "+thingspeak_association.json()['result']
                     saveFlag=True
                     ack=output
                 else:
