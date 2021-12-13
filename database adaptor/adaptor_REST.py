@@ -14,12 +14,13 @@ class AdaptorREST():
     def GET(self,*uri,**params):
         try:
             platform_ID=uri[0]
-            #room_ID=uri[1]
-            command=uri[1]
+            room_ID=uri[1]
+            command=uri[2]
             try:
                 clients_catalog=self.adaptor.retrieveService('clients_catalog')
-                clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+"/thingspeak").json()
-                channelID=clients_result["channelID"]
+                clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+'/'+room_ID+"/thingspeak").json()
+                client=next((item for item in clients_result if item["room"] == room_ID), False)
+                channelID=client["channelID"]
             except Exception as e:
                 print(e)
                 raise cherrypy.HTTPError(500,"Ops! Try later..")
@@ -74,13 +75,14 @@ class AdaptorREST():
         print(json_body)
         try:
             platform_ID=uri[0]
-            #room_ID=uri[1]
-            command=uri[1]
+            room_ID=uri[1]
+            command=uri[2]
             try:
                 clients_catalog=self.adaptor.retrieveService('clients_catalog')
-                clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+"/thingspeak").json()
-                channelID=clients_result["channelID"]
-                put_key=clients_result["put_key"]
+                clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+'/'+room_ID+"/thingspeak").json()
+                client=next((item for item in clients_result if item["room"] == room_ID), False)
+                channelID=client["channelID"]
+                put_key=client["put_key"]
             except Exception as e:
                 print(e)
                 raise cherrypy.HTTPError(500,"Ops! Try later..")
