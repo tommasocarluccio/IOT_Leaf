@@ -21,7 +21,7 @@ class PlatformsCatalog():
         else:
             return platform
 
-    def assoicate_room_thingspeak(self,platform_ID,room_ID):
+    def associate_room_thingspeak(self,platform_ID,room_ID):
         platform=self.find_platform(platform_ID)
         notFound=1
         if platform is not False:
@@ -37,6 +37,21 @@ class PlatformsCatalog():
             return output
         else:
             return False
+
+    def removeRoom(self,platform_ID,room_ID):
+        notFound=1
+        platform=self.find_platform(platform_ID)
+        if platform is not False:
+            for spec in platform['specs']['thingspeak']:
+                if spec['room'] ==room_ID:
+                    spec['room']=None
+                    notFound=0
+                    return True
+            if notFound==1:
+                return False
+        else:
+            return False
+
 
     def save(self):
         with open(self.db_filename,'w') as file:

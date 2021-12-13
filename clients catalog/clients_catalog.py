@@ -101,8 +101,17 @@ class Registration_deployer(object):
             
     def PUT(self,*uri):
         command=str(uri[0])
+        body=cherrypy.request.body.read()
+        json_body=json.loads(body.decode('utf-8'))
         if command=="newRoom":
-            
+            output=self.catalog.platforms.associate_room_thingspeak(json_body['platformID'],json_body['room_ID'])
+            if output is not False:
+                self.catalog.platforms.save()
+                print("{} - {}".format(json_body['platformID'],json_body['room_ID']))
+                print(output)
+                return {"result":output}
+            else:
+                raise cherrypy.HTTPError(404, "Platform not found!")
 
         else:
             raise cherrypy.HTTPError(501, "No operation!")
@@ -122,6 +131,18 @@ class Registration_deployer(object):
             else:
                 #output="Platform '{}' not found ".format(platform_ID)
                 raise cherrypy.HTTPError(404, "Platform not found")
+
+        if command=='removeRoom':
+            username=uri[1]
+            platform_ID=uri[2]
+            room_ID=uri[3]
+            outputFlag=self.catalog.platforms.removeRoom(username,platform_ID,room_ID)
+            if outputFlag:
+                output="Platform '{}' - room '{}' removed".format(platform_ID,room_ID)
+                self.catalog.platforms.save()
+            else:
+                raise cherrypy.HTTPError(404, "Requested information not found")
+
         elif command=='removeUser':
             username=uri[1]
             outputFlag=self.catalog.users.removeUser(username)
