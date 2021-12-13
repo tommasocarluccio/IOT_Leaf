@@ -206,8 +206,8 @@ if __name__ == '__main__':
 			hum_avice = 'not enough data'
 
 	respDEF['AQI']['Advice'] = AQI_avice
-	respDEF['AQI']['Advice'] = temp_avice
-	respDEF['AQI']['Advice'] = hum_avice
+	respDEF['temp']['Advice'] = temp_avice
+	respDEF['hum']['Advice'] = hum_avice
 
 	print(respDEF)
 
