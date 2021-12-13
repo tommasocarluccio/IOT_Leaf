@@ -157,4 +157,7 @@ if __name__ == '__main__':
     cherrypy.config.update({'server.socket_port': server.catalog.servicePort})
     cherrypy.engine.start()
     cherrypy.engine.block()
+    while True:
+        server.catalog.removeInactive(server.delta)
+        time.sleep(server.delta)
 
