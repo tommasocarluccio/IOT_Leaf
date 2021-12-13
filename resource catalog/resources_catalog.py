@@ -158,6 +158,7 @@ if __name__ == '__main__':
     cherrypy.engine.start()
     cherrypy.engine.block()
     while True:
+        print("ciao")
         server.catalog.removeInactive(server.delta)
         time.sleep(server.delta)
 

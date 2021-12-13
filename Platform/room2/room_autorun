@@ -1,2 +1,0 @@
-#! /bin/bash
-xterm -e "python3 room_setup.py etc/room_setup.json"
