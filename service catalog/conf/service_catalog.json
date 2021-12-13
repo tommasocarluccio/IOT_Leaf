@@ -18,12 +18,6 @@
         "port": 9090,
         "service": "/clients_service"
     },
-    "database_adaptor": {
-        "IP_address": "192.168.130",
-        "port": 8085,
-        "service": "/database_adaptor",
-        "url": "http://172.29.4.158:8085/database_adaptor"
-    },
     "resource_catalog": {
         "IP_address": "192.168.1.130",
         "port": 8083,
@@ -41,5 +35,11 @@
         "port": 8081,
         "service": "/profiles_catalog",
         "url": "http://192.168.1.130:8081/profiles_catalog"
+    },
+    "database_adaptor": {
+        "IP_address": "192.168.1.130",
+        "port": 8085,
+        "service": "/database_adaptor",
+        "url": "http://192.168.1.130:8085/database_adaptor"
     }
 }
