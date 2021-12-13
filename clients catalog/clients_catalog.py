@@ -135,7 +135,7 @@ class Registration_deployer(object):
         if command=='removeRoom':
             platform_ID=uri[1]
             room_ID=uri[2]
-            outputFlag=self.catalog.platforms.removeRoom(username,platform_ID,room_ID)
+            outputFlag=self.catalog.platforms.removeRoom(platform_ID,room_ID)
             if outputFlag:
                 output="Platform '{}' - room '{}' removed".format(platform_ID,room_ID)
                 self.catalog.platforms.save()
