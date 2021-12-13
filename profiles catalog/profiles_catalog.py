@@ -78,7 +78,7 @@ class catalogREST():
                 if thingspeak_association.status_code==200:
                     output=output+"\n"+thingspeak_association.json()['result']
                     saveFlag=True
-                    ack=True
+                    ack=output
                 else:
                     self.catalog.removeRoom(platform_ID,room_ID)
             else:
