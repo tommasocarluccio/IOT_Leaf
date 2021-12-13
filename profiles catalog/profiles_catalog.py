@@ -170,13 +170,6 @@ class catalogREST():
             room_ID=uri[2]
             removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
             if removedRoom==True:
-                """
-                try:
-                    self.serverDelete(platform_ID+'/'+room_ID)
-                    pass
-                except:
-                    pass
-                """
                 self.catalog.save()
                 output="Room '{}' removed from platform '{}' removed".format(room_ID,platform_ID)
                 self.catalog.save()
