@@ -133,9 +133,8 @@ class Registration_deployer(object):
                 raise cherrypy.HTTPError(404, "Platform not found")
 
         if command=='removeRoom':
-            username=uri[1]
-            platform_ID=uri[2]
-            room_ID=uri[3]
+            platform_ID=uri[1]
+            room_ID=uri[2]
             outputFlag=self.catalog.platforms.removeRoom(username,platform_ID,room_ID)
             if outputFlag:
                 output="Platform '{}' - room '{}' removed".format(platform_ID,room_ID)
