@@ -182,6 +182,7 @@ class Registration_deployer(object):
                     self.catalog.platforms.save()
             else:
                 raise cherrypy.HTTPError(404, "Resource not found")
+                return json.dumps("prova")
 
         elif command=='removeUser':
             username=uri[1]
