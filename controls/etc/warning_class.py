@@ -31,7 +31,6 @@ class warningControl():
 
 	def notify(self,topic,msg):
 		payload=json.loads(msg)
-		print(payload)
 		platform_ID=payload['bn'].split("/")[0]
 		room_ID=payload['bn'].split("/")[1]
 		device_ID=payload['bn'].split("/")[2]
@@ -40,6 +39,7 @@ class warningControl():
 		response=requests.get("{}/{}/rooms/{}/preferences/thresholds".format(profiles_catalog,platform_ID,room_ID))
 		if response.status_code==200:
 			th_dict=response.json()
+			print(th_dict)
 			for meas in e:
 				parameter=meas['n']
 				try:
