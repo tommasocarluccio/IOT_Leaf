@@ -185,6 +185,7 @@ class catalogREST():
             try:
                 clients_service=self.catalog.retrieveService('clients_catalog')
                 r_client=requests.delete(clients_service['url']+"/removeRoom/"+username+"/"+platform_ID+"/"+room_ID)
+                print(r_client)
                 removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
                 if removedRoom:
                     self.catalog.save()
