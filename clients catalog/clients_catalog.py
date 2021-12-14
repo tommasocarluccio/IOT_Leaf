@@ -194,7 +194,7 @@ class Registration_deployer(object):
                 raise cherrypy.HTTPError("404 User not found")
         
         else:
-            raise cherrypy.HTTPError(501, "No operation!")
+            raise cherrypy.HTTPError("501 No operation!")
 
     
 if __name__ == '__main__':
