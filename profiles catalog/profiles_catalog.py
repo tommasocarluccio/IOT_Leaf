@@ -97,7 +97,11 @@ class catalogREST():
                 
         elif command=='associateRoom':
             platform_ID=uri[1]
-            associatedRoom=self.catalog.associateRoom(platform_ID,json_body['timestamp'])
+            try:
+                timestamp=json_body['timestamp']
+            except:
+                raise cherrypy.HTTPError("400 Bad Request! You need to specify parameters")
+            associatedRoom=self.catalog.associateRoom(platform_ID,timestamp)
             if associatedRoom is not False:
                 output="Room '{}' has been associated in platform '{}'".format(associatedRoom['preferences']['room_name'],platform_ID)
                 msg['msg']={"room_ID": associatedRoom['room_ID'], "room_name": associatedRoom['preferences']['room_name'],"connection_timestamp":associatedRoom['connection_timestamp']}
