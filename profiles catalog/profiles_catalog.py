@@ -198,8 +198,8 @@ class catalogREST():
                     result={"msg":output}
                     return json.dumps(result)
                 else:
-                    #output="Resource not found. Can't remove room '{}' from platform '{}'. ".format(room_ID,platform_ID)
-                    raise cherrypy.HTTPError(404,"error")
+                    output="Resource not found. Can't remove room '{}' from platform '{}'. ".format(room_ID,platform_ID)
+                    #raise cherrypy.HTTPError(404,"error")
                 print(output)
             except:
                 return r_client
