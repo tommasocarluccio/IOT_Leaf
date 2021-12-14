@@ -149,6 +149,12 @@ class ProfilesCatalog(Generic_Service):
                 return room
         if notFound==1:
             return False
+
+    def retrieveRoomList(self, rooms):
+        output=[]
+        for room in rooms:
+            output.append(room['room_ID'])
+        return output
         
     def setRoomParameter(self,platform_ID,room_ID,body):
         profile=self.retrieveProfileInfo(platform_ID)

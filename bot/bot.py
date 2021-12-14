@@ -81,6 +81,10 @@ class LeafBot(Generic_Service):
             "Bathroom":":bathtub:"
             }
     
+        self.unit_dict={
+            "temperature":"°C",
+            "humidity":"%",
+        }
     def create_new_user(self, chat_ID):
         user={
             "chat_ID":chat_ID,
@@ -247,20 +251,55 @@ class LeafBot(Generic_Service):
             parameters_list_keyboard+=[[InlineKeyboardButton(text=emoji.emojize(f"{emo}\t{parameter}", use_aliases=True), callback_data=parameter)]]
         parameters_keyboard=InlineKeyboardMarkup(inline_keyboard=parameters_list_keyboard)
         return parameters_keyboard
-    """
-    def get_home_measures(self, chat_ID):
+
+    def get_room_measures(self, chat_ID, room_ID):
         adaptorURL=requests.get(self.serviceURL+'/database_adaptor').json()['url']
-        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
-
+        #check in the db user with the current chatID
         user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
-        home_data=requests.get(adaptorURL+'/'+user['platform_ID']+'/now').json()
-        profile_info=requests.get(profileURL+'/'+user['platform_ID']).json()
+        room_data=requests.get(adaptorURL+'/'+user['platform_ID']+'/'+room_ID+'/now').json()
+        date=room_data["created_at"][0].split("T")[0]
+        time=room_data["created_at"][0].split("T")[1].split("Z")[0]
+        room_name=self.get_room_name(chat_ID, room_ID)
+        try:
+            room_emo=self.emoji_dic[room_name]
+        except:
+            room_emo=':small_blue_diamond:'
 
-        home_measures='Your Leaf device:\n:bust_in_silhouette:'+profile_info['platform_ID']+':\t'+profile_info['platform_name']+'\n'
-        home_measures+='Associated rooms:\n'
-        for room in home_data:
-            room_name=room['channel']['name']
-    """
+        output=f'{room_emo} {room_name}\nLast update: {date} at {time}\n'
+        print(room_data)
+        print(room_data.items())
+        for key, value in room_data.items():
+            if key!='created_at' and key!='entry_id':
+                try:
+                    emo=self.emoji_dic[value[0]]
+                except:
+                    emo=':small_blue_diamond:'
+                try:
+                    unit=self.unit_dict[value[0]]
+                except:
+                    unit=''
+                #print("par: ",value[0])
+                #print("mes: ",value[1])
+                output+=emo+' '+value[0]+': '+str(value[1])+' '+unit+'\n'
+        print(output)
+        return output
+    
+    def get_home_measures(self, chat_ID):
+        clientURL=requests.get(self.serviceURL+'/clients_catalog').json()['url']
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
+        rooms_list=requests.get(clientURL+'/associated_rooms/'+user['platform_ID']+'/thingspeak').json()
+        output=f':house:Current condition in your house:\n\n'
+        for room in rooms_list:
+            room_output=self.get_room_measures(chat_ID, room)
+            output+=room_output+'\n'
+        return output
+
+    def get_room_name(self, chat_ID, room_ID):
+        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
+        return requests.get(profileURL+'/'+user['platform_ID']+'/rooms/'+room_ID+'/preferences/room_name').json()
+
+
 
     def on_chat_message(self, msg):
         content_type, chat_type, chat_ID = telepot.glance(msg)
@@ -496,8 +535,7 @@ class LeafBot(Generic_Service):
                     ])
 
         self.room_set_keyboard=InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text=emoji.emojize(':pencil2: Change room name', use_aliases=True), callback_data='change_room_name'),
-                 InlineKeyboardButton(text=emoji.emojize(':heavy_multiplication_x: Delete sensor', use_aliases=True), callback_data='delete_sensor')],
+                [InlineKeyboardButton(text=emoji.emojize(':pencil2: Change room name', use_aliases=True), callback_data='change_room_name')],
                 [InlineKeyboardButton(text=emoji.emojize(':radio_button: Change room thresholds', use_aliases=True), callback_data='change_thresholds')],
                 [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
                 ])
@@ -704,6 +742,15 @@ class LeafBot(Generic_Service):
             parameters_keyboard=self.create_parameters_keyboard(chat_ID)
             self.bot.sendMessage(chat_ID, f'Select the parameter for which you want to change the threshold', reply_markup=parameters_keyboard)
             user['flags']['thresholds_flag']=1
+
+        elif query_data=='room_act':
+            output=self.get_room_measures(chat_ID, user['room_ID'])
+            self.bot.sendMessage(chat_ID, text=(emoji.emojize(output)), reply_markup=self.back_button)
+
+        elif query_data=='act_int':
+            output=self.get_home_measures(chat_ID)
+            self.bot.sendMessage(chat_ID, text=(emoji.emojize(output)), reply_markup=self.back_button)
+
  
 
 

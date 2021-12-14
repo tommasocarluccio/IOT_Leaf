@@ -84,6 +84,21 @@ class Registration_deployer(object):
             result=json.load(open('database/temp_token.json',"r"))
             return json.dumps(result)
 
+        elif (len(uri))>0 and uri[0]=="associated_rooms":
+            platform=self.catalog.platforms.find_platform(uri[1])
+            if platform is not False:
+                try:
+                    log=platform['specs'][uri[2]]
+                    output=[]
+                    for i in log:
+                        output.append(i['room'])
+                    return json.dumps(output)
+                except:
+                    raise cherrypy.HTTPError(400, "Bad request!")
+            else:
+                raise cherrypy.HTTPError(404, "Platform not found!")
+
+
         elif(len(uri))==4 and uri[0]=="info":
             platform=self.catalog.platforms.find_platform(uri[1])
             if platform is not False:
@@ -103,7 +118,7 @@ class Registration_deployer(object):
         command=str(uri[0])
         body=cherrypy.request.body.read()
         json_body=json.loads(body.decode('utf-8'))
-        if command="newPlatform":
+        if command=="newPlatform":
             user=self.catalog.users.find_user(json_body['username'])
             if not self.catalog.check_association(json_body['platformID']) and user is not False:
                 try:

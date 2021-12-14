@@ -21,7 +21,10 @@ class catalogREST():
                     profileInfo= self.catalog.retrieveProfileParameter(uri[0],uri[1])
                     output=profileInfo
                     if uriLen>2:
-                        roomInfo=self.catalog.retrieveRoomInfo(profileInfo,uri[2])
+                        if str(uri[2])=='rooms_list':
+                            roomInfo=self.catalog.retrieveRoomList(profileInfo)
+                        else:
+                            roomInfo=self.catalog.retrieveRoomInfo(profileInfo,uri[2])
                         if uriLen>3:
                             try:
                                 output=roomInfo[uri[3]]
