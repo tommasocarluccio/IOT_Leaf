@@ -186,7 +186,7 @@ class Registration_deployer(object):
                         print(output)
                         self.catalog.platforms.save()
                 else:
-                    raise cherrypy.HTTPError(404, "Resource hjklnot found")
+                    raise cherrypy.HTTPError(404, "Resource not found")
             except:
                 raise cherrypy.HTTPError(404, "Resource not found")
 

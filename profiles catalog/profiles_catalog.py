@@ -197,7 +197,7 @@ class catalogREST():
                     self.catalog.save()
                     result={"msg":output}
                     return json.dumps(result)
-                else:
+                if not removedRoom:
                     output="Resource not found. Can't remove room '{}' from platform '{}'. ".format(room_ID,platform_ID)
                     raise cherrypy.HTTPError(501, "No operation!")
                 print(output)
