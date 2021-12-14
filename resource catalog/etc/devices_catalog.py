@@ -30,7 +30,7 @@ class DevicesCatalog():
             if device['deviceID']==device_ID:
                 timestamp=time.time()
                 date=datetime.now().strftime("%d/%m/%Y %H:%M")
-                device['resources']=info
+                device['resources']=info['e']
                 device['timestamp']=timestamp
                 device['date']=date
                 print("Device {} updated.\n".format(device_ID))
