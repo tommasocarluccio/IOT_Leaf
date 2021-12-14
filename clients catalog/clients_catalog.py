@@ -171,19 +171,16 @@ class Registration_deployer(object):
                 room_ID=uri[2]
             except:
                 raise cherrypy.HTTPError(400, "Bad Request!")
-            try:
-                if platform_ID not in self.catalog.users.find_user(username)["platforms_list"]:
-                    raise cherrypy.HTTPError(403, "You haven't the privileges to do that!")
-                else:
-                    if self.catalog.platforms.find_platform(platform_ID) is not False:
-                        outputFlag=self.catalog.platforms.removeRoom(platform_ID,room_ID)
-                        if outputFlag:
-                            output="Platform '{}' - room '{}' removed".format(platform_ID,room_ID)
-                            self.catalog.platforms.save()
-                    else:
-                        raise cherrypy.HTTPError(404, "Platform not found")
-            except:
+            if platform_ID not in self.catalog.users.find_user(username)["platforms_list"]:
                 raise cherrypy.HTTPError(403, "You haven't the privileges to do that!")
+            else:
+                if self.catalog.platforms.find_platform(platform_ID) is not False:
+                    outputFlag=self.catalog.platforms.removeRoom(platform_ID,room_ID)
+                    if outputFlag:
+                        output="Platform '{}' - room '{}' removed".format(platform_ID,room_ID)
+                        self.catalog.platforms.save()
+                else:
+                    raise cherrypy.HTTPError(404, "Platform not found")
 
 
         elif command=='removeUser':
