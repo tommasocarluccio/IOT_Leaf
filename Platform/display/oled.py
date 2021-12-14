@@ -12,6 +12,7 @@ from PIL import ImageFont
 import sys
 import json
 import requests
+import threading
 
 import subprocess
 
@@ -56,7 +57,7 @@ class pingThread(threading.Thread):
             return False
         
 class OLED():
-    def __init__(self,clientID,broker_IP,broker_port):
+    def __init__(self,clientID,base_topic,broker_IP,broker_port):
         self.broker_IP=broker_IP
         self.broker_port=broker_port
         self.temp=0
@@ -64,9 +65,10 @@ class OLED():
         self.aqi=0
         self.AQI="NONE"
         self.clientID=clientID
+        self.topic=base_topic+"/"+self.clientID
     def create_info(self):
         e=[]
-        resource={"n":parameter+"_warning","u":None,"topic":self.topic}
+        resource={"n":None,"u":None,"topic":self.topic}
         e.append(resource)
         self._data={"bn":self.clientID,"endpoints":"MQTT","e":e}
     def setup(self):
@@ -186,17 +188,21 @@ if __name__=='__main__':
             broker_IP=broker.get('IP_address')
             broker_port=broker.get('port')
             data_topic=broker['topic'].get('data')
-            myOLED=OLED(CLIENTid,broker_IP,broker_port)
+            base_topic="{}{}/{}".format(data_topic,platform_ID,room_ID)
+            myOLED=OLED(clientID,base_topic,broker_IP,broker_port)
             myOLED.initializeDisplay()
+            myOLED.setup()
+            time.sleep(1)
             myOLED.run()
             mqtt_flag=True
-        except:
+        except Exception as e:
+            #print(e)
             print("Can't connect to mqtt broker. New attempt...")
             time.sleep(30)
             
     time.sleep(1)
-    myLED.create_info()
-    thread1=pingThread(1,platform_ID,room_ID,myLED._data,serviceCatalogAddress)
+    #myOLED.create_info()
+    thread1=pingThread(1,platform_ID,room_ID,myOLED._data,serviceCatalogAddress)
     thread1.start()
 
     myOLED.follow(data_topic+platform_ID+"/"+room_ID+"/#")

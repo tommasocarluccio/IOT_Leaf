@@ -3,7 +3,7 @@
     "room_info": {
         "room_ID": "room_13",
         "room_name": "Kitchen",
-        "connection_flag": true,
+        "connection_flag": True,
         "devices": [],
         "connection_timestamp": 1638639712.9719746
     },

@@ -7,7 +7,47 @@
                 {
                     "room_ID": "room_13",
                     "room_name": "Kitchen",
-                    "devices": []
+                    "devices": [
+                        {
+                            "deviceID": "DISPLAY",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": null,
+                                    "u": null,
+                                    "topic": "Leaf_monitoring/Leaf_002/room_13/DISPLAY"
+                                }
+                            ],
+                            "timestamp": 1639520534.5872066,
+                            "date": "14/12/2021 23:22"
+                        },
+                        {
+                            "deviceID": "LED_1_AQI",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "AQI_warning",
+                                    "u": null,
+                                    "topic": "Leaf_monitoring/Leaf_002/room_13/LED_1_AQI"
+                                }
+                            ],
+                            "timestamp": 1639520492.7165148,
+                            "date": "14/12/2021 23:21"
+                        },
+                        {
+                            "deviceID": "mq5",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "AQI",
+                                    "u": "ppm",
+                                    "topic": "Leaf_monitoring/Leaf_002/room_13/mq5"
+                                }
+                            ],
+                            "timestamp": 1639520539.88108,
+                            "date": "14/12/2021 23:22"
+                        }
+                    ]
                 }
             ],
             "creation_date": "04/12/2021 18:30"
