@@ -193,6 +193,7 @@ class catalogREST():
                     try:
                         requests.delete(resource_service['url']+"/"+platform_ID+"/room_ID")
                     except:
+                        print("miao")
                         pass
                     self.catalog.save()
                     result={"msg":output}
