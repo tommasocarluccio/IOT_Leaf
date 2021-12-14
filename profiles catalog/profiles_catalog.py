@@ -54,56 +54,66 @@ class catalogREST():
         body=cherrypy.request.body.read()
         json_body=json.loads(body.decode('utf-8'))
         command=str(uri[0])
-        ack=False
         saveFlag=False
+        msg={"msg":None}
         if command=='insertProfile':
-            platform_ID=json_body['platform_ID']
-            platform_name=json_body['platform_ID']
+            try:
+                platform_ID=json_body['platform_ID']
+                platform_name=json_body['platform_ID']
+            except:
+                raise cherrypy.HTTPError(400, "Bad Request! You need to specify parameters")
             newProfile=self.catalog.insertProfile(platform_ID,platform_name)
             if newProfile:
                 output="Profile '{}' has been added to Profiles Database".format(platform_ID)
+                msg['msg']=output
                 saveFlag=True
             else:
                 output="'{}' already exists!".format(platform_ID)
+                raise cherrypy.HTTPError(409,"Resource already exists!")
         #from bot
         elif command=='insertRoom':
-            platform_ID=uri[1]
-            room_name=json_body['room_name']
+            try:
+                platform_ID=uri[1]
+                room_name=json_body['room_name']
+            except:
+                raise cherrypy.HTTPError(400, "Bad Request! You need to specify parameters")
+
             newRoom=self.catalog.insertRoom(platform_ID,room_name)
             if newRoom is not False:
                 output="Room '{}' has been added to platform '{}'".format(room_name,platform_ID)
                 clients_service=self.catalog.retrieveService('clients_catalog')
-                msg={"platformID":platform_ID,"roomID":newRoom.room_info['room_ID']}
-                thingspeak_association=requests.put(clients_service['url']+"/newRoom",json=msg)
+                json_msg={"platformID":platform_ID,"roomID":newRoom.room_info['room_ID']}
+                thingspeak_association=requests.put(clients_service['url']+"/newRoom",json=json_msg)
                 if thingspeak_association.status_code==200:
-                    output=output+". "+thingspeak_association.json()['result']
+                    output=output+". "+thingspeak_association.json()['msg']
+                    msg['msg']=output
                     saveFlag=True
-                    ack=output
                 else:
                     self.catalog.removeRoom(platform_ID,room_ID)
+                    return thingspeak_association
             else:
                 output="Room '{}' cannot be added to platform '{}'".format(room_name,platform_ID)
+                raise cherrypy.HTTPError(404, "Platform not found")
                 
         elif command=='associateRoom':
             platform_ID=uri[1]
             associatedRoom=self.catalog.associateRoom(platform_ID,json_body['timestamp'])
             if associatedRoom is not False:
                 output="Room '{}' has been associated in platform '{}'".format(associatedRoom['preferences']['room_name'],platform_ID)
-                ack={"room_ID": associatedRoom['room_ID'], "room_name": associatedRoom['preferences']['room_name'],"connection_timestamp":associatedRoom['connection_timestamp']}
+                msg['msg']={"room_ID": associatedRoom['room_ID'], "room_name": associatedRoom['preferences']['room_name'],"connection_timestamp":associatedRoom['connection_timestamp']}
                 saveFlag=True
             else:
-                output="Association failed in platform '{}'".format(platform_ID)
-                ack=False
+                output="Association failed in platform '{}' or already performed.".format(platform_ID)
+                raise cherrypy.HTTPError(409, "Association failed")
 
         else:
             raise cherrypy.HTTPError(501, "No operation!")
         
-        if saveFlag==True:
+        if saveFlag:
             self.catalog.save()
         print(output)
-        return json.dumps({"msg":ack})
+        return json.dumps(msg)
 		
-
     def POST(self, *uri):
         body=cherrypy.request.body.read()
         json_body=json.loads(body.decode('utf-8'))
@@ -126,53 +136,57 @@ class catalogREST():
             return json.dumps({"msg":output})
 
         elif command=='setRoomParameter':
-            platform_ID=uri[1]
-            room_ID=uri[2]
+            try:
+                platform_ID=uri[1]
+                room_ID=uri[2]
+            except:
+                raise cherrypy.HTTPError(400, "Bad Request! You need to specify parameters")
+
             newSetting=self.catalog.setRoomParameter(platform_ID,room_ID,json_body)
-            if newSetting==True:
+            if newSetting:
                 output="Platform '{}' - Room '{}': parameter updated".format(platform_ID,room_ID)
                 self.catalog.save()
-                flag=True
             else:
                 output="Platform '{}' Room '{}': Can't change parameter".format(platform_ID, room_ID)
-                flag=False
+                raise cherrypy.HTTPError(404, "No resource available!")
             print(output)
-            return json.dumps({"msg":flag})
+            return json.dumps({"msg":output})
 
         else:
             raise cherrypy.HTTPError(501, "No operation!")
 
     def DELETE(self,*uri):
         command=str(uri[0])
+        try:
+            clients_service=self.catalog.retrieveService('clients_catalog')
+        except:
+            raise cherrypy.HTTPError(503, "Can't perform the request now...")
+
         if command=='removeProfile':
             try:
                 username=uri[1]
                 platform_ID=uri[2]
             except:
                 raise cherrypy.HTTPError(400, "Bad Request! You need to specify parameters")
-            try:
-                clients_service=self.catalog.retrieveService('clients_catalog')
-                r_client=requests.delete(clients_service['url']+"/removePlatform/"+username+"/"+platform_ID).json()
-                if r_client.status_code==200:
-                    removedProfile=self.catalog.removeProfile(platform_ID)
-                    if removedProfile:
-                        output="Profile '{}' removed".format(platform_ID)
-                        resource_service=self.catalog.retrieveService('resource_catalog')
-                        try:
-                            requests.delete(resource_service['url']+"/"+platform_ID)
-                        except:
-                            pass
-                        self.catalog.save()
-                        result={"msg":output}
-                        return json.dumps(result)
-                    else:
-                        output="Platform '{}' not found ".format(platform_ID)
-                        raise cherrypy.HTTPError(404,"Platform not found.")
-                    print(output)
-
-            except:
-                output="Communication error."
+            r_client=requests.delete(clients_service['url']+"/removePlatform/"+username+"/"+platform_ID).json()
+            if r_client.status_code==200:
+                removedProfile=self.catalog.removeProfile(platform_ID)
+                if removedProfile:
+                    output="Profile '{}' removed".format(platform_ID)
+                    resource_service=self.catalog.retrieveService('resource_catalog')
+                    try:
+                        requests.delete(resource_service['url']+"/"+platform_ID)
+                    except:
+                        pass
+                    self.catalog.save()
+                    result={"msg":output}
+                    return json.dumps(result)
+                else:
+                    output="Platform '{}' not found ".format(platform_ID)
+                    raise cherrypy.HTTPError(404,"Resource not found.")
                 print(output)
+            else:
+                print(r.reason)
                 return r_client
 
         elif command=='removeRoom':
@@ -183,7 +197,6 @@ class catalogREST():
             except:
                 raise cherrypy.HTTPError(400, "Bad Request! You need to specify parameters")
 
-            clients_service=self.catalog.retrieveService('clients_catalog')
             r_client=requests.delete(clients_service['url']+"/removeRoom/"+username+"/"+platform_ID+"/"+room_ID)
             if r_client.status_code==200:
                 removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
@@ -199,17 +212,14 @@ class catalogREST():
                     result={"msg":output}
                     return json.dumps(result)
                 else:
-                    output="Resource not found. Can't remove room '{}' from platform '{}'. ".format(room_ID,platform_ID)
-                    raise cherrypy.HTTPError(404, output)
+                    output="Can't remove room '{}' from platform '{}'. ".format(room_ID,platform_ID)
+                    raise cherrypy.HTTPError(404, "Resource not found")
                 print(output)
             else:
                 return r_client
         else:
             raise cherrypy.HTTPError(501, "No operation!")
-
-        
-
-        
+   
 if __name__ == '__main__':
     conf=sys.argv[1]
     db=sys.argv[2]

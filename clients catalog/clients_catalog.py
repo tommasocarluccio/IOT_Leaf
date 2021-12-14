@@ -60,7 +60,7 @@ class Registration_deployer(object):
                 del data['password']
                 return json.dumps(data)
             except:
-                raise cherrypy.HTTPError(403,"Login failed")
+                raise cherrypy.HTTPError(401,"Login failed")
         elif(len(uri))>0 and uri[0]=="platforms_list":
             #username=str(cherrypy.request.login)
             username=params['username']
@@ -121,19 +121,19 @@ class Registration_deployer(object):
         if command=="newPlatform":
             user=self.catalog.users.find_user(json_body['username'])
             if not self.catalog.check_association(json_body['platformID']) and user is not False:
-                try:
-                    profiles_catalog=self.catalog.retrieveService("profiles_catalog")
-                    r=requests.put(profiles_catalog['url']+"/insertProfile",json={"platform_ID":json_body['platformID']}).json()
-                    if r['result']:
-                        user['platforms_list'].append(json_body['platformID'])
-                        self.catalog.platforms.set_value(params['platformID'],"associated",True)
-                        self.catalog.users.save()
-                        self.catalog.platforms.save()
+                profiles_catalog=self.catalog.retrieveService("profiles_catalog")
+                r=requests.put(profiles_catalog['url']+"/insertProfile",json={"platform_ID":json_body['platformID']})
+                if r.status_code==200:
+                    user['platforms_list'].append(json_body['platformID'])
+                    self.catalog.platforms.set_value(params['platformID'],"associated",True)
+                    self.catalog.users.save()
+                    self.catalog.platforms.save()
+                    print("Platform {} correctly associated.".format(platform_ID))
                         
-                except:
-                    raise cherrypy.HTTPError(500, "Can't install the profile")
+                else:
+                    return r
             else:
-                raise cherrypy.HTTPError(400, "Bad platform or user request")
+                raise cherrypy.HTTPError(409, "Already exists!")
 
         if command=="newRoom":
             output=self.catalog.platforms.associate_room_thingspeak(json_body['platformID'],json_body['roomID'])
@@ -141,10 +141,9 @@ class Registration_deployer(object):
                 self.catalog.platforms.save()
                 print("{} - {}".format(json_body['platformID'],json_body['roomID']))
                 print(output)
-                return json.dumps({'result':output})
+                return json.dumps({'msg':output})
             else:
                 raise cherrypy.HTTPError(404, "Platform not found!")
-
         else:
             raise cherrypy.HTTPError(501, "No operation!")
 
@@ -166,7 +165,7 @@ class Registration_deployer(object):
             else:
                 output="Platform '{}' not found ".format(platform_ID)
                 print(output)
-                raise cherrypy.HTTPError(404, "Platform not found")
+                raise cherrypy.HTTPError(404, "Resource not found")
 
         if command=='removeRoom':
             try:
