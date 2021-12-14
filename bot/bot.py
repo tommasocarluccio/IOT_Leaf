@@ -1,0 +1,817 @@
+import telepot
+from telepot.loop import MessageLoop
+from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+import emoji
+import requests
+import json
+import numpy as np
+import random
+import sys
+import cherrypy
+from etc.generic_service import *
+
+class LeafBot(Generic_Service):
+    exposed=True
+
+    def __init__(self, configuration_file):
+        Generic_Service.__init__(self,configuration_file, False)
+        self.service=self.registerRequest()
+
+        self.conf_content=json.load(open(configuration_file,"r"))
+        self.serviceURL=self.conf_content['service_catalog']
+        self.clientURL=requests.get(self.serviceURL+'/clients_catalog').json()['url']
+
+        self.api_coordinates_url='http://api.waqi.info/feed/geo:'
+        self.api_city_url='http://api.waqi.info/feed/'
+
+        tokens=requests.get(self.clientURL+'/temp_tokens').json()
+        self.tokenBot=tokens['tokens']['telegram_token']
+        self.tokenApi=tokens['tokens']['weather_api_token']
+
+        self.bot = telepot.Bot(self.tokenBot)
+        self.authentications=[]
+        self.thresholds=[]
+        self.__message={"alert":"","action":""}
+
+        self.keyboards()
+        MessageLoop(self.bot, {'chat': self.on_chat_message, 'callback_query': self.on_callback_query}).run_as_thread()
+
+        self.users_data={"users": []}
+
+        with open('etc/Tips.txt') as f:
+            self.lines = f.readlines()
+
+        self.aqi_state_dict=[
+            {
+            "circle":":green_circle:",
+            "status":"GOOD"
+            },
+            {
+            "circle":":yellow_circle:",
+            "status":"MODERATE"
+            },
+            {
+            "circle":":orange_circle:",
+            "status":"UNHEALTHY for Sensitive Groups"
+            },
+            {
+            "circle":":red_circle:",
+            "status":"UNHEALTHY"
+            },
+            {
+            "circle":":purple_circle:",
+            "status":"VERY UNHEALTHY"
+            },
+            {
+            "circle":":brown_circle:",
+            "status":"HAZARDOUS"
+            },
+            {
+            "circle":":white_circle:",
+            "status":"Unavailable"
+            }
+            ]
+
+        self.emoji_dic={
+            "temperature":":thermometer:",
+            "humidity":":droplet:",
+            "AQI":":cyclone:",
+            "Bedroom":":zzz:",
+            "Kitchen":":fork_and_knife:",
+            "Bathroom":":bathtub:"
+            }
+    
+    def create_new_user(self, chat_ID):
+        user={
+            "chat_ID":chat_ID,
+            "user_ID":None,
+            "platform_ID":None,
+            "room_ID":None,
+            "flags":
+                {
+                    "userID_flag":0,
+                    "password_flag":0,
+                    "insert_city_flag":0,
+                    'platform_name_flag':0,
+                    'new_room_flag':0,
+                    'remove_room_flag':0,
+                    'room_name_flag':0,
+                    'thresholds_flag':0
+                }
+            }
+        return user
+
+    def set_location(self, chat_ID, message, coordinates):
+        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+        adaptorURL=requests.get(self.serviceURL+'/database_adaptor').json()['url']
+
+        #check in the db user with the current chatID
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
+        print("user: ", user)
+        if coordinates==True:
+            url=self.api_coordinates_url+str(message['latitude'])+';'+str(message['longitude'])+'/?token='+self.tokenApi
+        else:
+            url=self.api_city_url+message+'/?token='+self.tokenApi
+        try:
+            api_data=requests.get(url).json()
+            body_profile={
+                "parameter":"coord",
+                "parameter_value": {"lat": api_data['data']['city']['geo'][0],"long": api_data['data']['city']['geo'][1]}
+            }
+
+            meta=str(api_data['data']['city']['name'])
+            body={
+            "latitude":api_data['data']['city']['geo'][0],
+            "longitude":api_data['data']['city']['geo'][1],
+            "metadata":meta
+            }
+            if user['room_ID']==None:
+                generic_room=requests.get(profileURL+'/'+user['platform_ID']+'/rooms').json()[0]['room_ID']
+            else:
+                generic_room=user['room_ID']
+            print(generic_room)
+            print(adaptorURL+'/'+user['platform_ID']+'/uploadLocation')
+            requests.post(profileURL+'/setParameter/'+user['platform_ID'], json=body_profile)
+            requests.put(adaptorURL+'/'+user['platform_ID']+'/'+generic_room+'/uploadLocation', json=body, headers={})
+            return api_data['data']['city']
+        except:
+            return False
+
+    def get_external_conditions(self, chat_ID):
+        #check in the db user with the current chatID
+        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
+        coordinates=requests.get(profileURL+'/'+user['platform_ID']+'/coord').json()
+        url=self.api_coordinates_url+str(coordinates['lat'])+';'+str(coordinates['long'])+'/?token='+self.tokenApi
+
+        try:
+            api_data=requests.get(url).json()
+            timestamp=api_data['data']['time']['s']
+            date=timestamp.split(' ')[0]
+            time=timestamp.split(' ')[1]
+            aqi=api_data["data"]["aqi"]
+            try:
+                pm25=api_data['data']['iaqi']['pm25']['v']
+            except:
+                pm25='-Unavailable-'
+            try:
+                pm10=api_data['data']['iaqi']['pm10']['v']
+            except:
+                pm10='-Unavailable-'
+            temp=api_data['data']['iaqi']['t']['v']
+            humidity=api_data['data']['iaqi']['h']['v']
+            vap_pres=(humidity/100)*6.105*np.exp(17.27*((temp)/(237+temp)))
+            try:
+                wind=api_data['data']['iaqi']['w']['v']
+                app_temp=temp+0.33*(vap_pres)-(0.7*wind)-4
+            except:
+                wind='-Unavailable-'
+                app_temp=temp+0.33*(vap_pres)-4
+            ext_data={
+                "date":date,
+                "time":time,
+                "aqi":aqi,
+                "pm25":pm25,
+                "pm10":pm10,
+                "temp":temp,
+                "humidity":humidity,
+                "wind":wind,
+                "app_temp":app_temp
+            }
+            return ext_data
+        except:
+            print("Error retrieving data")
+            return False
+
+    def get_general_info(self, chat_ID):
+        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
+        profile_info=requests.get(profileURL+'/'+user['platform_ID']).json()
+        output='Your Leaf device:\n:bust_in_silhouette:'+profile_info['platform_ID']+':\t'+profile_info['platform_name']+'\n'
+        output+=':round_pushpin:Location coordinates:\t'+str(profile_info['coord']['lat'])+', '+str(profile_info['coord']['long'])+'\n'
+        output+=':alarm_clock:Last update:\t'+profile_info['last_update']+'\n'
+        output+='Rooms:\n'
+        if profile_info['rooms']!=[]:
+            for room in profile_info['rooms']:
+                try:
+                    emo_room=self.emoji_dic[room['preferences']['room_name']]
+                except:
+                    emo_room=':house:'
+                if room['connection_flag']==1:
+                    output+=emo_room+room['preferences']['room_name']+'\n'
+                else:
+                    output+=emo_room+room['preferences']['room_name']+' (not yet associated)\n'
+        else:
+            output+='No room detected.\n'
+        return output
+
+    def add_room(self, chat_ID, room_name):
+        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
+        room_body={
+            "room_name":room_name
+        }
+        print(room_body)
+        log=requests.put(profileURL+'/insertRoom/'+user['platform_ID'], json=room_body, headers={}).json()
+        print(log)
+        if log['result']==True:
+            return True
+        else:
+            return False
+
+    def create_rooms_keyboard(self, chat_ID):
+        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
+        rooms_info=requests.get(profileURL+'/'+user['platform_ID']+'/rooms').json()
+        room_list_keyboard=[]
+        for room in rooms_info:
+            room_name=room['preferences']['room_name']
+            try:
+                emo=self.emoji_dic[room_name]
+            except:
+                emo=':small_blue_diamond:'
+            room_list_keyboard+=[[InlineKeyboardButton(text=emoji.emojize(f"{emo}\t{room_name}", use_aliases=True), callback_data=room_name)]]
+        rooms_keyboard=InlineKeyboardMarkup(inline_keyboard=room_list_keyboard)
+        return rooms_keyboard
+
+    def create_parameters_keyboard(self, chat_ID):
+        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
+        room_info=requests.get(profileURL+'/'+user['platform_ID']+'/rooms/'+user['room_ID']).json()
+        parameters_list_keyboard=[]
+        for parameter in room_info['preferences']['thresholds'].keys():
+            try:
+                emo=self.emoji_dic[parameter]
+            except:
+                emo=':small_blue_diamond:'
+            parameters_list_keyboard+=[[InlineKeyboardButton(text=emoji.emojize(f"{emo}\t{parameter}", use_aliases=True), callback_data=parameter)]]
+        parameters_keyboard=InlineKeyboardMarkup(inline_keyboard=parameters_list_keyboard)
+        return parameters_keyboard
+    """
+    def get_home_measures(self, chat_ID):
+        adaptorURL=requests.get(self.serviceURL+'/database_adaptor').json()['url']
+        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
+        home_data=requests.get(adaptorURL+'/'+user['platform_ID']+'/now').json()
+        profile_info=requests.get(profileURL+'/'+user['platform_ID']).json()
+
+        home_measures='Your Leaf device:\n:bust_in_silhouette:'+profile_info['platform_ID']+':\t'+profile_info['platform_name']+'\n'
+        home_measures+='Associated rooms:\n'
+        for room in home_data:
+            room_name=room['channel']['name']
+    """
+
+    def on_chat_message(self, msg):
+        content_type, chat_type, chat_ID = telepot.glance(msg)
+
+        #check in the db user with the current chatID
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False) 
+        #if first time this chat_ID is used a new user is created
+        if user==False:
+            print("New user!")
+            user=self.create_new_user(chat_ID)
+            self.users_data['users'].append(user)
+        print(user)
+        if content_type=='text':
+            message = msg['text']
+            if message=='/start':
+                self.bot.sendMessage(chat_ID, emoji.emojize(':seedling:\t Welcome to Leaf!\t:seedling:\nBefore starting Log into your Leaf account or create one', use_aliases=True), reply_markup=self.login_keyboard)
+            #user has written their userID
+            elif user['flags']['userID_flag']==1 and user['flags']['password_flag']==0:
+                self.bot.sendMessage(chat_ID, f'Now type your password for {message}:', reply_markup=self.back_login)
+                #create a provisional instance to store that userID with correspondent chatID
+                user_dict={"chat_ID":chat_ID,
+                "user_ID":message
+                }
+                self.authentications.append(user_dict)
+                user['flags']['password_flag']=1
+                print('Auth: ', self.authentications)
+            #user has written their password
+            elif user['flags']['userID_flag']==1 and user['flags']['password_flag']==1:
+                #extract provitional instance to retrieve inserted userID
+                user_auth=next((item for item in self.authentications if item["chat_ID"] == chat_ID), False)
+                password=message
+                ##check password-userID
+                log=requests.get(self.clientURL+'/login'+'?username='+user_auth['user_ID']+'&password='+password)
+                #if all correct
+                if log.status_code==200:
+                    user['user_ID']=user_auth['user_ID']
+                    self.bot.sendMessage(chat_ID, emoji.emojize(f':seedling:\tWelcome to Leaf!\t:seedling:\nYou are logged in as {user["user_ID"]}', use_aliases=True))
+                    platforms_list=log.json()['platforms_list']
+
+                    plt_list_keyboard=[]
+                    for i in platforms_list:
+                        emo=':small_blue_diamond:'
+                        plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}', use_aliases=True), callback_data=i)]]
+                    rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
+
+                    self.bot.sendMessage(chat_ID, 'Choose the registered platform you want to visualize', reply_markup=rlk)
+
+                else:
+                    self.bot.sendMessage(chat_ID, f'Wrong username or password!\nPlease try again', reply_markup=self.login_keyboard)
+                user['flags']['userID_flag']=0
+                user['flags']['password_flag']=0
+                self.authentications=[i for i in self.authentications if i['chat_ID']!=chat_ID]
+                #print(user)
+                #print('Auth: ', self.authentications)
+            #user has written the new city
+            elif user['flags']['insert_city_flag']==1:
+                api_data=self.set_location(chat_ID, message, False)
+                if api_data!=False:
+                    self.bot.sendMessage(chat_ID, 'Your location has been Succesfully updated!')
+                    self.bot.sendMessage(chat_ID, f"The nearest active station found is: {api_data['name']}")
+                    self.bot.sendMessage(chat_ID, 'Select an option:', reply_markup=self.home_keyboard)
+                    print("New nearest station found: "+ api_data['name'])
+                    user['flags']['insert_city_flag']=0
+                else:
+                    self.bot.sendMessage(chat_ID, 'Invalid city name! Please try again')
+                    self.bot.sendMessage(chat_ID, 'Type on your keyboard the city name:')
+            #user has written new name for platform
+            elif user['flags']['platform_name_flag']==1:
+                profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+                body_profile={
+                    "parameter":"platform_name",
+                    "parameter_value":message
+                }
+                log=requests.post(profileURL+'/setParameter/'+user['platform_ID'], json=body_profile)
+                if log.status_code==200:
+                    self.bot.sendMessage(chat_ID, 'Update succesfull!')
+                    self.bot.sendMessage(chat_ID, f'Your new platform name is: {message}', reply_markup=self.home_keyboard)
+                else:
+                    self.bot.sendMessage(chat_ID, 'Update was unsuccesfull! Please try again', reply_markup=self.home_keyboard)
+                user['flags']['platform_name_flag']=0
+
+            elif user['flags']['new_room_flag']==1:
+                if self.add_room(chat_ID, message):
+                    self.bot.sendMessage(chat_ID, f'A new instance for the room {message} has been added to the platform!', reply_markup=self.home_keyboard)
+                else:
+                    self.bot.sendMessage(chat_ID, 'unsuccesfull operation! Please try again.', reply_markup=self.home_keyboard)
+                user['flags']['new_room_flag']=0
+
+            elif user['flags']['room_name_flag']==1:
+                profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+                body_profile={
+                    "room_name":message
+                }
+                log=requests.post(profileURL+'/setRoomParameter/'+user['platform_ID']+'/'+user['room_ID'], json=body_profile)
+                if log.status_code==200:
+                    self.bot.sendMessage(chat_ID, 'Update succesfull!')
+                    self.bot.sendMessage(chat_ID, f'Your new Room name is: {message}', reply_markup=self.home_keyboard)
+                else:
+                    self.bot.sendMessage(chat_ID, 'Update was unsuccesfull! Please try again', reply_markup=self.home_keyboard)
+                user['flags']['room_name_flag']=0
+
+            elif user['flags']['thresholds_flag']==1:
+                min_th=message.split(" ")[0]
+                max_th=message.split(" ")[1]
+                if min_th>max_th:
+                    self.bot.sendMessage(chat_ID, 'The minimum cannot be greater than the maximum value! Please try again!', reply_markup=self.room_menu)
+                    user['flags']['thresholds_flag']==0
+                try:
+                    profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+                    parameter=next((item['parameter'] for item in self.thresholds if item["chat_ID"] == chat_ID), False)
+                    body_profile={
+                        "thresholds":{
+                            parameter:{
+                            "min":min_th,
+                            "max":max_th
+                            }
+                        }
+                    }
+                    log=requests.post(profileURL+'/setRoomParameter/'+user['platform_ID']+'/'+user['room_ID'], json=body_profile)
+                    if log.status_code==200:
+                        self.bot.sendMessage(chat_ID, 'Update succesfull!')
+                        self.bot.sendMessage(chat_ID, f'Your new thresholds for {parameter} are: {min_th},{max_th}', reply_markup=self.room_menu)
+                    else:
+                        self.bot.sendMessage(chat_ID, 'Update was unsuccesfull! Please try again', reply_markup=self.room_menu)
+                    user['flags']['room_name_flag']=0
+                    self.thresholds=[i for i in self.thresholds if i['chat_ID']!=chat_ID]
+                except:
+                    self.bot.sendMessage(chat_ID, 'Update was unsuccesfull! Please try again', reply_markup=self.room_menu)
+                    user['flags']['room_name_flag']=0
+                    self.thresholds=[i for i in self.thresholds if i['chat_ID']!=chat_ID]
+
+
+             
+        elif content_type=='location':
+            location=msg['location']
+            api_data=self.set_location(chat_ID, location, True)
+            if api_data!=False:
+                self.bot.sendMessage(chat_ID, 'Your location has been Succesfully updated!', reply_markup=ReplyKeyboardRemove(remove_keyboard=True))
+                self.bot.sendMessage(chat_ID, f'The nearest active station found is: {api_data["name"]}')
+                self.bot.sendMessage(chat_ID, 'Select an option:', reply_markup=self.home_keyboard)
+                print('New nearest station found: '+ api_data['name'])
+            else:
+                self.bot.sendMessage(chat_ID, 'Error in sending location! Please try again', reply_markup=ReplyKeyboardRemove(remove_keyboard=True))
+                self.bot.sendMessage(chat_ID, 'Push the button to share your location', reply_markup=self.location_keyboard)
+
+        self.users_data['users']=[user if x['chat_ID']==chat_ID else x for x in self.users_data['users']]
+        
+    def keyboards(self):
+
+        self.login_keyboard= InlineKeyboardMarkup (inline_keyboard=[
+                    [InlineKeyboardButton(text=emoji.emojize(':gear: LOGIN', use_aliases=True), callback_data='login')],
+                    [InlineKeyboardButton(text=emoji.emojize(':green_circle:Register on the website:green_circle:', use_aliases=True), url="http://reg.html")],
+                    ])
+
+        self.back_login=InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back_login')]
+                    ])
+
+
+        self.starting_keyboard=InlineKeyboardMarkup (inline_keyboard=[
+                    [InlineKeyboardButton(text=emoji.emojize(':gear: Settings', use_aliases=True), callback_data='set')],
+                    [InlineKeyboardButton(text=emoji.emojize(':house: Go to the main menu', use_aliases=True), callback_data= 'home')],
+                    ])
+
+
+        self.settings_keyboard=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text= emoji.emojize(':globe_with_meridians: Location settings', use_aliases=True), callback_data='set_loc'),
+                InlineKeyboardButton(text= emoji.emojize(':computer: System settings', use_aliases=True), callback_data='set_dev')],
+                [InlineKeyboardButton(text= emoji.emojize(':question: Get info on your device', use_aliases=True), callback_data='info_dev')],
+                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                ])
+
+        self.home_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text= emoji.emojize(':watch: Actual Conditions', use_aliases=True), callback_data='act'),
+                    InlineKeyboardButton(text= emoji.emojize(':key: Enter a Room', use_aliases=True), callback_data='room')],
+                    [InlineKeyboardButton(text=emoji.emojize(':green_book: Tips', use_aliases=True), callback_data='tips'),
+                    InlineKeyboardButton(text=emoji.emojize(':gear: Settings',use_aliases=True), callback_data='set')]
+                    ])
+
+
+        self.location_opt_keyboard=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text=emoji.emojize(':round_pushpin:\tSend your current position', use_aliases=True), callback_data='send_loc')],
+                [InlineKeyboardButton(text=emoji.emojize(':cityscape:\tInsert City', use_aliases=True), callback_data='insert_city')],
+                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                ])
+
+
+        self.device_setting=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text= emoji.emojize(':house: Add a new room', use_aliases=True), callback_data='add_room'),
+                InlineKeyboardButton(text= emoji.emojize(':heavy_multiplication_x: Remove a room', use_aliases=True), callback_data='remove_room')],
+                [InlineKeyboardButton(text= emoji.emojize(':pencil2: Change platform name', use_aliases=True), callback_data='change_platform_name')],
+                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                ])
+
+
+        self.back_button=InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                    ])
+
+        self.actual_menu=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text= emoji.emojize(':house: Internal Conditions', use_aliases=True), callback_data='act_int'),
+                InlineKeyboardButton(text= emoji.emojize(':earth_africa: External Conditions', use_aliases=True), callback_data='act_ext')],
+                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                ])
+
+        self.other_tip_keyboard=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text=emoji.emojize(':pencil: Another Tip!', use_aliases=True), callback_data='other_tips'),
+                InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                ])
+
+        self.location_keyboard=ReplyKeyboardMarkup(keyboard=[
+                [KeyboardButton(text='Send your location', request_location=True)]
+                ])
+
+        self.back_or_home=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')],
+                [InlineKeyboardButton(text=emoji.emojize(':house: Go to the main menu', use_aliases=True), callback_data= 'home')],
+                ])
+
+        self.device_setting=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text= emoji.emojize(':house: Add a new room', use_aliases=True), callback_data='add_room'),
+                InlineKeyboardButton(text= emoji.emojize(':heavy_multiplication_x: Remove a room', use_aliases=True), callback_data='remove_room')],
+                [InlineKeyboardButton(text= emoji.emojize(':pencil2: Change platform name', use_aliases=True), callback_data='change_platform_name')],
+                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                ])
+
+
+        self.room_menu=InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text= emoji.emojize(':bar_chart: Room statistics', use_aliases=True), callback_data='stat'),
+                    InlineKeyboardButton(text= emoji.emojize(':gear: Room settings', use_aliases=True), callback_data='room_set')],
+                    [InlineKeyboardButton(text=emoji.emojize(':watch: Room actual conditions', use_aliases=True), callback_data='room_act')],
+                    [InlineKeyboardButton(text=emoji.emojize(':house: Go to the main menu', use_aliases=True), callback_data='home')]
+                    ])
+
+        self.room_set_keyboard=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text=emoji.emojize(':pencil2: Change room name', use_aliases=True), callback_data='change_room_name'),
+                 InlineKeyboardButton(text=emoji.emojize(':heavy_multiplication_x: Delete sensor', use_aliases=True), callback_data='delete_sensor')],
+                [InlineKeyboardButton(text=emoji.emojize(':radio_button: Change room thresholds', use_aliases=True), callback_data='change_thresholds')],
+                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                ])
+
+
+
+
+        self.find_more=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text=emoji.emojize(':exclamation_question_mark: Find out more', use_aliases=True), callback_data='act_int'),
+             InlineKeyboardButton(text=emoji.emojize(':back: Ignore', use_aliases=True), callback_data='back')]
+            ])
+
+
+
+
+
+        self.home_button=InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text=emoji.emojize(':house: HOME', use_aliases=True), callback_data='home')]
+                    ])
+
+        
+
+        #stat_menu=InlineKeyboardMarkup(inline_keyboard=[
+                #[InlineKeyboardButton(text= emoji.emojize(':globe_with_meridians: AQI', use_aliases=True), callback_data='aqi'),
+                 #InlineKeyboardButton(text= emoji.emojize(':thermometer: Temperature', use_aliases=True), callback_data='temp')],
+                 #[InlineKeyboardButton(text= emoji.emojize(':droplet: Humidity', use_aliases=True), callback_data='hum'),
+                 #InlineKeyboardButton(text= emoji.emojize(':hot_face: Apparent Temperature', use_aliases=True), callback_data='app_temp')],
+                 #[InlineKeyboardButton(text= emoji.emojize(':dash: GAS', use_aliases=True), callback_data='gas')],
+                 #[InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                 #])
+
+        self.time_menu=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text= emoji.emojize(':date: DAY statistics', use_aliases=True), callback_data='day')],
+                [InlineKeyboardButton(text= emoji.emojize(':calendar: WEEK statistics', use_aliases=True), callback_data='week')],
+                [InlineKeyboardButton(text= emoji.emojize(':spiral_calendar: MONTH statistics', use_aliases=True), callback_data='month')],
+                [InlineKeyboardButton(text= emoji.emojize(':watch: REAL TIME statistics', use_aliases=True), callback_data='real_time')],
+                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                ])
+
+        self.day_keyboard=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text=emoji.emojize(':green_circle:Day Statistics:green_circle:', use_aliases=True), url='192.168.1.130:8091/day')],
+                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                ])
+
+        self.week_keyboard=InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text=emoji.emojize(':green_circle:Week Statistics:green_circle:', use_aliases=True), url='192.168.1.130:8091/week')],
+                    [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                    ])
+
+        self.month_keyboard=InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text=emoji.emojize(':green_circle:Month Statistics:green_circle:', use_aliases=True), url='192.168.1.130:8091/month')],
+                    [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                    ])
+
+        self.rt_keyboard=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text=emoji.emojize(':green_circle:Real Time Statistics:green_circle:', use_aliases=True), url='192.168.1.130:8091/actual')],
+                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                ])
+
+    def on_callback_query(self, msg):
+        query_id, chat_ID, query_data= telepot.glance(msg, flavor='callback_query')
+        message_id_tuple=telepot.origin_identifier(msg)
+
+        #check in the db user with the current chatID
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False) 
+        #if first time this chat_ID is used a new user is created
+        if user==False:
+            print("New user!")
+            user=self.create_new_user(chat_ID)
+            self.users_data['users'].append(user)
+
+        if query_data=='login':
+            self.bot.sendMessage(chat_ID, ('Type your User ID: '), reply_markup=self.back_login)
+            user['flags']['userID_flag']=1
+
+        elif query_data=='back_login':
+            self.bot.editMessageReplyMarkup(message_id_tuple, reply_markup=None)
+            self.bot.deleteMessage(message_id_tuple)
+            self.bot.sendMessage(chat_ID, 'Select an option:', reply_markup=self.login_keyboard)
+
+        elif query_data=='set':
+            self.bot.sendMessage(chat_ID, 'Select an option:', reply_markup=self.settings_keyboard)
+            #self.bot.sendMessage(chat_ID, 'or go back', reply_markup=back_button)
+
+        elif query_data=='home':
+            self.bot.answerCallbackQuery(query_id, text='Home')
+            self.bot.editMessageReplyMarkup(message_id_tuple, reply_markup=None)
+            self.bot.deleteMessage(message_id_tuple)
+            self.bot.sendMessage(chat_ID, emoji.emojize(f':seedling:\tWelcome to Leaf!\t:seedling:\nYou are logged in as {user["user_ID"]}', use_aliases=True))
+            self.bot.sendMessage(chat_ID, 'Select an option:', reply_markup=self.home_keyboard)
+            # self.room_flag=0
+            # self.user_flag=0
+            # self.userID_flag=0
+            # self.password_flag=0
+            # self.new_sensor_flag=0
+            # self.new_room_flag=0
+            # self.enter_room_flag==0
+
+        elif query_data=='set_loc':
+            self.bot.sendMessage(chat_ID, 'Chose how to set your location', reply_markup=self.location_opt_keyboard)
+
+        elif query_data=='back':
+            self.bot.answerCallbackQuery(query_id, text='Back')
+            self.bot.editMessageReplyMarkup(message_id_tuple, reply_markup=None)
+            self.bot.deleteMessage(message_id_tuple)
+
+        elif query_data=='act':
+            self.bot.answerCallbackQuery(query_id, text='Actual Conditions')
+            self.bot.sendMessage(chat_ID, 'Do you want the internal or the external conditions?', reply_markup=self.actual_menu)
+
+        elif query_data=='tips':
+            self.bot.answerCallbackQuery(query_id, text='Tips')
+            self.bot.sendMessage(chat_ID, random.choice(self.lines), reply_markup=self.other_tip_keyboard)
+
+        elif query_data=='send_loc':
+            self.bot.sendMessage(chat_ID, 'Push the button to share your location', reply_markup=self.location_keyboard)
+
+        elif query_data=='insert_city':
+            self.bot.sendMessage(chat_ID, 'Type on your keyboard the city name:')
+            user['flags']['insert_city_flag']=1
+
+        elif query_data=='act_ext':
+            adaptorURL=requests.get(self.serviceURL+'/database_adaptor').json()['url']
+            if user['room_ID']==None:
+                profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+                generic_room=requests.get(profileURL+'/'+user['platform_ID']+'/rooms').json()[0]['room_ID']
+            else:
+                generic_room=user['room_ID']
+            try:
+                station=str(requests.get(adaptorURL+'/'+user['platform_ID']+'/'+generic_room+'/station').json())
+                station_str=f"Selected station name: {station}\n"
+            except:
+                station_str=''
+            self.bot.answerCallbackQuery(query_id, text='Actual External Conditions')
+            ext_data=self.get_external_conditions(chat_ID)
+            if type(ext_data['aqi'])==str:
+                index=6
+            elif ext_data['aqi']<=50:
+                index=0
+            elif ext_data['aqi']>50 and ext_data['aqi']<=100:
+                index=1
+            elif ext_data['aqi']>100 and ext_data['aqi']<=150:
+                index=2
+            elif ext_data['aqi']>150 and ext_data['aqi']<=200:
+                index=3
+            elif ext_data['aqi']>200 and ext_data['aqi']<=300:
+                index=4
+            elif ext_data['aqi']>300:
+                index=5
+            self.bot.sendMessage(chat_ID, emoji.emojize ("External conditions:\n"
+                                                             f"{station_str}"
+                                                             f"Time: {ext_data['date']}, {ext_data['time']}\n"
+                                                             f"{self.aqi_state_dict[index]['circle']} AQI: {ext_data['aqi']} {self.aqi_state_dict[index]['status']}\n"
+                                                        f":thermometer:\tTemperature: {ext_data['temp']}°C\n"
+                                                        f":droplet:\tHumidity: {ext_data['humidity']}%\n"
+                                                        f":wind_face:\tWind: {ext_data['wind']}m/s\n"
+                                                        f":sunny:\tApparent temperature: {ext_data['app_temp']:.1f}°C\n"
+                                                        f":cyclone:\tpm2.5 concentration: {ext_data['pm25']}\n"
+                                                        f":diamond_shape_with_a_dot_inside:\tpm10 concentration: {ext_data['pm10']}\n"
+                                                        ,use_aliases=True),
+                                reply_markup=self.back_or_home)
+
+        elif query_data=='other_tips':
+            self.bot.answerCallbackQuery(query_id, text='Tips')
+            self.bot.editMessageReplyMarkup(message_id_tuple, reply_markup=None)
+            self.bot.deleteMessage(message_id_tuple)
+            self.bot.sendMessage(chat_ID, random.choice(self.lines), reply_markup=self.other_tip_keyboard)
+
+        elif query_data=='set_dev':
+            self.bot.answerCallbackQuery(query_id, text='Device setting')
+            self.bot.sendMessage(chat_ID, 'Select an option:', reply_markup=self.device_setting)
+
+        elif query_data=='change_platform_name':
+            self.bot.sendMessage(chat_ID, f'Type the new platform name for {user["platform_ID"]}:', reply_markup=self.back_button)
+            user['flags']['platform_name_flag']=1
+
+        elif query_data=='info_dev':
+            output=self.get_general_info(chat_ID)
+            self.bot.sendMessage(chat_ID, emoji.emojize(f"{output}", use_aliases=True), reply_markup=self.back_button)
+
+
+        elif query_data=='add_room':
+            self.bot.sendMessage(chat_ID, 'Type the name of the new room: ', reply_markup=self.back_button)
+            user['flags']['new_room_flag']=1
+
+        elif query_data=='remove_room':
+            rooms_keyboard=self.create_rooms_keyboard(chat_ID)
+            self.bot.sendMessage(chat_ID, 'Select the room you want to delete:', reply_markup=rooms_keyboard)
+            user['flags']['remove_room_flag']=1
+
+        elif query_data=='room':
+            self.bot.answerCallbackQuery(query_id, text='Room menu')
+            rooms_keyboard=self.create_rooms_keyboard(chat_ID)
+            self.bot.sendMessage(chat_ID, f'Select the room you want to enter in:', reply_markup=rooms_keyboard)
+
+        elif query_data=='room_set':
+            self.bot.sendMessage(chat_ID, 'Select an option:', reply_markup=self.room_set_keyboard)
+
+        elif query_data=='change_room_name':
+            self.bot.sendMessage(chat_ID, f'Type the new name for the current room', reply_markup=self.back_button)
+            user['flags']['room_name_flag']=1
+
+        elif query_data=='change_thresholds':
+            parameters_keyboard=self.create_parameters_keyboard(chat_ID)
+            self.bot.sendMessage(chat_ID, f'Select the parameter for which you want to change the threshold', reply_markup=parameters_keyboard)
+            user['flags']['thresholds_flag']=1
+ 
+
+
+            
+        else:
+            profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+            #when user clicks on a room
+            try:
+                rooms_info=requests.get(profileURL+'/'+user['platform_ID']+'/rooms').json()
+                for room in rooms_info:
+                    if query_data==room['preferences']['room_name']:
+                        #when user want to remove room
+                        if user['flags']['remove_room_flag']==1:
+                            log=requests.delete(profileURL+'/removeRoom/'+user['platform_ID']+'/'+room['room_ID']).json()
+                            if log['result']:
+                                self.bot.sendMessage(chat_ID, f"Room {room['preferences']['room_name']} succesfully removed!", reply_markup=self.home_keyboard)
+                            else:
+                                self.bot.sendMessage(chat_ID, f"Error while removing room {room['preferences']['room_name']}! Please try again.", reply_markup=self.home_keyboard)
+                            user['flags']['remove_room_flag']=0
+                        #when user want to enter a room
+                        else:
+                            if room['connection_flag']==1:
+                                user['room_ID']=room['room_ID']
+                                self.bot.sendMessage(chat_ID, f'You are now visualizing Room: {room["preferences"]["room_name"]}', reply_markup=self.room_menu)
+                            else:
+                                self.bot.sendMessage(chat_ID, f'Room: {room["preferences"]["room_name"]} has not been associated yet!', reply_markup=self.home_keyboard)
+                    else:
+                        pass
+            except:
+                pass
+            #when user clicks a parameter
+            try:
+                room_info=requests.get(profileURL+'/'+user['platform_ID']+'/rooms/'+user['room_ID']).json()
+                for parameter in room_info['preferences']['thresholds'].keys():
+                    if query_data==parameter:
+                        self.bot.sendMessage(chat_ID, f"The current thresholds for {parameter} are: {room_info['preferences']['thresholds'][parameter]['min']} {room_info['preferences']['thresholds'][parameter]['max']}")
+                        self.bot.sendMessage(chat_ID, 'Type the new threshold values as min and max value separated by a space')
+                        self.thresholds.append({"chat_ID":chat_ID,"parameter":parameter})
+                        user['flags']['thresholds_flag']=1
+            except:
+                pass
+
+            try:
+                #when user clicks on a platform
+                platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
+                for i in platforms_list:
+                    if query_data==i:
+                        user['platform_ID']=i
+                        self.users_data['users']=[user if x['chat_ID']==chat_ID else x for x in self.users_data['users']]
+                        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+                        platform_name=requests.get(profileURL+'/'+user['platform_ID']+'/platform_name').json()
+                        self.bot.sendMessage(chat_ID, f'You are now visualizing Platform: {user["platform_ID"]} ({platform_name})')
+                        self.bot.sendMessage(chat_ID, 'Before starting, go to Settings to set your position and configure your device or go to the main menu', reply_markup=self.starting_keyboard)
+            except:
+                pass
+
+        
+        """
+        elif query_data=='act_int':
+            self.get_home_measures(chat_ID)
+            
+            self.bot.sendMessage(chat_ID, emoji.emojize(f"{self.strin}", use_aliases=True),reply_markup=self.back_or_home)
+            #except:
+                #self.bot.sendMessage(chat_ID, emoji.emojize("No information", use_aliases=True),reply_markup=back_or_home)
+        """
+
+        
+        # elif query_data=='stat':
+        #     self.bot.answerCallbackQuery(query_id, text='Statistics')
+        #     self.bot.sendMessage(chat_ID, 'Choose the period of time for your statistic:', reply_markup=self.time_menu)
+
+
+        self.users_data['users']=[user if x['chat_ID']==chat_ID else x for x in self.users_data['users']]
+
+    def POST(self,*uri):
+        user=next((item for item in self.users_data['users'] if item["platform_ID"] == str(uri[0])), False) 
+        tosend=''
+        if user and len(uri)!=0:
+            if uri[2]=='warning':
+                body=cherrypy.request.body.read()
+                jsonBody=json.loads(body)
+                alert=jsonBody["alert"]
+                parameter=jsonBody["parameter"]
+                room=uri[1]
+                tosend=f"ATTENTION!!!\n{parameter} {alert} in room {room}"
+
+                self.bot.sendMessage(user['chat_ID'], text=tosend)
+        return True
+
+if __name__ == "__main__":
+    conf=sys.argv[1]
+    conf_content=json.load(open(conf,"r"))
+    bot=LeafBot(conf)
+    print(conf)
+
+    if bot.service is not False:
+        conf = {
+            '/': {
+                'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
+                'tools.sessions.on': True
+            }
+        }
+        cherrypy.tree.mount(bot, bot.service, conf)
+        cherrypy.config.update({'server.socket_host': conf_content['IP_address']})
+        cherrypy.config.update({'server.socket_port': conf_content['IP_port']})
+        cherrypy.engine.start()
+        cherrypy.engine.block()
+
+    while 1:
+        pass
+    

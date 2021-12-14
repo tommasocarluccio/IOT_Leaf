@@ -69,9 +69,9 @@
                                 "max": 650
                             }
                         },
-                        "room_name": "prova_thing"
+                        "room_name": "Bedroom"
                     },
-                    "connection_timestamp": 1639418862.7674124
+                    "connection_timestamp": 1639413360.705788
                 },
                 {
                     "room_ID": "room_15",
@@ -101,15 +101,15 @@
                                 "max": 650
                             }
                         },
-                        "room_name": "prova_thing2"
+                        "room_name": "Bathroom"
                     },
-                    "connection_timestamp": 1639419034.0770307
+                    "connection_timestamp": 1639420210.2086751
                 }
             ],
             "last_update": "03/12/2021 16:59",
             "coord": {
-                "lat": 45.104332,
-                "long": 7.6964231
+                "lat": 59.903095,
+                "long": 10.758408
             }
         }
     ]
