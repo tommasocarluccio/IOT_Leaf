@@ -24,12 +24,12 @@
                         },
                         "thresholds": {
                             "temperature": {
-                                "min": "19",
-                                "max": "24"
+                                "min": 19,
+                                "max": 24
                             },
                             "humidity": {
-                                "min": "40",
-                                "max": "60"
+                                "min": 40,
+                                "max": 60
                             },
                             "AQI": {
                                 "min": 0,
@@ -43,7 +43,7 @@
                 },
                 {
                     "room_ID": "room_14",
-                    "connection_flag": false,
+                    "connection_flag": true,
                     "preferences": {
                         "optimal": {
                             "temperature": {

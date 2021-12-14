@@ -55,16 +55,14 @@ class pingThread(threading.Thread):
 
 
 if __name__ == '__main__':
-    settingFile=sys.argv[1]
-    device_ID=sys.argv[2]
-    pin=sys.argv[3]
+    #settingFile=sys.argv[1]
+    platform_ID=sys.argv[1]
+    room_ID=sys.argv[2]
+    device_ID=sys.argv[3]
+    pin=sys.argv[4]
     
-    roomContent=json.load(open("../room/conf/room_settings.json","r"))
-    room_ID=roomContent['room_info']['room_ID']
-    platform_ID=roomContent['platform_ID']
-    serviceCatalogAddress=roomContent['service_catalog']
-    
-    
+    settingFile="conf/{}_settings.json".format(device_ID)
+    serviceCatalogAddress=json.load(open("../room/conf/room_settings.json","r"))['service_catalog']
     class_imported=__import__(device_ID+'_class')
     sensor_class=getattr(class_imported,device_ID)
     mqtt_flag=False

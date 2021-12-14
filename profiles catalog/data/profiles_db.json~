@@ -3,9 +3,9 @@
     "profiles": [
         {
             "platform_ID": "Leaf_002",
-            "platform_name": "Home",
+            "platform_name": "Mountain house",
             "warning": true,
-            "room_cnt": 14,
+            "room_cnt": 15,
             "location": null,
             "rooms": [
                 {
@@ -40,12 +40,44 @@
                         "parameter": "room_name"
                     },
                     "connection_timestamp": 1638639712.9719746
+                },
+                {
+                    "room_ID": "room_14",
+                    "connection_flag": true,
+                    "preferences": {
+                        "optimal": {
+                            "temperature": {
+                                "min": 20,
+                                "max": 22
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 60
+                            }
+                        },
+                        "thresholds": {
+                            "temperature": {
+                                "min": 16,
+                                "max": 25
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 70
+                            },
+                            "AQI": {
+                                "min": 0,
+                                "max": 650
+                            }
+                        },
+                        "room_name": "Bedroom"
+                    },
+                    "connection_timestamp": 1639413360.705788
                 }
             ],
             "last_update": "03/12/2021 16:59",
             "coord": {
-                "lat": 45.104332,
-                "long": 7.6964231
+                "lat": 45.0402149,
+                "long": 7.6227648
             }
         }
     ]
