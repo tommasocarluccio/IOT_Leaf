@@ -32,11 +32,9 @@ class RoomConfiguration(object):
                 self.room_name=r['msg']['room_name']
                 return True
             else:
-                print(r.reason)
                 return False
         except IndexError as e:
             print(e)
-            print("Association failed.")
             return False
         
     def connection(self):
@@ -64,6 +62,8 @@ if __name__ == '__main__':
             room.save()
         else:
             print("Error connection.")
+    else:
+        print("Association failed or previously performed.")
     
     print("Exiting...")
     #time.sleep(3)
