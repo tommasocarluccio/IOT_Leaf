@@ -175,7 +175,7 @@ class catalogREST():
             try:
                 clients_service=self.catalog.retrieveService('clients_catalog')
                 r_client=requests.delete(clients_service['url']+"/removeRoom/"+username+"/"+platform_ID+"/"+room_ID)
-                if r_client['result']:
+                if r_client.json()['result']:
                     removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
                     if removedRoom:
                         self.catalog.save()
@@ -186,20 +186,18 @@ class catalogREST():
                         except:
                             pass
                         self.catalog.save()
-                        result={"result":True}
+                        result={"result":output}
+                        print(output)
+                        return json.dumps(result)
                     else:
                         output="Can't remove room '{}' from platform '{}' ".format(room_ID,platform_ID)
-                        result={"result":False}
+                        raise cherrypy.HTTPError(404, "Resource not found")
             except:
-                #output="Communication error."
-                #result={"result":False} 
                 return r_client
             
         else:
             raise cherrypy.HTTPError(501, "No operation!")
 
-        print(output)
-        return json.dumps(result)
         
 
         
