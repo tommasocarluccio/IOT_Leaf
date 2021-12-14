@@ -39,7 +39,6 @@ class warningControl():
 		response=requests.get("{}/{}/rooms/{}/preferences/thresholds".format(profiles_catalog,platform_ID,room_ID))
 		if response.status_code==200:
 			th_dict=response.json()
-			print(th_dict)
 			for meas in e:
 				parameter=meas['n']
 				try:
@@ -62,7 +61,7 @@ class warningControl():
 
 
 	def compare_value(self,minimum,maximum,value):
-		if value<minimum or value>maximum:
+		if float(value)<float(minimum) or float(value)>float(maximum):
 			return True
 			
 		else:
