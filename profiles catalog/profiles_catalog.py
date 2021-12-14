@@ -57,7 +57,6 @@ class catalogREST():
             platform_ID=json_body['platform_ID']
             platform_name=json_body['platform_ID']
             newProfile=self.catalog.insertProfile(platform_ID,platform_name)
-            
             if newProfile==True:
                 output="Profile '{}' has been added to Profiles Database".format(platform_ID)
                 saveFlag=True

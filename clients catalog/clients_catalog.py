@@ -103,6 +103,23 @@ class Registration_deployer(object):
         command=str(uri[0])
         body=cherrypy.request.body.read()
         json_body=json.loads(body.decode('utf-8'))
+        if command="newPlatform":
+            user=self.catalog.users.find_user(json_body['username'])
+            if not self.catalog.check_association(json_body['platformID']) and user is not False:
+                try:
+                    profiles_catalog=self.catalog.retrieveService("profiles_catalog")
+                    r=requests.put(profiles_catalog['url']+"/insertProfile",json={"platform_ID":json_body['platformID']}).json()
+                    if r['result']:
+                        user['platforms_list'].append(json_body['platformID'])
+                        self.catalog.platforms.set_value(params['platformID'],"associated",True)
+                        self.catalog.users.save()
+                        self.catalog.platforms.save()
+                        
+                except:
+                    raise cherrypy.HTTPError(500, "Can't install the profile")
+            else:
+                raise cherrypy.HTTPError(400, "Bad platform or user request")
+
         if command=="newRoom":
             output=self.catalog.platforms.associate_room_thingspeak(json_body['platformID'],json_body['roomID'])
             if output is not False:
