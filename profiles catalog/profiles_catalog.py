@@ -172,23 +172,28 @@ class catalogREST():
             username=uri[1]
             platform_ID=uri[1]
             room_ID=uri[2]
-            clients_service=self.catalog.retrieveService('clients_catalog')
-            r_client=requests.delete(clients_service['url']+"/removeRoom/"+username+"/"+platform_ID+"/"+room_ID).json()
-            if r_client['result']:
-                removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
-                if removedRoom:
-                    self.catalog.save()
-                    output="Room '{}' removed from platform '{}' removed".format(room_ID,platform_ID)
-                    resource_service=self.catalog.retrieveService('resource_catalog')
-                    try:
-                        requests.delete(resource_service['url']+"/"+platform_ID)
-                    except:
-                        pass
-                    self.catalog.save()
-                    result={"result":True}
-                else:
-                    output="Can't remove room '{}' from platform '{}' ".format(room_ID,platform_ID)
-                    result={"result":False}
+            try:
+                clients_service=self.catalog.retrieveService('clients_catalog')
+                r_client=requests.delete(clients_service['url']+"/removeRoom/"+username+"/"+platform_ID+"/"+room_ID)
+                if r_client['result']:
+                    removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
+                    if removedRoom:
+                        self.catalog.save()
+                        output="Room '{}' removed from platform '{}' removed".format(room_ID,platform_ID)
+                        resource_service=self.catalog.retrieveService('resource_catalog')
+                        try:
+                            requests.delete(resource_service['url']+"/"+platform_ID)
+                        except:
+                            pass
+                        self.catalog.save()
+                        result={"result":True}
+                    else:
+                        output="Can't remove room '{}' from platform '{}' ".format(room_ID,platform_ID)
+                        result={"result":False}
+            except:
+                #output="Communication error."
+                #result={"result":False} 
+                return r_client
             
         else:
             raise cherrypy.HTTPError(501, "No operation!")
