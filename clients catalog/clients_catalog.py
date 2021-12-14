@@ -151,9 +151,11 @@ class Registration_deployer(object):
     def DELETE(self,*uri):
         command=str(uri[0])
         if command=='removePlatform':
-            username=uri[1]
-            #username=str(cherrypy.request.login)
-            platform_ID=uri[2]
+            try:
+                username=uri[1]
+                platform_ID=uri[2]
+            except:
+                raise cherrypy.HTTPError(400, "Bad Request!")
             outputFlag=self.catalog.users.removePlatform(username,platform_ID)
             if outputFlag:
                 output="Platform '{}' removed".format(platform_ID)
@@ -167,20 +169,23 @@ class Registration_deployer(object):
         if command=='removeRoom':
             try:
                 username=uri[1]
-                platform_ID=uri[1]
+                platform_ID=uri[2]
                 room_ID=uri[2]
             except:
                 raise cherrypy.HTTPError(400, "Bad Request!")
-            if platform_ID not in self.catalog.users.find_user(username)["platforms_list"]:
-                raise cherrypy.HTTPError(403, "You haven't the privileges to do that!")
-            else:
-                if self.catalog.platforms.find_platform(platform_ID) is not False:
-                    outputFlag=self.catalog.platforms.removeRoom(platform_ID,room_ID)
-                    if outputFlag:
-                        output="Platform '{}' - room '{}' removed".format(platform_ID,room_ID)
-                        self.catalog.platforms.save()
+            try:
+                if platform_ID not in self.catalog.users.find_user(username)["platforms_list"]:
+                    raise cherrypy.HTTPError(403, "You haven't the privileges to do that!")
                 else:
-                    raise cherrypy.HTTPError(404, "Platform not found")
+                    if self.catalog.platforms.find_platform(platform_ID) is not False:
+                        outputFlag=self.catalog.platforms.removeRoom(platform_ID,room_ID)
+                        if outputFlag:
+                            output="Platform '{}' - room '{}' removed".format(platform_ID,room_ID)
+                            self.catalog.platforms.save()
+                    else:
+                        raise cherrypy.HTTPError(404, "Platform not found")
+            except:
+                raise cherrypy.HTTPError(403, "You haven't the privileges to do that!")
 
 
         elif command=='removeUser':
