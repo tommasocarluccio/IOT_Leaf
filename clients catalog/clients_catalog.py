@@ -156,15 +156,20 @@ class Registration_deployer(object):
                 platform_ID=uri[2]
             except:
                 raise cherrypy.HTTPError(400, "Bad Request!")
-            outputFlag=self.catalog.users.removePlatform(username,platform_ID)
-            if outputFlag:
-                output="Platform '{}' removed".format(platform_ID)
-                self.catalog.platforms.set_value(platform_ID,"associated",False)
-                self.catalog.users.save()
-                self.catalog.platforms.save()
-            else:
-                #output="Platform '{}' not found ".format(platform_ID)
-                raise cherrypy.HTTPError(404, "Platform not found")
+            try:
+                outputFlag=self.catalog.users.removePlatform(username,platform_ID)
+                if outputFlag:
+                    output="Platform '{}' removed".format(platform_ID)
+                    print(output)
+                    self.catalog.platforms.set_value(platform_ID,"associated",False)
+                    self.catalog.users.save()
+                    self.catalog.platforms.save()
+                else:
+                    output="Platform '{}' not found ".format(platform_ID)
+                    print(output)
+                    raise cherrypy.HTTPError(404, "Platform not found")
+            except:
+                raise cherrypy.HTTPError(404, "Resource not found")
 
         if command=='removeRoom':
             try:
@@ -178,31 +183,27 @@ class Registration_deployer(object):
                     outputFlag=self.catalog.platforms.removeRoom(platform_ID,room_ID)
                     if outputFlag:
                         output="Platform '{}' - room '{}' removed".format(platform_ID,room_ID)
+                        print(output)
                         self.catalog.platforms.save()
                 else:
                     raise cherrypy.HTTPError(404, "Resource not found")
             except:
                 raise cherrypy.HTTPError(404, "Resource not found")
 
-
-
         elif command=='removeUser':
             username=uri[1]
             outputFlag=self.catalog.users.removeUser(username)
-            if outputFlag==True:
+            if outputFlag:
                 output="User '{}' removed".format(username)
+                print(output)
                 self.catalog.users.save()
             else:
                 raise cherrypy.HTTPError(404, "User not found")
         
         else:
             raise cherrypy.HTTPError(501, "No operation!")
-        print(output)
-        result={"result":outputFlag}
-        return json.dumps(result)
+
     
-        
-        
 if __name__ == '__main__':
     clients_db=sys.argv[1]
     clientsCatalog=Registration_deployer(clients_db)

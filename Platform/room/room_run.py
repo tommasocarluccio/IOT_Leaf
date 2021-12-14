@@ -25,11 +25,11 @@ class RoomConfiguration(object):
             profilesAddress=self.findService('profiles_catalog')
             json_body={'platform_ID':self.platform_ID,'timestamp':self.timestamp}
             r=requests.put(f'{profilesAddress}/associateRoom/{self.platform_ID}',json=json_body).json()
-            if r['result'] is not False:
-                for parameter in r['result']:
-                    self.content['room_info'][parameter]=r['result'][parameter]
-                self.room_ID=r['result']['room_ID']
-                self.room_name=r['result']['room_name']
+            if r['msg'] is not False:
+                for parameter in r['msg']:
+                    self.content['room_info'][parameter]=r['msg'][parameter]
+                self.room_ID=r['msg']['room_ID']
+                self.room_name=r['msg']['room_name']
                 return True
             else:
                 return False
