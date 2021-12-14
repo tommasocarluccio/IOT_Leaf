@@ -181,7 +181,7 @@ class Registration_deployer(object):
                     print(output)
                     self.catalog.platforms.save()
             else:
-                raise cherrypy.HTTPError(404, reason="Resource not found")
+                raise cherrypy.HTTPError("404 Resource not found")
 
         elif command=='removeUser':
             username=uri[1]
