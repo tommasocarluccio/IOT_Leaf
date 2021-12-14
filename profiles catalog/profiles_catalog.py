@@ -182,17 +182,28 @@ class catalogREST():
                 room_ID=uri[3]
             except:
                 raise cherrypy.HTTPError(400, "Bad Request! You need to specify parameters")
-            try:
-                clients_service=self.catalog.retrieveService('clients_catalog')
-                r_client=requests.delete(clients_service['url']+"/removeRoom/"+username+"/"+platform_ID+"/"+room_ID)
+
+            clients_service=self.catalog.retrieveService('clients_catalog')
+            r_client=requests.delete(clients_service['url']+"/removeRoom/"+username+"/"+platform_ID+"/"+room_ID)
+            if r_client.status_code==200:
                 removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
-                if not removedRoom:
+                if removedRoom:
+                    self.catalog.save()
+                    output="Room '{}' removed from platform '{}'. ".format(room_ID,platform_ID)
+                    resource_service=self.catalog.retrieveService('resource_catalog')
+                    try:
+                        requests.delete(resource_service['url']+"/"+platform_ID+"/room_ID")
+                    except:
+                        pass
+                    self.catalog.save()
+                    result={"msg":output}
+                    return json.dumps(result)
+                else removedRoom:
                     output="Resource not found. Can't remove room '{}' from platform '{}'. ".format(room_ID,platform_ID)
                     raise cherrypy.HTTPError(501, "No operation!")
                 print(output)
-            except:
+            else:
                 return r_client
-            
         else:
             raise cherrypy.HTTPError(501, "No operation!")
 
