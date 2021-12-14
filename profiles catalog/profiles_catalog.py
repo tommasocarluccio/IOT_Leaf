@@ -186,7 +186,7 @@ class catalogREST():
                     raise cherrypy.HTTPError(404,"Resource not found.")
                 print(output)
             else:
-                return r_client
+                raise cherrypy.HTTPError(r_client.status_code)
 
         elif command=='removeRoom':
             try:
@@ -215,7 +215,8 @@ class catalogREST():
                     raise cherrypy.HTTPError(404, "Resource not found")
                 print(output)
             else:
-                raise cherrypy.HTTPError(r.status_code)
+                #raise cherrypy.HTTPError(r_client.status_code)
+                return r_client
         else:
             raise cherrypy.HTTPError(501, "No operation!")
    
