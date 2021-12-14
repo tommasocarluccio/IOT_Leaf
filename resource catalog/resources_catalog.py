@@ -94,7 +94,7 @@ class ResourcesServerREST(object):
             room_ID=uri[2]
             device=self.catalog.insertDevice(platform_ID,room_ID,json_body)
             if device is False:
-                raise cherrypy.HTTPError(500, "Error!")
+                raise cherrypy.HTTPError(404, "Resource not found!")
             else:
                 saveFlag=True
         else:
