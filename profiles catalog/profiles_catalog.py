@@ -173,7 +173,7 @@ class catalogREST():
             except:
                 output="Communication error."
                 print(output)
-                return r_client
+                raise cherrypy.HTTPError(r_client.status_code,r_client.response)
 
         elif command=='removeRoom':
             try:
