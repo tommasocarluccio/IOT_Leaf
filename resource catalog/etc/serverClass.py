@@ -62,7 +62,9 @@ class ResourceService(Generic_Service):
     def retrieveParameterInfo(self,platform_ID,room_ID,device_ID,parameter_name):
         notFound=1
         device=self.retrieveDeviceInfo(platform_ID,room_ID,device_ID)
+        print(device)
         for parameter in device['resources']:
+            print(parameter)
             if parameter['n']==parameter_name:
                 notFound=0
                 return parameter
