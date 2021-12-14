@@ -164,7 +164,7 @@ class catalogREST():
                         result={"result":False}
 
             except Exception as e:
-                #print(e)
+                print(e)
                 output="Communication error."
                 raise cherrypy.HTTPError(500,"Internal communication error.")
 

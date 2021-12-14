@@ -15,7 +15,7 @@ class NewProfile():
         self.rooms=rooms
         
     def jsonify(self):
-        profile={"platform_ID":self.platform_ID,'platform_name':self.platform_name,'warning':self.warning,'room_cnt':self.room_cnt,'inactive_time':self.inactiveTime,'location':self.location,'rooms':self.rooms,'last_update':self.lastUpdate}
+        profile={"platform_ID":self.platform_ID,'platform_name':self.platform_name,'warning':self.warning,'room_cnt':self.room_cnt,'inactive_time':self.inactiveTime,'location':self.location,'rooms':self.rooms,'creation_date':self.lastUpdate}
         return profile
 
 class NewRoom():
@@ -72,6 +72,7 @@ class ProfilesCatalog(Generic_Service):
             rooms=[]
             createdProfile=NewProfile(platform_ID,platform_name,inactiveTime,location,rooms,timestamp).jsonify()
             self.db_content['profiles'].append(createdProfile)
+            self.db_content['last_creation']=timestamp
             return True
         else:
             return False
