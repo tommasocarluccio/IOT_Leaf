@@ -11,7 +11,7 @@
         "service": "/broker",
         "topic": {
             "data": "Leaf_monitoring/data/",
-            "actuators": "Leaf_monitoring/actuators"
+            "actuators": "Leaf_monitoring/actuators/"
         }
     },
     "clients_service": {
