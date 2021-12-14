@@ -197,7 +197,6 @@ class catalogREST():
                 raise cherrypy.HTTPError(400, "Bad Request! You need to specify parameters")
 
             r_client=requests.delete(clients_service['url']+"/removeRoom/"+username+"/"+platform_ID+"/"+room_ID)
-            status=r_client.status_code
             try:
                 r_client.raise_for_status()
                 removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
@@ -217,9 +216,7 @@ class catalogREST():
                     raise cherrypy.HTTPError(404, "Resource not found")
                 print(output)
             except requests.exceptions.HTTPError as e:
-                return str(e.response.reason)
-
-                #raise cherrypy.HTTPError(r_client.status_code)
+                raise cherrypy.HTTPError("{} {}".format(str(e.response.status_code),str(e.response.reason)))
                 #return r_client
         else:
             raise cherrypy.HTTPError(501, "No operation!")
