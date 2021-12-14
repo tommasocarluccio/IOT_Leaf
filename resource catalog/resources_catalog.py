@@ -85,7 +85,7 @@ class ResourcesServerREST(object):
                     newPlatform=self.catalog.insertPlatform(platform_ID,rooms)
                     self.catalog.subscriber.follow(platform_ID+'/#')
                 else:
-                    raise cherrypy.HTTPError(400,"Platform Not valid")
+                    raise cherrypy.HTTPError("409 Platform Not valid")
                     
             self.catalog.insertRoom(platform_ID,room_ID,json_body)
             saveFlag=True
@@ -112,29 +112,32 @@ class ResourcesServerREST(object):
                 if uriLen>2:
                     device_ID=uri[2]
                     removedDevice=self.catalog.removeDevice(platform_ID,room_ID,device_ID)
-                    if removedDevice==True:
+                    if removedDevice:
                         output="Platform '{}' - Room '{}' - Device '{}' removed".format(platform_ID,room_ID,device_ID)
                         self.catalog.dateUpdate(self.catalog.retrieveRoomInfo(platform_ID,room_ID))
                         saveFlag=True
                     else:
                         output="Platform '{}'- Room '{}' - Device '{}' not found ".format(platform_ID,room_ID,device_ID)
+                        raise cherrypy.HTTPError(404, "Resource not found!")
                 else:
 
                     removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
-                    if removedRoom==True:
+                    if removedRoom:
 
                         output="Platform '{}' - Room '{}' removed".format(platform_ID,room_ID)
                         saveFlag=True
                     else:
                         output="Platform '{}'- Room '{}' not found ".format(platform_ID,room_ID)
+                        raise cherrypy.HTTPError(404, "Resource not found!")
 
             else:
                 removedPlatform=self.catalog.removePlatform(platform_ID) 
-                if removedPlatform==True:
+                if removedPlatform:
                     output="Platform '{}' removed".format(platform_ID)
                     saveFlag=True
                 else:
                     output="Platform '{}' not found ".format(platform_ID)
+                    raise cherrypy.HTTPError(404, "Resource not found!")
         else:
             raise cherrypy.HTTPError(501, "No operation!")
         if saveFlag:

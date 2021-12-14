@@ -96,8 +96,8 @@ class catalogREST():
                 raise cherrypy.HTTPError("400 Platform not found")
                 
         elif command=='associateRoom':
-            platform_ID=uri[1]
             try:
+                platform_ID=uri[1]
                 timestamp=json_body['timestamp']
             except:
                 raise cherrypy.HTTPError("400 Bad Request! You need to specify parameters")
@@ -208,7 +208,7 @@ class catalogREST():
                     output="Room '{}' removed from platform '{}'. ".format(room_ID,platform_ID)
                     resource_service=self.catalog.retrieveService('resource_catalog')
                     try:
-                        requests.delete(resource_service['url']+"/"+platform_ID+"/room_ID")
+                        requests.delete(resource_service['url']+"/"+platform_ID+"/"+room_ID)
                     except:
                         pass
                     self.catalog.save()
