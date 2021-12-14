@@ -31,8 +31,8 @@ class warningControl():
 
 	def notify(self,topic,msg):
 		payload=json.loads(msg)
+		print(payload)
 		platform_ID=payload['bn'].split("/")[0]
-		print(platform_ID)
 		room_ID=payload['bn'].split("/")[1]
 		device_ID=payload['bn'].split("/")[2]
 		e=payload['e']
