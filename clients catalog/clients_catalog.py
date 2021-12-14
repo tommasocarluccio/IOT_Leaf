@@ -140,7 +140,7 @@ class Registration_deployer(object):
             #username=str(cherrypy.request.login)
             platform_ID=uri[2]
             outputFlag=self.catalog.users.removePlatform(username,platform_ID)
-            if outputFlag==True:
+            if outputFlag:
                 output="Platform '{}' removed".format(platform_ID)
                 self.catalog.platforms.set_value(platform_ID,"associated",False)
                 self.catalog.users.save()
@@ -152,12 +152,13 @@ class Registration_deployer(object):
         if command=='removeRoom':
             platform_ID=uri[1]
             room_ID=uri[2]
-            outputFlag=self.catalog.platforms.removeRoom(platform_ID,room_ID)
-            if outputFlag:
-                output="Platform '{}' - room '{}' removed".format(platform_ID,room_ID)
-                self.catalog.platforms.save()
+            if self.catalog.platforms.find_platform(platform_ID) is not False:
+                outputFlag=self.catalog.platforms.removeRoom(platform_ID,room_ID)
+                if outputFlag:
+                    output="Platform '{}' - room '{}' removed".format(platform_ID,room_ID)
+                    self.catalog.platforms.save()
             else:
-                raise cherrypy.HTTPError(404, "Requested information not found")
+                raise cherrypy.HTTPError(404, "Platform not found")
 
         elif command=='removeUser':
             username=uri[1]
