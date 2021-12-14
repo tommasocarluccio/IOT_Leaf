@@ -21,22 +21,17 @@ class RoomConfiguration(object):
         return r['url']
 
     def association(self):
-        try:
-            profilesAddress=self.findService('profiles_catalog')
-            json_body={'platform_ID':self.platform_ID,'timestamp':self.timestamp}
-            r=requests.put(f'{profilesAddress}/associateRoom/{self.platform_ID}',json=json_body)
-            if r.status_code==200:
-                for parameter in r['msg']:
-                    self.content['room_info'][parameter]=r['msg'][parameter]
-                self.room_ID=r['msg']['room_ID']
-                self.room_name=r['msg']['room_name']
-                return True
-            else:
-                print(str(r.reason))
-                return False
-        except IndexError as e:
-            print(e)
-            print("Association failed.")
+        profilesAddress=self.findService('profiles_catalog')
+        json_body={'platform_ID':self.platform_ID,'timestamp':self.timestamp}
+        r=requests.put(f'{profilesAddress}/associateRoom/{self.platform_ID}',json=json_body)
+        if r.status_code==200:
+            for parameter in r['msg']:
+                self.content['room_info'][parameter]=r['msg'][parameter]
+            self.room_ID=r['msg']['room_ID']
+            self.room_name=r['msg']['room_name']
+            return True
+        else:
+            print(str(r.reason))
             return False
         
     def connection(self):
