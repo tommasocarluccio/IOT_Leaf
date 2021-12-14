@@ -216,7 +216,7 @@ class catalogREST():
                     raise cherrypy.HTTPError(404, "Resource not found")
                 print(output)
             else:
-                return r_client.response.status_code
+                return r_client.reason
 
                 #raise cherrypy.HTTPError("{} {}".format(str(e.response.status_code),str(e.response.reason)))
                 #cherrypy.response.status=
