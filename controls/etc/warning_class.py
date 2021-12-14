@@ -46,6 +46,7 @@ class warningControl():
 					warning_cmd=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
 					topic=self.retrieve_topic(platform_ID,room_ID,parameter+"_warning")	
 					if topic is not False:
+						print(topic)
 						self.pub.publish(topic,json.dumps(warning_cmd))
 					if warning_cmd:
 						print("Warning sent to {}-{}".format(platform_ID,room_ID))		
