@@ -175,7 +175,7 @@ class catalogREST():
             try:
                 username=uri[1]
                 platform_ID=uri[2]
-                room_ID=uri[2]
+                room_ID=uri[3]
             except:
                 raise cherrypy.HTTPError(400, "Bad Request!")
             try:
