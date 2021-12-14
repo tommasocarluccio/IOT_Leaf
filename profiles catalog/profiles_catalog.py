@@ -218,7 +218,7 @@ class catalogREST():
             except requests.exceptions.HTTPError as e:
 
                 #raise cherrypy.HTTPError("{} {}".format(str(e.response.status_code),str(e.response.reason)))
-                cherrypy.reponse.status=300
+                cherrypy.response.status=300
                 return r_client
         else:
             raise cherrypy.HTTPError(501, "No operation!")
