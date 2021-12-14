@@ -166,7 +166,6 @@ class catalogREST():
             try:
                 username=uri[1]
                 platform_ID=uri[2]
-                break
             except:
                 raise cherrypy.HTTPError("400 Bad Request! You need to specify parameters")
             r_client=requests.delete(clients_service['url']+"/removePlatform/"+username+"/"+platform_ID).json()
@@ -190,33 +189,35 @@ class catalogREST():
                 raise cherrypy.HTTPError("{} {}".format(str(r_client.status_code),str(r_client.reason)))
 
         elif command=='removeRoom':
+            flag=False
             try:
                 username=uri[1]
                 platform_ID=uri[2]
                 room_ID=uri[3]
+                flag=True
             except:
                 raise cherrypy.HTTPError("400 Bad Request! You need to specify parameters")
-
-            r_client=requests.delete(clients_service['url']+"/removeRoom/"+username+"/"+platform_ID+"/"+room_ID)
-            if r_client.status_code==200:
-                removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
-                if removedRoom:
-                    self.catalog.save()
-                    output="Room '{}' removed from platform '{}'. ".format(room_ID,platform_ID)
-                    resource_service=self.catalog.retrieveService('resource_catalog')
-                    try:
-                        requests.delete(resource_service['url']+"/"+platform_ID+"/room_ID")
-                    except:
-                        pass
-                    self.catalog.save()
-                    result={"msg":output}
-                    return json.dumps(result)
+            if flag:
+                r_client=requests.delete(clients_service['url']+"/removeRoom/"+username+"/"+platform_ID+"/"+room_ID)
+                if r_client.status_code==200:
+                    removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
+                    if removedRoom:
+                        self.catalog.save()
+                        output="Room '{}' removed from platform '{}'. ".format(room_ID,platform_ID)
+                        resource_service=self.catalog.retrieveService('resource_catalog')
+                        try:
+                            requests.delete(resource_service['url']+"/"+platform_ID+"/room_ID")
+                        except:
+                            pass
+                        self.catalog.save()
+                        result={"msg":output}
+                        return json.dumps(result)
+                    else:
+                        output="Can't remove room '{}' from platform '{}'. ".format(room_ID,platform_ID)
+                        raise cherrypy.HTTPError("404 Resource not found")
+                    print(output)
                 else:
-                    output="Can't remove room '{}' from platform '{}'. ".format(room_ID,platform_ID)
-                    raise cherrypy.HTTPError("404 Resource not found")
-                print(output)
-            else:
-                raise cherrypy.HTTPError("{} {}".format(str(r_client.status_code),str(r_client.reason)))
+                    raise cherrypy.HTTPError("{} {}".format(str(r_client.status_code),str(r_client.reason)))
         else:
             raise cherrypy.HTTPError("501 No operation!")
    
