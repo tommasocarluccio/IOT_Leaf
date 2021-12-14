@@ -160,14 +160,14 @@ class catalogREST():
         try:
             clients_service=self.catalog.retrieveService('clients_catalog')
         except:
-            raise cherrypy.HTTPError(503, "Can't perform the request now...")
+            raise cherrypy.HTTPError("503 Can't perform the request now...")
 
         if command=='removeProfile':
             try:
                 username=uri[1]
                 platform_ID=uri[2]
             except:
-                raise cherrypy.HTTPError(400, "Bad Request! You need to specify parameters")
+                raise cherrypy.HTTPError("400 Bad Request! You need to specify parameters")
             r_client=requests.delete(clients_service['url']+"/removePlatform/"+username+"/"+platform_ID).json()
             if r_client.status_code==200:
                 removedProfile=self.catalog.removeProfile(platform_ID)
@@ -183,7 +183,7 @@ class catalogREST():
                     return json.dumps(result)
                 else:
                     output="Platform '{}' not found ".format(platform_ID)
-                    raise cherrypy.HTTPError(404,"Resource not found.")
+                    raise cherrypy.HTTPError("400 Resource not found.")
                 print(output)
             else:
                 raise cherrypy.HTTPError(r_client.status_code)
@@ -194,11 +194,10 @@ class catalogREST():
                 platform_ID=uri[2]
                 room_ID=uri[3]
             except:
-                raise cherrypy.HTTPError(400, "Bad Request! You need to specify parameters")
+                raise cherrypy.HTTPError("400 Bad Request! You need to specify parameters")
 
             r_client=requests.delete(clients_service['url']+"/removeRoom/"+username+"/"+platform_ID+"/"+room_ID)
             if r_client.status_code==200:
-                #r_client.raise_for_status()
                 removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
                 if removedRoom:
                     self.catalog.save()
@@ -213,14 +212,12 @@ class catalogREST():
                     return json.dumps(result)
                 else:
                     output="Can't remove room '{}' from platform '{}'. ".format(room_ID,platform_ID)
-                    raise cherrypy.HTTPError(404, "Resource not found")
+                    raise cherrypy.HTTPError("404 Resource not found")
                 print(output)
             else:
                 raise cherrypy.HTTPError("{} {}".format(str(r_client.status_code),str(r_client.reason)))
-                #cherrypy.response.status=
-                #return r_client
         else:
-            raise cherrypy.HTTPError(501, "No operation!")
+            raise cherrypy.HTTPError("501 No operation!")
    
 if __name__ == '__main__':
     conf=sys.argv[1]

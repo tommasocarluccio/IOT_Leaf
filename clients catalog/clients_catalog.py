@@ -154,7 +154,7 @@ class Registration_deployer(object):
                 username=uri[1]
                 platform_ID=uri[2]
             except:
-                raise cherrypy.HTTPError(400, "Bad Request!")
+                raise cherrypy.HTTPError("400 Missing parameters!")
             outputFlag=self.catalog.users.removePlatform(username,platform_ID)
             if outputFlag:
                 output="Platform '{}' removed".format(platform_ID)
@@ -165,7 +165,7 @@ class Registration_deployer(object):
             else:
                 output="Platform '{}' not found ".format(platform_ID)
                 print(output)
-                raise cherrypy.HTTPError(404, "Resource not found")
+                raise cherrypy.HTTPError("404 Resource not found")
 
         if command=='removeRoom':
             try:
@@ -173,7 +173,7 @@ class Registration_deployer(object):
                 platform_ID=uri[2]
                 room_ID=uri[3]
             except:
-                raise cherrypy.HTTPError(400, "Bad Request!")
+                raise cherrypy.HTTPError("400 Missing parameters!")
             if self.catalog.users.find_user(username) and platform_ID in self.catalog.users.find_user(username)["platforms_list"]:
                 outputFlag=self.catalog.platforms.removeRoom(platform_ID,room_ID)
                 if outputFlag:
@@ -191,7 +191,7 @@ class Registration_deployer(object):
                 print(output)
                 self.catalog.users.save()
             else:
-                raise cherrypy.HTTPError(404, "User not found")
+                raise cherrypy.HTTPError("404 User not found")
         
         else:
             raise cherrypy.HTTPError(501, "No operation!")
