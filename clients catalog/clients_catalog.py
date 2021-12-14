@@ -60,7 +60,7 @@ class Registration_deployer(object):
                 del data['password']
                 return json.dumps(data)
             except:
-                raise cherrypy.HTTPError(401,"Login failed")
+                raise cherrypy.HTTPError("401 Login failed")
         elif(len(uri))>0 and uri[0]=="platforms_list":
             #username=str(cherrypy.request.login)
             username=params['username']
@@ -96,7 +96,7 @@ class Registration_deployer(object):
                 except:
                     raise cherrypy.HTTPError(400, "Bad request!")
             else:
-                raise cherrypy.HTTPError(404, "Platform not found!")
+                raise cherrypy.HTTPError("404 Platform not found!")
 
 
         elif(len(uri))==4 and uri[0]=="info":
@@ -112,7 +112,7 @@ class Registration_deployer(object):
                 
                 
         else:
-            raise cherrypy.HTTPError(501, "No operation!")
+            raise cherrypy.HTTPError("501 No operation!")
             
     def PUT(self,*uri):
         command=str(uri[0])
@@ -133,7 +133,7 @@ class Registration_deployer(object):
                 else:
                     return r
             else:
-                raise cherrypy.HTTPError(409, "Already exists!")
+                raise cherrypy.HTTPError("409 Already exists!")
 
         if command=="newRoom":
             output=self.catalog.platforms.associate_room_thingspeak(json_body['platformID'],json_body['roomID'])
@@ -143,9 +143,9 @@ class Registration_deployer(object):
                 print(output)
                 return json.dumps({'msg':output})
             else:
-                raise cherrypy.HTTPError(404, "Platform not found!")
+                raise cherrypy.HTTPError("404 Platform not found!")
         else:
-            raise cherrypy.HTTPError(501, "No operation!")
+            raise cherrypy.HTTPError("501 No operation!")
 
     def DELETE(self,*uri):
         command=str(uri[0])

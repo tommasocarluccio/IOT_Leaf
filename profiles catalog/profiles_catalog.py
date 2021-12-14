@@ -61,7 +61,7 @@ class catalogREST():
                 platform_ID=json_body['platform_ID']
                 platform_name=json_body['platform_ID']
             except:
-                raise cherrypy.HTTPError(400, "Bad Request! You need to specify parameters")
+                raise cherrypy.HTTPError("400 Bad Request! You need to specify parameters")
             newProfile=self.catalog.insertProfile(platform_ID,platform_name)
             if newProfile:
                 output="Profile '{}' has been added to Profiles Database".format(platform_ID)
@@ -69,14 +69,14 @@ class catalogREST():
                 saveFlag=True
             else:
                 output="'{}' already exists!".format(platform_ID)
-                raise cherrypy.HTTPError(409,"Resource already exists!")
+                raise cherrypy.HTTPError("409 Resource already exists!")
         #from bot
         elif command=='insertRoom':
             try:
                 platform_ID=uri[1]
                 room_name=json_body['room_name']
             except:
-                raise cherrypy.HTTPError(400, "Bad Request! You need to specify parameters")
+                raise cherrypy.HTTPError("400 Bad Request! You need to specify parameters")
 
             newRoom=self.catalog.insertRoom(platform_ID,room_name)
             if newRoom is not False:
@@ -93,7 +93,7 @@ class catalogREST():
                     return thingspeak_association
             else:
                 output="Room '{}' cannot be added to platform '{}'".format(room_name,platform_ID)
-                raise cherrypy.HTTPError(404, "Platform not found")
+                raise cherrypy.HTTPError("400 Platform not found")
                 
         elif command=='associateRoom':
             platform_ID=uri[1]
@@ -104,10 +104,10 @@ class catalogREST():
                 saveFlag=True
             else:
                 output="Association failed in platform '{}' or already performed.".format(platform_ID)
-                raise cherrypy.HTTPError(409, "Association failed")
+                raise cherrypy.HTTPError("409 Association failed")
 
         else:
-            raise cherrypy.HTTPError(501, "No operation!")
+            raise cherrypy.HTTPError("501 No operation!")
         
         if saveFlag:
             self.catalog.save()
@@ -124,7 +124,7 @@ class catalogREST():
                 parameter=json_body['parameter']
                 parameter_value=json_body['parameter_value']
             except:
-                raise cherrypy.HTTPError(400, "Bad Request! You need to specify parameters")
+                raise cherrypy.HTTPError("400 Bad Request! You need to specify parameters")
             newSetting=self.catalog.setParameter(platform_ID,parameter,parameter_value)
             if newSettingTrue:
                 output="Platform '{}': {} is now {}".format(platform_ID, parameter,parameter_value)
@@ -140,7 +140,7 @@ class catalogREST():
                 platform_ID=uri[1]
                 room_ID=uri[2]
             except:
-                raise cherrypy.HTTPError(400, "Bad Request! You need to specify parameters")
+                raise cherrypy.HTTPError("400 Bad Request! You need to specify parameters")
 
             newSetting=self.catalog.setRoomParameter(platform_ID,room_ID,json_body)
             if newSetting:
