@@ -216,9 +216,11 @@ class catalogREST():
                     output="Can't remove room '{}' from platform '{}'. ".format(room_ID,platform_ID)
                     raise cherrypy.HTTPError(404, "Resource not found")
                 print(output)
-            except:
+            except requests.exceptions.HTTPError as e:
+                return e
+
                 #raise cherrypy.HTTPError(r_client.status_code)
-                return r_client
+                #return r_client
         else:
             raise cherrypy.HTTPError(501, "No operation!")
    
