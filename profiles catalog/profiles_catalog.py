@@ -186,6 +186,7 @@ class catalogREST():
                 clients_service=self.catalog.retrieveService('clients_catalog')
                 r_client=requests.delete(clients_service['url']+"/removeRoom/"+username+"/"+platform_ID+"/"+room_ID)
                 removedRoom=self.catalog.removeRoom(platform_ID,room_ID)
+                print(removedRoom)
                 if removedRoom:
                     self.catalog.save()
                     output="Room '{}' removed from platform '{}'. ".format(room_ID,platform_ID)
@@ -193,7 +194,6 @@ class catalogREST():
                     try:
                         requests.delete(resource_service['url']+"/"+platform_ID+"/room_ID")
                     except:
-                        print("miao")
                         pass
                     self.catalog.save()
                     result={"msg":output}
