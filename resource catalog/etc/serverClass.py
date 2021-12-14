@@ -39,11 +39,14 @@ class ResourceService(Generic_Service):
     def retrieveRoomInfo(self,platform_ID,room_ID):
         notFound=1
         platform=self.retrievePlatform(platform_ID)
-        for room in platform['rooms']:
-            if room['room_ID']==room_ID:
-                notFound=0
-                return room
-        if notFound==1:
+        if platform is not False:
+            for room in platform['rooms']:
+                if room['room_ID']==room_ID:
+                    notFound=0
+                    return room
+            if notFound==1:
+                return False
+        else:
             return False
 
     def retrieveDeviceInfo(self,platform_ID,room_ID,device_ID):
