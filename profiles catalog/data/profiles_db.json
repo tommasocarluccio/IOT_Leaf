@@ -3,7 +3,7 @@
     "profiles": [
         {
             "platform_ID": "Leaf_002",
-            "platform_name": "Home",
+            "platform_name": "Mountain house",
             "warning": true,
             "room_cnt": 15,
             "location": null,
@@ -108,8 +108,8 @@
             ],
             "last_update": "03/12/2021 16:59",
             "coord": {
-                "lat": 59.903095,
-                "long": 10.758408
+                "lat": 45.0402149,
+                "long": 7.6227648
             }
         }
     ]

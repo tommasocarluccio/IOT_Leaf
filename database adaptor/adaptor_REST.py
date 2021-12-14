@@ -1,3 +1,4 @@
+from collections import defaultdict
 import cherrypy
 import json
 import requests
@@ -21,6 +22,7 @@ class AdaptorREST():
                 clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+'/'+room_ID+"/thingspeak").json()
                 client=next((item for item in clients_result if item["room"] == room_ID), False)
                 channelID=client["channelID"]
+                fields=client['fields']
             except Exception as e:
                 print(e)
                 raise cherrypy.HTTPError(500,"Ops! Try later..")
@@ -28,10 +30,14 @@ class AdaptorREST():
         except:
             raise cherrypy.HTTPError(400,"Check your request and try again!")
         if command=="now":
-            thingspeak_url="{}/channels/{}/feeds.json?results=1".format(self.adaptor.thingspeak_url,channelID)
+            thingspeak_url="{}/channels/{}/feeds/last.json".format(self.adaptor.thingspeak_url,channelID)
             result=requests.get(thingspeak_url).json()
-            print(result)
-            return json.dumps(result)
+            output=defaultdict(list)
+            for d in (fields, result):
+                for key, value in d.items():
+                    output[key].append(value)
+            #print(output)
+            return json.dumps(output)
         elif command=='station':
             thingspeak_url="{}/channels/{}/feeds.json?metadata=true".format(self.adaptor.thingspeak_url,channelID)
             result=requests.get(thingspeak_url).json()
