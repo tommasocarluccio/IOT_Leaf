@@ -175,7 +175,7 @@ class Registration_deployer(object):
                 room_ID=uri[3]
             except:
                 raise cherrypy.HTTPError(400, "Bad Request!")
-            if username in self.catalog.users.find_user(username) and platform_ID in self.catalog.users.find_user(username)["platforms_list"]:
+            if self.catalog.users.find_user(username) and platform_ID in self.catalog.users.find_user(username)["platforms_list"]:
                 outputFlag=self.catalog.platforms.removeRoom(platform_ID,room_ID)
                 if outputFlag:
                     output="Platform '{}' - room '{}' removed".format(platform_ID,room_ID)
