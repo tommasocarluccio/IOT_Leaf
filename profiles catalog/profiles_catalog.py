@@ -108,7 +108,7 @@ class catalogREST():
                 saveFlag=True
             else:
                 output="Association failed in platform '{}' or already performed.".format(platform_ID)
-                raise cherrypy.HTTPError("409 Association failed")
+                raise cherrypy.HTTPError("409 "+output)
 
         else:
             raise cherrypy.HTTPError("501 No operation!")
