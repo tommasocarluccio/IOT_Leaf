@@ -216,7 +216,8 @@ class catalogREST():
                     raise cherrypy.HTTPError(404, "Resource not found")
                 print(output)
             except requests.exceptions.HTTPError as e:
-                raise cherrypy.HTTPError("{} {}".format(str(e.response.status_code),str(e.response.reason)))
+                return str(e.response.reason)
+                #raise cherrypy.HTTPError("{} {}".format(str(e.response.status_code),str(e.response.reason)))
                 #return r_client
         else:
             raise cherrypy.HTTPError(501, "No operation!")
