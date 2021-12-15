@@ -130,7 +130,7 @@ class catalogREST():
             except:
                 raise cherrypy.HTTPError("400 Bad Request! You need to specify parameters")
             newSetting=self.catalog.setParameter(platform_ID,parameter,parameter_value)
-            if newSettingTrue:
+            if newSetting:
                 output="Platform '{}': {} is now {}".format(platform_ID, parameter,parameter_value)
                 self.catalog.save()
             else:
