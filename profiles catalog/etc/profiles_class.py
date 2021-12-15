@@ -112,7 +112,6 @@ class ProfilesCatalog(Generic_Service):
 
     def removeProfile(self,platform_ID):
         profile=self.retrieveProfileInfo(platform_ID)
-        print(profile)
         if profile is not False:
             self.db_content["profiles"].remove(profile)
             return True
