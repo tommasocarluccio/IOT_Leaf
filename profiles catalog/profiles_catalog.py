@@ -165,7 +165,6 @@ class catalogREST():
             clients_service=self.catalog.retrieveService('clients_catalog')
         except:
             raise cherrypy.HTTPError("503 Can't perform the request now...")
-        print(command)
         if command=='removeProfile':
             try:
                 username=uri[1]
