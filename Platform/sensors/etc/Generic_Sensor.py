@@ -4,6 +4,7 @@ import json
     
 class SensorPublisher(MyPublisher):
     def __init__(self, configuration_filename, platform_ID,room_ID, device_ID,broker_ip,broker_port,data_topic):
+        self.alive=True
         self.broker_IP=broker_ip
         self.broker_port=broker_port
         self.platform_ID=platform_ID

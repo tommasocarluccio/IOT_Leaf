@@ -18,8 +18,39 @@
                                     "topic": "Leaf_monitoring/actuators/Leaf_002/room_13/LED_1_AQI"
                                 }
                             ],
-                            "timestamp": 1639594382.5541587,
-                            "date": "15/12/2021 19:53"
+                            "timestamp": 1639595050.0165927,
+                            "date": "15/12/2021 20:04"
+                        },
+                        {
+                            "deviceID": "mq5",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "AQI",
+                                    "u": "ppm",
+                                    "topic": "Leaf_monitoring/data/Leaf_002/room_13/mq5"
+                                }
+                            ],
+                            "timestamp": 1639595022.371101,
+                            "date": "15/12/2021 20:03"
+                        },
+                        {
+                            "deviceID": "dht11",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "temperature",
+                                    "u": "C",
+                                    "topic": "Leaf_monitoring/data/Leaf_002/room_13/dht11"
+                                },
+                                {
+                                    "n": "humidity",
+                                    "u": "%",
+                                    "topic": "Leaf_monitoring/data/Leaf_002/room_13/dht11"
+                                }
+                            ],
+                            "timestamp": 1639595068.8549612,
+                            "date": "15/12/2021 20:04"
                         }
                     ]
                 }
