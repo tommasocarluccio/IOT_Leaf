@@ -172,7 +172,7 @@ class catalogREST():
                 platform_ID=uri[2]
             except:
                 raise cherrypy.HTTPError("400 Bad Request! You need to specify parameters")
-            r_client=requests.delete(clients_service['url']+"/removePlatform/"+username+"/"+platform_ID).json()
+            r_client=requests.delete(clients_service['url']+"/removePlatform/"+username+"/"+platform_ID)
             if r_client.status_code==200:
                 removedProfile=self.catalog.removeProfile(platform_ID)
                 if removedProfile:
