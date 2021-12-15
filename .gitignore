@@ -139,5 +139,6 @@ adaptor.json
 default.json
 room_settings.json
 profiles_catalog.json
+conf.json
 service_catalog.json
 
