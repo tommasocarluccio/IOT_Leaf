@@ -13,13 +13,16 @@ class SendDataThread(threading.Thread):
     def run(self): 
         while True:
             output=self.sensor.retrieveData()
-            try:
-                self.sensor.publishData(output)
-                self.sensor.alive=True
+            if self.sensor.connected:
+                try:
+                    self.sensor.publishData(output)
+                    self.sensor.alive=True
+                    time.sleep(self.sensor.time_sleep)
+                except:
+                    self.sensor.alive=False
+                    time.sleep(5)
+            else:
                 time.sleep(self.sensor.time_sleep)
-            except:
-                self.sensor.alive=False
-                time.sleep(1)
         self.sensor.stop()
 
 class pingThread(threading.Thread):
@@ -50,8 +53,10 @@ class pingThread(threading.Thread):
             catalog=requests.get(self.serviceCatalogAddress+'/resource_catalog').json()['url']
             r=requests.put("{}/insertDevice/{}/{}".format(catalog,self.platform_ID,self.room_ID),data=json.dumps(self.data))
             if r.status_code==200:
+                self.sensor.connected=True
                 return True
             else:
+                self.sensor.connected=False
                 return False
         except Exception as e:
             #print(e)
