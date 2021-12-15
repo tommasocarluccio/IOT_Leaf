@@ -38,10 +38,11 @@ class RoomConfiguration(object):
         try:
             resourcesAddress=self.findService('resource_catalog')
             server_msg={"room_ID":self.room_ID,"room_name":self.room_name,"devices":self.content['room_info']['devices']}
-            requests.put(f'{resourcesAddress}/insertRoom/{self.platform_ID}',json=server_msg)
+            r=requests.put(f'{resourcesAddress}/insertRoom/{self.platform_ID}',json=server_msg)
+            r.raise_for_status()
             return True
         except Exception as e:
-            print(e)
+            #print(e)
             return False
         
     def save(self):
