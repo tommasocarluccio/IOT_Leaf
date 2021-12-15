@@ -37,6 +37,12 @@
         "service": "/profiles_catalog",
         "url": "http://192.168.1.130:8081/profiles_catalog"
     },
+    "bot_catalog": {
+        "IP_address": "192.168.1.89",
+        "port": 8087,
+        "service": "/bot_catalog",
+        "url": "http://192.168.1.89:8087/bot_catalog"
+    },
     "resource_catalog": {
         "IP_address": "192.168.1.130",
         "port": 8083,

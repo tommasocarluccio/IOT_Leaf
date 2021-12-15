@@ -86,9 +86,9 @@ class LED():
         payload=json.loads(msg)
         if payload:
             GPIO.output(self.pin,GPIO.HIGH)
+            print("LED is on")
         else:
             GPIO.output(self.pin,GPIO.LOW)
-        print("New LED command")
             
 if __name__=='__main__':
     filename=sys.argv[1]
@@ -106,7 +106,7 @@ if __name__=='__main__':
             broker=requests.get(serviceCatalogAddress+'/broker').json()
             broker_IP=broker.get('IP_address')
             broker_port=broker.get('port')
-            data_topic=broker['topic'].get('data')
+            data_topic=broker['topic'].get('actuators')
             base_topic="{}{}/{}".format(data_topic,platform_ID,room_ID)
             myLED=LED(clientID,base_topic,broker_IP,broker_port,parameter,pin)
             myLED.setup()

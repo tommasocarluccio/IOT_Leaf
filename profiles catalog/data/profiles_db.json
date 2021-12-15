@@ -3,7 +3,7 @@
     "profiles": [
         {
             "platform_ID": "Leaf_002",
-            "platform_name": "Mountain house",
+            "platform_name": "My house",
             "warning": true,
             "room_cnt": 15,
             "location": null,
@@ -57,8 +57,8 @@
                         },
                         "thresholds": {
                             "temperature": {
-                                "min": 16,
-                                "max": 25
+                                "min": "0",
+                                "max": "650"
                             },
                             "humidity": {
                                 "min": 40,

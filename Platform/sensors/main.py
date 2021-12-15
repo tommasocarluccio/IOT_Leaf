@@ -12,12 +12,16 @@ class SendDataThread(threading.Thread):
         
     def run(self): 
         while True:
+            err_flag=False
             output=self.sensor.retrieveData()
-            try:
-                self.sensor.publishData(output)
-                time.sleep(self.sensor.time_sleep)
-            except:
-                time.sleep(1)
+            while err_flag is not True:
+                try:
+                    self.sensor.publishData(output)
+                    err_flag=True
+                    time.sleep(self.sensor.time_sleep)
+                except:
+                    err_flag=False
+                    time.sleep(1)
         self.sensor.stop()
 
 class pingThread(threading.Thread):
