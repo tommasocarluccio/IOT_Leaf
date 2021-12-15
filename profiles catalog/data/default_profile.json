@@ -8,6 +8,10 @@
       "humidity": {
         "min": 40,
         "max": 60
+      },
+      "AQI":{
+        "min": 0,
+        "max": 650    
       }
     },
     "thresholds": {

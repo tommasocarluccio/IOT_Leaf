@@ -402,8 +402,8 @@ class LeafBot(Generic_Service):
                 user['flags']['room_name_flag']=0
 
             elif user['flags']['thresholds_flag']==1:
-                min_th=message.split(" ")[0]
-                max_th=message.split(" ")[1]
+                min_th=float(message.split(" ")[0])
+                max_th=float(message.split(" ")[1])
                 if min_th>max_th:
                     self.bot.sendMessage(chat_ID, 'The minimum cannot be greater than the maximum value! Please try again!', reply_markup=self.room_menu)
                     user['flags']['thresholds_flag']==0
@@ -451,7 +451,7 @@ class LeafBot(Generic_Service):
 
         self.login_keyboard= InlineKeyboardMarkup (inline_keyboard=[
                     [InlineKeyboardButton(text=emoji.emojize(':gear: LOGIN', use_aliases=True), callback_data='login')],
-                    [InlineKeyboardButton(text=emoji.emojize(':green_circle:Register on the website:green_circle:', use_aliases=True), url="http://reg.html")],
+                    [InlineKeyboardButton(text=emoji.emojize(':green_circle:Register on the website:green_circle:', use_aliases=True), url=self.clientURL+"/reg")],
                     ])
 
         self.back_login=InlineKeyboardMarkup(inline_keyboard=[
