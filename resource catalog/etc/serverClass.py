@@ -4,7 +4,6 @@ import time
 from etc.rooms_catalog import RoomsCatalog
 from etc.devices_catalog import DevicesCatalog
 from etc.generic_service import *
-from etc.MyMQTT import *
 
 class NewPlatform():
     def __init__(self,platform_ID,rooms,last_update):

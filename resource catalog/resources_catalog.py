@@ -83,7 +83,6 @@ class ResourcesServerREST(object):
                 if(requests.get(requestClients['url']+'/checkAssociation/'+platform_ID).json()["result"]):
                     rooms=[]
                     newPlatform=self.catalog.insertPlatform(platform_ID,rooms)
-                    self.catalog.subscriber.follow(platform_ID+'/#')
                 else:
                     raise cherrypy.HTTPError("409 Platform Not valid")
                     
