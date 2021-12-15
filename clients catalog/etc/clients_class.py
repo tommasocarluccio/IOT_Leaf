@@ -52,6 +52,10 @@ class PlatformsCatalog():
         else:
             return False
 
+    def remove_all_rooms(self,platform_ID):
+        platform=self.find_platform(platform_ID)
+        for spec in platform['specs']['thingspeak']:
+            self.removeRoom(platform_ID,spec['room'])
 
     def save(self):
         with open(self.db_filename,'w') as file:

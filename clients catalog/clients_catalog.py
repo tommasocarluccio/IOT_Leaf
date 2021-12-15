@@ -160,6 +160,7 @@ class Registration_deployer(object):
                 output="Platform '{}' removed".format(platform_ID)
                 print(output)
                 self.catalog.platforms.set_value(platform_ID,"associated",False)
+                self.catalog.platforms.remove_all_rooms(platform_ID)
                 self.catalog.users.save()
                 self.catalog.platforms.save()
             else:
