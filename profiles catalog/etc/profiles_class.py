@@ -4,10 +4,9 @@ from datetime import datetime
 from etc.generic_service import *
 
 class NewProfile():
-    def __init__(self,platform_ID,platform_name,inactiveTime, location, rooms,lastUpdate):
+    def __init__(self,platform_ID,platform_name,location, rooms,lastUpdate):
         self.platform_ID=platform_ID
         self.platform_name=platform_name
-        self.inactiveTime=inactiveTime
         self.location=location
         self.lastUpdate=lastUpdate
         self.warning=True
@@ -15,7 +14,7 @@ class NewProfile():
         self.rooms=rooms
         
     def jsonify(self):
-        profile={"platform_ID":self.platform_ID,'platform_name':self.platform_name,'warning':self.warning,'room_cnt':self.room_cnt,'inactive_time':self.inactiveTime,'location':self.location,'rooms':self.rooms,'creation_date':self.lastUpdate}
+        profile={"platform_ID":self.platform_ID,'platform_name':self.platform_name,'warning':self.warning,'room_cnt':self.room_cnt,'location':self.location,'rooms':self.rooms,'creation_date':self.lastUpdate}
         return profile
 
 class NewRoom():
@@ -68,9 +67,8 @@ class ProfilesCatalog(Generic_Service):
         profile=self.retrieveProfileInfo(platform_ID)
         if profile is False:
             location=None
-            inactiveTime=3600
             rooms=[]
-            createdProfile=NewProfile(platform_ID,platform_name,inactiveTime,location,rooms,timestamp).jsonify()
+            createdProfile=NewProfile(platform_ID,platform_name,location,rooms,timestamp).jsonify()
             self.db_content['profiles'].append(createdProfile)
             self.db_content['last_creation']=timestamp
             return True
