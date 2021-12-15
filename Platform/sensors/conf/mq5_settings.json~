@@ -1,7 +1,7 @@
 {
 	"sensorID": "mq5",
 	"end_points": "MQTT",
-	"time_sleep":5,
+	"time_sleep":3,
 	"parameters": [{
 		"parameter": "AQI",
 		"value": null,

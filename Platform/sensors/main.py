@@ -66,7 +66,7 @@ if __name__ == '__main__':
     pin=sys.argv[4]
     
     settingFile="conf/{}_settings.json".format(device_ID)
-    serviceCatalogAddress=json.load(open("../room/conf/room_settings.json","r"))['service_catalog']
+    serviceCatalogAddress=json.load(open(settingFile,"r"))['service_catalog']
     class_imported=__import__(device_ID+'_class')
     sensor_class=getattr(class_imported,device_ID)
     mqtt_flag=False
