@@ -175,4 +175,4 @@ if __name__ == '__main__':
     cherrypy.config.update({'server.socket_host': server.catalog.serviceIP})
     cherrypy.config.update({'server.socket_port': server.catalog.servicePort})
     cherrypy.engine.start()
-    cherrypy.engine.block()
+    #cherrypy.engine.block()
