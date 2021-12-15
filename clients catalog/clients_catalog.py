@@ -37,6 +37,8 @@ class Registration_deployer(object):
                 try:
                     profiles_catalog=self.catalog.retrieveService("profiles_catalog")
                     r=requests.put(profiles_catalog['url']+"/insertProfile",json={"platform_ID":params['platformID']})
+                    r.raise_for_status()
+                       
                 except:
                     self.catalog.users.removeUser(params['userID'])
                     self.catalog.platforms.set_value(params['platformID'],"associated",False)
