@@ -167,7 +167,7 @@ class Registration_deployer(object):
                 print(output)
                 raise cherrypy.HTTPError("404 Resource not found")
 
-        if command=='removeRoom':
+        elif command=='removeRoom':
             try:
                 username=uri[1]
                 platform_ID=uri[2]
