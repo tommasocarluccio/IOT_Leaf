@@ -38,6 +38,10 @@ class PlatformsCatalog():
         else:
             return False
 
+    def removePlatform(self,platform_ID):
+        self.set_value(platform_ID,"associated",False)
+        self.remove_all_rooms(platform_ID)
+
     def removeRoom(self,platform_ID,room_ID):
         notFound=1
         platform=self.find_platform(platform_ID)
@@ -101,16 +105,12 @@ class UsersCatalog():
             return False
     
     def removeUser(self,username):
-        user=self.find_user(username)
-        if user is not False:
-            try:
-                self.content['users'].remove(user)
-                return True
-            except Exception as e:
-                return False
-        else:
+        try:
+            self.content['users'].remove(user)
+            return True
+        except Exception as e:
             return False
-        
+
     def save(self):
         self.createDict()
         with open(self.db_filename,'w') as file:

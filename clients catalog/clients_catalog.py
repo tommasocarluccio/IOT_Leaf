@@ -156,10 +156,9 @@ class Registration_deployer(object):
                 raise cherrypy.HTTPError("400 Missing parameters!")
             outputFlag=self.catalog.users.removePlatform(username,platform_ID)
             if outputFlag:
+                self.catalog.platforms.removePlatform(platform_ID)
                 output="Platform '{}' removed".format(platform_ID)
                 print(output)
-                self.catalog.platforms.set_value(platform_ID,"associated",False)
-                self.catalog.platforms.remove_all_rooms(platform_ID)
                 self.catalog.users.save()
                 self.catalog.platforms.save()
             else:
@@ -185,11 +184,21 @@ class Registration_deployer(object):
 
         elif command=='removeUser':
             username=uri[1]
-            outputFlag=self.catalog.users.removeUser(username)
-            if outputFlag:
-                output="User '{}' removed".format(username)
-                print(output)
-                self.catalog.users.save()
+            user=self.catalog.users.find_user(username)
+            platforms_list=user['platforms_list']
+
+            if user is not False:
+                outputFlag=self.catalog.users.removeUser(user)
+                if outputFlag:
+                    for platform in platforms_list:
+                        self.catalog.platforms.removePlatform(platform)
+                    output="User '{}' removed".format(username)
+                    print(output)
+                    self.catalog.platforms.save()
+                    self.catalog.users.save()
+                else:
+                    raise cherrypy.HTTPError("500 Operation can't be performed.")
+
             else:
                 raise cherrypy.HTTPError("404 User not found")
         
