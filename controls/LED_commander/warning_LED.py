@@ -1,5 +1,3 @@
-import json
-import requests
 import time
 import sys
 from etc.warning_class import *
