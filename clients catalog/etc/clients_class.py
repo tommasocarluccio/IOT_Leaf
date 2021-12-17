@@ -14,10 +14,10 @@ class PlatformsCatalog():
         platform=self.find_platform(platform_ID)
         try:
             chatID_list=platform['specs']['chatIDs']
-            chatID_list.append(chatID)
+            chatID_list.append(int(chatID))
         except:
             platform['specs']['chatIDs']=[]
-            platform['specs']['chatIDs'].append(chatID)
+            platform['specs']['chatIDs'].append(int(chatID))
 
         
     def find_platform(self,platform_ID):
