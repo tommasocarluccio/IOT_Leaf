@@ -58,6 +58,7 @@ class Registration_deployer(object):
                 try:
                     chatID=params['chat_ID']
                     self.catalog.platforms.add_chatID(chatID)
+                    self.catalog.platforms.save()
                 except:
                     pass
                 print(data)

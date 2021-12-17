@@ -15,7 +15,8 @@ class PlatformsCatalog():
         try:
             chatID_list=platform['specs']['chatIDs']
             chatID_list.append(int(chatID))
-        except:
+        except Exception as e:
+            print(e)
             platform['specs']['chatIDs']=[]
             platform['specs']['chatIDs'].append(int(chatID))
 
