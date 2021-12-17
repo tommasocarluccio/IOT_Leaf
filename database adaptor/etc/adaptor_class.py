@@ -67,18 +67,20 @@ class Adaptor(Generic_Service):
             return False
 
 
-    def retrieve_info2(self,platform_ID):
+    def retrieve_info2(self,platform_ID,room_ID):
         for platform in self.platforms_last:
             if platform['platform_ID']==platform_ID:
                 break
         try:
             clients_catalog=self.retrieveService('clients_catalog')
             clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+"/thingspeak").json()
-            room_ID=clients_result['room']
-            params={"api_key":clients_result["write_key"]}
-            for field in clients_result['fields']:
+            for room in clients_result:
+                if room['room']==room_ID:
+                    break
+            params={"api_key":room["write_key"]}
+            for field in room['fields']:
                 try:
-                    params[field]=platform['measurements'][clients_result['fields'].get(field)]
+                    params[field]=platform['measurements'][room['fields'].get(field)]
                 except:
                     params[field]=None
             print(platform['measurements'])
@@ -133,8 +135,7 @@ class Adaptor(Generic_Service):
 
             self.create_platform_entry(platform_ID,e)
             if time.time()-self.platforms_last[self.find_pos(platform_ID)]['last_msg_time']>self.delta:
-                params=self.retrieve_info2(platform_ID)
-                print(params)
+                params=self.retrieve_info2(platform_ID,room_ID)
                 if params is not False:
                     print("Sending data for {}-{}".format(platform_ID,room_ID))
                     if self.send("update",params):
