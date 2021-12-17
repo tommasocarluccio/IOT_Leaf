@@ -125,7 +125,7 @@ class Adaptor(Generic_Service):
     def notify(self,topic,msg):
         try:
             payload=json.loads(msg)
-            print(payload)
+            #print(payload)
             platform_ID=payload['bn'].split("/")[0]
             room_ID=payload['bn'].split("/")[1]
             device_ID=payload['bn'].split("/")[2]
@@ -134,6 +134,7 @@ class Adaptor(Generic_Service):
             self.create_platform_entry(platform_ID,e)
             if time.time()-self.platforms_last[self.find_pos(platform_ID)]['last_msg_time']>self.delta:
                 params=self.retrieve_info2(platform_ID)
+                print(params)
                 if params is not False:
                     print("Sending data for {}-{}".format(platform_ID,room_ID))
                     if self.send("update",params):
