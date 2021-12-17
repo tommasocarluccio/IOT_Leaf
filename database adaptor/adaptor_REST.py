@@ -38,6 +38,7 @@ class AdaptorREST():
                     output[key].append(value)
             #print(output)
             return json.dumps(output)
+
         elif command=='station':
             thingspeak_url="{}/channels/{}/feeds.json?metadata=true".format(self.adaptor.thingspeak_url,channelID)
             result=requests.get(thingspeak_url).json()
@@ -48,7 +49,7 @@ class AdaptorREST():
             parameter=str(params['parameter'])
             wnd_size=str(str(params['time']))
             thingspeak_url="{}/channels/{}/feeds.json?average={}".format(self.adaptor.thingspeak_url, channelID,time)
-            for key,value in fields:
+            for key,value in fields.items():
                 if value==parameter:
                     break
             average_data=requests.get(thingspeak_url).json()
