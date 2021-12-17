@@ -40,7 +40,7 @@ class AlertingControl(warningControl):
                     status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
                     if status is not False:
                         msg=self.create_msg(parameter,status)
-                        requests.post(self.bot_url+'/'+platform_ID+'/'+room_ID+'/warning', json=msg)
+                        requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
                         print("{}-{}. Sending Message:".format(platform_ID,room_ID))
                         print(msg) 
                 except Exception as e:
