@@ -43,10 +43,8 @@ class AdaptorREST():
             result=requests.get(thingspeak_url).json()
             print(result)
             return json.dumps(result['channel']['metadata'])
-        else:
-            raise cherrypy.HTTPError(501, "No operation!")
 
-        if command=="check_warning":
+        elif command=="check_warning":
             parameter=str(params['parameter'])
             wnd_size=str(str(params['time']))
             thingspeak_url="{}/channels/{}/feeds.json?average={}".format(self.thingspeak_url, channelID,time)
@@ -55,6 +53,8 @@ class AdaptorREST():
                     break
             average_data=requests.get(thingspeak_url).json()
             return json.dumps(float(average_data['feeds'][0][key]))
+        else:
+            raise cherrypy.HTTPError(501, "No operation!")
 
     def POST(self, *uri):
         body=cherrypy.request.body.read()
