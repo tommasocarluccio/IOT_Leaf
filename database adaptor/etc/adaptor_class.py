@@ -136,6 +136,7 @@ class Adaptor(Generic_Service):
 
             self.create_platform_entry(platform_ID,e)
             if time.time()-self.platforms_last[self.find_pos(platform_ID)]['last_msg_time']>self.delta:
+                print("ciao")
                 params=self.retrieve_info2(platform_ID,room_ID)
                 if params is not False:
                     print("Sending data for {}-{}".format(platform_ID,room_ID))
