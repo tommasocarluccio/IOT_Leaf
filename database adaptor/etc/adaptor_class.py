@@ -75,6 +75,7 @@ class Adaptor(Generic_Service):
             clients_catalog=self.retrieveService('clients_catalog')
             clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+"/thingspeak").json()
             for room in clients_result:
+                print(room)
                 if room['room']==room_ID:
                     break
             params={"api_key":room["write_key"]}
