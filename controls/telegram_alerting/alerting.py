@@ -45,7 +45,7 @@ class AlertingControl(warningControl):
                         if r.status_code==200:
                             print("{}-{}. Sending Message:".format(platform_ID,room_ID))
                             print(msg) 
-                        except:
+                        else:
                             print("Bot Communication failed!")
                 except Exception as e:
                     print(e)
