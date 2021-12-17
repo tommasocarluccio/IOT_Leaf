@@ -14,7 +14,8 @@ class PlatformsCatalog():
         platform=self.find_platform(platform_ID)
         try:
             chatID_list=platform['specs']['chatIDs']
-            chatID_list.append(int(chatID))
+            if chatID not in chatID_list:
+                chatID_list.append(int(chatID))
         except:
             platform['specs']['chatIDs']=[]
             platform['specs']['chatIDs'].append(int(chatID))
