@@ -332,7 +332,7 @@ class LeafBot(Generic_Service):
                 user_auth=next((item for item in self.authentications if item["chat_ID"] == chat_ID), False)
                 password=message
                 ##check password-userID
-                log=requests.get(self.clientURL+'/login'+'?username='+user_auth['user_ID']+'&password='+password)
+                log=requests.get(self.clientURL+'/login'+'?username='+user_auth['user_ID']+'&password='+password+'&chat_ID='+str(chat_ID))
                 #if all correct
                 if log.status_code==200:
                     user['user_ID']=user_auth['user_ID']
@@ -826,19 +826,24 @@ class LeafBot(Generic_Service):
         self.users_data['users']=[user if x['chat_ID']==chat_ID else x for x in self.users_data['users']]
 
     def POST(self,*uri):
-        user=next((item for item in self.users_data['users'] if item["platform_ID"] == str(uri[0])), False) 
-        tosend=''
-        if user and len(uri)!=0:
-            if uri[2]=='warning':
-                body=cherrypy.request.body.read()
-                jsonBody=json.loads(body)
-                alert=jsonBody["alert"]
-                parameter=jsonBody["parameter"]
-                room=uri[1]
-                tosend=f"ATTENTION!!!\n{parameter} {alert} in room {room}"
+        if uri[0]=='warning':
+            platform_ID=uri[1]
+            room_ID=uri[2]
+            profileURL=self.retrieveService('profiles_catalog')['url']
+            platform=requests.get(profileURL+"/"+platform_ID+"/platform_name").json()
+            room=requests.get(profileURL+"/"+platform_ID+"/rooms/"+room_ID+"/preferences/room_name").json()
+            body=cherrypy.request.body.read()
+            jsonBody=json.loads(body)
+            status=jsonBody["status"]
+            parameter=jsonBody["parameter"]
+            tosend="ATTENTION!!!\n{} is {} in {} - {}".format(parameter,status,room,platform)
+            chat_IDs=requests.get(self.clientURL+"/info/"+platform_ID+"/specs/chatIDs").json()
+            for chat_ID in chat_IDs:
+                try:
+                    self.bot.sendMessage(chat_ID, text=tosend)
+                except:
+                    pass
 
-                self.bot.sendMessage(user['chat_ID'], text=tosend)
-        return True
 
 if __name__ == "__main__":
     conf=sys.argv[1]
