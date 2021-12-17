@@ -125,7 +125,7 @@ class Adaptor(Generic_Service):
     def notify(self,topic,msg):
         try:
             payload=json.loads(msg)
-            #print(payload)
+            print(payload)
             platform_ID=payload['bn'].split("/")[0]
             room_ID=payload['bn'].split("/")[1]
             device_ID=payload['bn'].split("/")[2]
