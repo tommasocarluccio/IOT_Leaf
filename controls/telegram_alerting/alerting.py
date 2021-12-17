@@ -4,7 +4,7 @@ from etc.warning_class import *
 
 class AlertingControl(warningControl):
     def __init__(self,conf_filename):
-        warning_class.__init__(self,conf_filename)
+        warningControl.__init__(self,conf_filename)
         self.bot_url=requests.get(self.serviceCatalogAddress+'/telegram_bot').json()['url']
 
     def setup(self,clientID):
