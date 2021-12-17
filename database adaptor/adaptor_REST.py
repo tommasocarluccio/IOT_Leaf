@@ -14,9 +14,9 @@ class AdaptorREST():
 
     def GET(self,*uri,**params):
         try:
-            command=uri[0]
-            platform_ID=uri[1]
-            room_ID=uri[2]
+            platform_ID=uri[0]
+            room_ID=uri[1]
+            command=uri[2]
             try:
                 clients_catalog=self.adaptor.retrieveService('clients_catalog')
                 clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+'/'+room_ID+"/thingspeak").json()
