@@ -9,6 +9,16 @@ class PlatformsCatalog():
     def set_value(self,platform_ID,field,value):
         platform=self.find_platform(platform_ID)
         platform[field]=value
+
+    def add_chatID(self,platform_ID,chatID):
+        platform=self.find_platform(platform_ID)
+        try:
+            chatID_list=platform['specs']['chatIDs']
+            chatID_list.append(chatID)
+        except:
+            platform['specs']['chatIDs']=[]
+            platform['specs']['chatIDs'].append(chatID)
+
         
     def find_platform(self,platform_ID):
         notFound=1

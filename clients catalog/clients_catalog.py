@@ -55,6 +55,11 @@ class Registration_deployer(object):
             password=params['password']
             try:
                 data=self.catalog.users.login(username,password).copy()
+                try:
+                    chatID=params['chat_ID']
+                    self.catalog.platforms.add_chatID(chatID)
+                except:
+                    pass
                 print(data)
                 del data['password']
                 return json.dumps(data)
@@ -134,7 +139,7 @@ class Registration_deployer(object):
             else:
                 raise cherrypy.HTTPError("409 Already exists!")
 
-        if command=="newRoom":
+        elif command=="newRoom":
             output=self.catalog.platforms.associate_room_thingspeak(json_body['platformID'],json_body['roomID'])
             if output is not False:
                 self.catalog.platforms.save()
@@ -143,6 +148,7 @@ class Registration_deployer(object):
                 return json.dumps({'msg':output})
             else:
                 raise cherrypy.HTTPError("404 Platform not found!")
+
         else:
             raise cherrypy.HTTPError("501 No operation!")
 
