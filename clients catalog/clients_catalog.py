@@ -59,8 +59,8 @@ class Registration_deployer(object):
                     chatID=params['chat_ID']
                     self.catalog.platforms.add_chatID(chatID)
                     self.catalog.platforms.save()
-                except:
-                    print("error")
+                except Exception as e:
+                    print(e)
                     pass
                 print(data)
                 del data['password']
