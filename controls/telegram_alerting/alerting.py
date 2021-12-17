@@ -5,6 +5,24 @@ from etc.warning_class import *
 class AlertingControl(warningControl):
     def __init__(self,conf_filename):
         warning_class.__init__(self,conf_filename)
+        self.bot_url=requests.get(self.serviceCatalogAddress+'/telegram_bot').json()['url']
+
+    def setup(self,clientID):
+        try:
+            broker=requests.get(self.serviceCatalogAddress+'/broker').json()
+            self.broker_IP=broker.get('IP_address')
+            self.broker_port=broker.get('port')
+            self.data_topic=broker['topic'].get('data')
+            self.clientID=clientID
+            self.subscriber=DataCollector(self.clientID,self.broker_IP,self.broker_port,self)
+            self.subscriber.run()
+            self.subscriber.follow(self.data_topic+'#')
+            return True
+        except Exception as e:
+            print(e)
+            print("MQTT Subscriber not created")
+            self.subscriber.end()
+            return False
 
     def notify(self,topic,msg):
         payload=json.loads(msg)
@@ -19,14 +37,25 @@ class AlertingControl(warningControl):
             for meas in e:
                 parameter=meas['n']
                 try:
-                    warning_cmd=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
-                    topic=self.retrieve_topic(platform_ID,room_ID,parameter+"_warning") 
-                    if topic is not False:
-                        self.pub.publish(topic,json.dumps(warning_cmd))
-                    if warning_cmd:
-                        print("Warning sent to {}-{}".format(platform_ID,room_ID))      
+                    status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
+                    if status is not False:
+                        msg=self.create_msg()
+                        requests.post(self.bot_url+'/'+platform_ID+'/'+room_ID+'/warning', json=msg)     
                 except Exception as e:
                     print(e)
+    def create_msg(self,parameter, status):
+        msg=self.conf_content['msg']
+        msg['parameter']=parameter
+        msg['status']=status
+        return msg
+
+    def compare_value(self,minimum,maximum,value):
+        if float(value)<float(minimum):
+            return "LOW"   
+        elif float(value)>=float(maximum):
+            return "HIGH"
+        else:
+            return False
 
 
 if __name__ == '__main__':

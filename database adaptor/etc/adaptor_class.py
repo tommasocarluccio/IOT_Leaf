@@ -147,4 +147,3 @@ class Adaptor(Generic_Service):
                 
         except Exception as e:
             print(e)
-
