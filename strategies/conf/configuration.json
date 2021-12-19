@@ -1,7 +1,0 @@
-{
-	"service_catalog":"http://172.29.4.158:8080/service_catalog",
-	"resource catalog":"resource_catalog",
-	"clients catalog":"clients_catalog",
-	"time_sleep":300,
-	"thingspeak_url":"https://api.thingspeak.com/"
-}
