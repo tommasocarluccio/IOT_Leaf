@@ -85,6 +85,7 @@ class LeafBot(Generic_Service):
             "temperature":"°C",
             "humidity":"%",
         }
+    
     def create_new_user(self, chat_ID):
         user={
             "chat_ID":chat_ID,
@@ -100,7 +101,8 @@ class LeafBot(Generic_Service):
                     'new_room_flag':0,
                     'remove_room_flag':0,
                     'room_name_flag':0,
-                    'thresholds_flag':0
+                    'thresholds_flag':0,
+                    'new_platform_flag':0
                 }
             }
         return user
@@ -299,8 +301,6 @@ class LeafBot(Generic_Service):
         user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
         return requests.get(profileURL+'/'+user['platform_ID']+'/rooms/'+room_ID+'/preferences/room_name').json()
 
-
-
     def on_chat_message(self, msg):
         content_type, chat_type, chat_ID = telepot.glance(msg)
 
@@ -343,17 +343,17 @@ class LeafBot(Generic_Service):
                     for i in platforms_list:
                         emo=':small_blue_diamond:'
                         plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}', use_aliases=True), callback_data=i)]]
+                    plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(':heavy_plus_sign:\tAdd a new platform', use_aliases=True), callback_data=new_platform)]]
                     rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
 
-                    self.bot.sendMessage(chat_ID, 'Choose the registered platform you want to visualize', reply_markup=rlk)
+                    self.bot.sendMessage(chat_ID, 'Choose the registered platform you want to visualize or register a new one', reply_markup=rlk)
 
                 else:
                     self.bot.sendMessage(chat_ID, f'Wrong username or password!\nPlease try again', reply_markup=self.login_keyboard)
                 user['flags']['userID_flag']=0
                 user['flags']['password_flag']=0
                 self.authentications=[i for i in self.authentications if i['chat_ID']!=chat_ID]
-                #print(user)
-                #print('Auth: ', self.authentications)
+
             #user has written the new city
             elif user['flags']['insert_city_flag']==1:
                 api_data=self.set_location(chat_ID, message, False)
@@ -430,7 +430,18 @@ class LeafBot(Generic_Service):
                     self.bot.sendMessage(chat_ID, 'Update was unsuccesfull! Please try again', reply_markup=self.room_menu)
                     user['flags']['room_name_flag']=0
                     self.thresholds=[i for i in self.thresholds if i['chat_ID']!=chat_ID]
-
+            """
+            elif user['flags']['new_platform_flag']==1:
+                clientURL=requests.get(self.serviceURL+'/clients_catalog').json()['url']
+                body={
+                    'username':user['user_ID'],
+                    'platformID':message
+                }
+                log=requests.put(clientURL+'/newPlatform', json=body)
+                if log.status_code==200:
+                    user['platform_ID']=message
+                    self.bot.sendMessage(chat_ID, 'Your new platform has been correctly associated!', reply_markup=)
+            """
 
              
         elif content_type=='location':
@@ -750,11 +761,10 @@ class LeafBot(Generic_Service):
         elif query_data=='act_int':
             output=self.get_home_measures(chat_ID)
             self.bot.sendMessage(chat_ID, text=(emoji.emojize(output)), reply_markup=self.back_button)
-
- 
-
-
-            
+        
+        elif query_data=='new_platform':
+            self.bot.sendMessage(chat_ID, 'Write the unique platform_ID associated to your new platform')
+            user['flags']['new_platform_flag']=1
         else:
             profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
             #when user clicks on a room
@@ -843,7 +853,6 @@ class LeafBot(Generic_Service):
                     self.bot.sendMessage(chat_ID, text=tosend)
                 except:
                     pass
-
 
 if __name__ == "__main__":
     conf=sys.argv[1]
