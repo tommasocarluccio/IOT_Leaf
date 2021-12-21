@@ -7,6 +7,10 @@
             "warning": true,
             "room_cnt": 1,
             "location": null,
+            "coord": {
+                "lat": 45.104332,
+                "long": 7.6964231
+            },
             "rooms": [
                 {
                     "room_ID": "room_1",

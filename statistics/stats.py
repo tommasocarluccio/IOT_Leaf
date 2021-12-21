@@ -68,11 +68,12 @@ class Stats(Generic_Service):
 
         return resp
 
-    def GET(self,*uri,**params):
+    def GET(self,*uri):
         try:
             platform_ID=uri[0]
             room_ID=uri[1]
             command=uri[2]
+            print(command)
             # get today date
             now = datetime.now()
             # get thingspeak adaptor url
@@ -83,9 +84,15 @@ class Stats(Generic_Service):
         if command=="day":
             last_period_date = now + relativedelta(days=-1)
             #res = retrieveData(channelID, now, last_period_date)
-            
-            res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
+            last = str(last_period_date).split(' ')
+            nnow = str(now).split(' ')
+            last_period_date = '_'.join(last).split('.')[0]
+            now = '_'.join(nnow).split('.')[0]
+            print(last_period_date)
 
+            res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}')
+            print(res)
+        
             respDEF = self.calculateStats(res)
 
             NUM_DAYS = 7

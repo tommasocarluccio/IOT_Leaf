@@ -195,7 +195,10 @@ class LeafBot(Generic_Service):
         profile_info=requests.get(profileURL+'/'+user['platform_ID']).json()
         output='Your Leaf device:\n:bust_in_silhouette:'+profile_info['platform_ID']+':\t'+profile_info['platform_name']+'\n'
         output+=':round_pushpin:Location coordinates:\t'+str(profile_info['coord']['lat'])+', '+str(profile_info['coord']['long'])+'\n'
-        output+=':alarm_clock:Last update:\t'+profile_info['last_update']+'\n'
+        try:
+            output+=':alarm_clock:Last update:\t'+profile_info['last_update']+'\n'
+        except:
+            pass
         output+='Rooms:\n'
         if profile_info['rooms']!=[]:
             for room in profile_info['rooms']:
@@ -290,10 +293,13 @@ class LeafBot(Generic_Service):
         clientURL=requests.get(self.serviceURL+'/clients_catalog').json()['url']
         user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
         rooms_list=requests.get(clientURL+'/associated_rooms/'+user['platform_ID']+'/thingspeak').json()
+        print(rooms_list)
         output=f':house:Current condition in your house:\n\n'
         for room in rooms_list:
-            room_output=self.get_room_measures(chat_ID, room)
-            output+=room_output+'\n'
+            try:
+                room_output=self.get_room_measures(chat_ID, room)
+                output+=room_output+'\n'
+            except: pass
         return output
 
     def get_room_name(self, chat_ID, room_ID):
@@ -343,7 +349,7 @@ class LeafBot(Generic_Service):
                     for i in platforms_list:
                         emo=':small_blue_diamond:'
                         plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}', use_aliases=True), callback_data=i)]]
-                    plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(':heavy_plus_sign:\tAdd a new platform', use_aliases=True), callback_data=new_platform)]]
+                    plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(':heavy_plus_sign:\tAdd a new platform', use_aliases=True), callback_data='new_platform')]]
                     rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
 
                     self.bot.sendMessage(chat_ID, 'Choose the registered platform you want to visualize or register a new one', reply_markup=rlk)
