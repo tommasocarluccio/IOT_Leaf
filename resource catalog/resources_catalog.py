@@ -153,7 +153,8 @@ class InactiveThread(threading.Thread):
 
     def run(self):
         while True:
-            bot_url=self.catalog.retrieveService("telegram_bot").json()['url']
+            bot_url=self.catalog.retrieveService("telegram_bot")['url']
+            print(bot_url)
             for platform in self.catalog.db_content['platforms_list']:
                 for room in platform['rooms']:
                     devices=room['devices']
