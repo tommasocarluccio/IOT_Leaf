@@ -16,6 +16,5 @@ class TipsHandler():
 
     def param_tip(self,param,status):
         parameter=self.tips.get(param)
-        print(parameter)
         tips_list=parameter[status]
         return random.choice(tips_list)
