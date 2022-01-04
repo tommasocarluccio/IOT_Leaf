@@ -49,25 +49,7 @@ class Registration_deployer(object):
 
                 print("User '{}' correctly registered with platform '{}'\n".format(params['userID'],params['platformID']))
                 return open("etc/correct_reg.html")
-        elif(len(uri))>0 and uri[0]=="login":
-            #username=str(cherrypy.request.login)
-            username=params['username']
-            password=params['password']
-            try:
-                data=self.catalog.users.login(username,password).copy()
-                try:
-                    chatID=params['chat_ID']
-                    user=self.catalog.users.find_user(username)
-                    for platform in user['platforms_list']:
-                        self.catalog.platforms.add_chatID(platform,chatID)
-                    self.catalog.platforms.save()
-                except:
-                    pass
-                print(data)
-                del data['password']
-                return json.dumps(data)
-            except:
-                raise cherrypy.HTTPError("401 Login failed")
+        
         elif(len(uri))>0 and uri[0]=="platforms_list":
             #username=str(cherrypy.request.login)
             username=params['username']
@@ -120,7 +102,28 @@ class Registration_deployer(object):
                 
         else:
             raise cherrypy.HTTPError("501 No operation!")
-            
+    def POST(self,*uri):
+        if(len(uri))>0 and uri[0]=="login":
+            body=cherrypy.request.body.read()
+            json_body=json.loads(body.decode('utf-8'))
+            #username=str(cherrypy.request.login)
+            username=body['username']
+            password=body['password']
+            try:
+                data=self.catalog.users.login(username,password).copy()
+                try:
+                    chatID=body['chat_ID']
+                    user=self.catalog.users.find_user(username)
+                    for platform in user['platforms_list']:
+                        self.catalog.platforms.add_chatID(platform,chatID)
+                    self.catalog.platforms.save()
+                except:
+                    pass
+                print(data)
+                del data['password']
+                return json.dumps(data)
+            except:
+                raise cherrypy.HTTPError("401 Login failed")
     def PUT(self,*uri):
         command=str(uri[0])
         body=cherrypy.request.body.read()
