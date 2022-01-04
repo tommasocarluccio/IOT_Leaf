@@ -665,7 +665,9 @@ class LeafBot(Generic_Service):
 
         elif query_data=='tips':
             self.bot.answerCallbackQuery(query_id, text='Tips')
-            self.bot.sendMessage(chat_ID, random.choice(self.lines), reply_markup=self.other_tip_keyboard)
+            tipsURL=requests.get(self.serviceURL+'/tips_catalog').json()['url']
+            tip=requests.get(tipsURL+'/tip').json()
+            self.bot.sendMessage(chat_ID, tip , reply_markup=self.other_tip_keyboard)
 
         elif query_data=='send_loc':
             self.bot.sendMessage(chat_ID, 'Push the button to share your location', reply_markup=self.location_keyboard)
