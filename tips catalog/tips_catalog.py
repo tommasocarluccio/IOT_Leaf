@@ -16,7 +16,7 @@ class TipsREST(Generic_Service):
         if uri[0]=="tip":
             if len(uri)>1:
                 try:
-                    return self.catalog.param_tip(uri[1],uri[2])
+                    return self.catalog.param_tip(uri[1],uri[2].lower())
                 except:
                     raise cherrypy.HTTPError(404,"Resource not found!")
             else:
