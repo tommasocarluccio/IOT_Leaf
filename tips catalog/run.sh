@@ -1,3 +1,3 @@
 #! /bin/bash
 
-python3 tips.py conf/conf.json
+python3 tips_catalog.py conf/conf.json
