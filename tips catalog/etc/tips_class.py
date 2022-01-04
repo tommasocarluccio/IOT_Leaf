@@ -19,6 +19,7 @@ class TipsHandler():
             parameter=self.general_tips.get(param)
             tips_list=parameter[status]
             return random.choice(tips_list)
-        except:
+        except Exception as e:
+            print(e)
             return False
 
