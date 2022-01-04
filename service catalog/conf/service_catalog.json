@@ -19,17 +19,11 @@
         "port": 9090,
         "service": "/clients_service"
     },
-    "database_adaptor": {
+    "profiles_catalog": {
         "IP_address": "192.168.1.130",
-        "port": 8085,
-        "service": "/database_adaptor",
-        "url": "http://192.168.1.130:8085/database_adaptor"
-    },
-    "bot_catalog": {
-        "IP_address": "192.168.1.89",
-        "port": 8087,
-        "service": "/bot_catalog",
-        "url": "http://192.168.1.89:8087/bot_catalog"
+        "port": 8081,
+        "service": "/profiles_catalog",
+        "url": "http://192.168.1.130:8081/profiles_catalog"
     },
     "resource_catalog": {
         "IP_address": "192.168.1.130",
@@ -37,11 +31,17 @@
         "service": "/resource_catalog",
         "url": "http://192.168.1.130:8083/resource_catalog"
     },
-    "profiles_catalog": {
+    "database_adaptor": {
         "IP_address": "192.168.1.130",
-        "port": 8081,
-        "service": "/profiles_catalog",
-        "url": "http://192.168.1.130:8081/profiles_catalog"
+        "port": 8085,
+        "service": "/database_adaptor",
+        "url": "http://192.168.1.130:8085/database_adaptor"
+    },
+    "telegram_bot": {
+        "IP_address": "192.168.1.89",
+        "port": 8087,
+        "service": "/telegram_bot",
+        "url": "http://192.168.1.89:8087/telegram_bot"
     },
     "clients_catalog": {
         "IP_address": "192.168.1.130",

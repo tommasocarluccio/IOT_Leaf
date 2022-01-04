@@ -34,6 +34,9 @@
                             "field3": "temperature"
                         }
                     }
+                ],
+                "chatIDs": [
+                    306741166
                 ]
             }
         },
