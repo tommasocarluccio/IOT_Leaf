@@ -112,7 +112,7 @@ class Registration_deployer(object):
             try:
                 data=self.catalog.users.login(username,password).copy()
                 try:
-                    chatID=json_body['chat_ID']
+                    chatID=int(json_body['chat_ID'])
                     user=self.catalog.users.find_user(username)
                     for platform in user['platforms_list']:
                         self.catalog.platforms.add_chatID(platform,chatID)
