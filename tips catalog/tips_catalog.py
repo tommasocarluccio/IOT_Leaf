@@ -13,7 +13,7 @@ class TipsREST(Generic_Service):
         self.catalog=TipsHandler()
 
     def GET(self,*uri):
-        if uri=="tip":
+        if uri[0]=="tip":
             if len(uri)>1:
                 try:
                     json.dumps(self.catalog.param_tip(uri[1],uri[2]))
