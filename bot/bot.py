@@ -38,9 +38,6 @@ class LeafBot(Generic_Service):
 
         self.users_data={"users": []}
 
-        with open('etc/Tips.txt') as f:
-            self.lines = f.readlines()
-
         self.aqi_state_dict=[
             {
             "circle":":green_circle:",
@@ -721,7 +718,9 @@ class LeafBot(Generic_Service):
             self.bot.answerCallbackQuery(query_id, text='Tips')
             self.bot.editMessageReplyMarkup(message_id_tuple, reply_markup=None)
             self.bot.deleteMessage(message_id_tuple)
-            self.bot.sendMessage(chat_ID, random.choice(self.lines), reply_markup=self.other_tip_keyboard)
+            tipsURL=requests.get(self.serviceURL+'/tips_catalog').json()['url']
+            tip=requests.get(tipsURL+'/tip').text
+            self.bot.sendMessage(chat_ID, tip, reply_markup=self.other_tip_keyboard)
 
         elif query_data=='set_dev':
             self.bot.answerCallbackQuery(query_id, text='Device setting')
