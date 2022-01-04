@@ -157,7 +157,7 @@ class InactiveThread(threading.Thread):
             for platform in self.catalog.db_content['platforms_list']:
                 for room in platform['rooms']:
                     devices=room['devices']
-                    devicesCatalog=self.catalog.DevicesCatalog(devices)
+                    devicesCatalog=DevicesCatalog(devices)
                     dev_list=devicesCatalog.removeInactive(self.catalog.delta)
                     for dev in dev_list:
                         msg={"parameter":dev,"status":"REMOVED","tip":None}
