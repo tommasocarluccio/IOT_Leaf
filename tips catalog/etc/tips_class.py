@@ -15,11 +15,7 @@ class TipsHandler():
         return random.choice(self.general_tips)
 
     def param_tip(self,param,status):
-        try:
-            parameter=self.general_tips.get(param)
-            tips_list=parameter[status]
-            return random.choice(tips_list)
-        except Exception as e:
-            print(e)
-            return False
-
+        parameter=self.general_tips.get(param)
+        print(parameter)
+        tips_list=parameter[status]
+        return random.choice(tips_list)
