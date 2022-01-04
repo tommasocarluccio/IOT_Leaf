@@ -155,15 +155,13 @@ class InactiveThread(threading.Thread):
         while True:
             bot_url=self.catalog.retrieveService("telegram_bot")['url']
             for platform in self.catalog.db_content['platforms_list']:
-                print(platform)
                 for room in platform['rooms']:
-                    print(room)
                     devices=room['devices']
                     devicesCatalog=DevicesCatalog(devices)
                     dev_list=devicesCatalog.removeInactive(self.catalog.delta)
                     for dev in dev_list:
                         msg={"parameter":dev,"status":"REMOVED","tip":None}
-                        requests.post(bot_url+'/warning/'+platform+'/'+room, json=msg)
+                        requests.post(bot_url+'/warning/'+platform['platform_ID']+'/'+room['room_ID'], json=msg)
             self.catalog.save()
             time.sleep(self.catalog.delta)
 
