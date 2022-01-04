@@ -3,7 +3,7 @@
     "database_owner": "Andrea Avignone",
     "service_catalog": "http://192.168.1.130:8080/service_catalog",
 	 "service_name":"resource_catalog",  
-	 "delta":300,  
+	 "delta":3,  
     "IP_address": "192.168.1.130",
     "IP_port": 8083
 }
