@@ -161,7 +161,7 @@ class InactiveThread(threading.Thread):
                     dev_list=devicesCatalog.removeInactive(self.catalog.delta)
                     for dev in dev_list:
                         msg={"parameter":dev,"status":"REMOVED","tip":None}
-                        requests.post(bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
+                        requests.post(bot_url+'/warning/'+platform+'/'+room, json=msg)
             self.catalog.save()
             time.sleep(self.catalog.delta)
 
