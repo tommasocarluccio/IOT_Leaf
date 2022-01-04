@@ -154,9 +154,10 @@ class InactiveThread(threading.Thread):
     def run(self):
         while True:
             bot_url=self.catalog.retrieveService("telegram_bot")['url']
-            print(bot_url)
             for platform in self.catalog.db_content['platforms_list']:
+                print(platform)
                 for room in platform['rooms']:
+                    print(room)
                     devices=room['devices']
                     devicesCatalog=DevicesCatalog(devices)
                     dev_list=devicesCatalog.removeInactive(self.catalog.delta)
