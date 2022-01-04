@@ -213,6 +213,10 @@ class Registration_deployer(object):
 
             else:
                 raise cherrypy.HTTPError("404 User not found")
+
+        elif command=='removeChatID':
+            platform_ID=uri[1]
+            self.catalog.platforms.remove_chatID(int(uri[2]))
         
         else:
             raise cherrypy.HTTPError("501 No operation!")
