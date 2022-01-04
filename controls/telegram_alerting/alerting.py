@@ -68,7 +68,7 @@ class AlertingControl(warningControl):
         tips_catalog=requests.get(self.serviceCatalogAddress+'/tips_catalog').json()['url']
         tip=requests.get(self.tips_catalog+"/tip/"+parameter+"/"+status)
         if tip.status_code==200:
-            return tip.json()
+            return tip.text
         else:
             return None
 
