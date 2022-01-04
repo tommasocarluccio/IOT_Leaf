@@ -1,0 +1,6 @@
+{
+	"temperature":{
+		"low":["prova1","prova2"],
+		"high":["prova3","prova4"]
+	}
+}

@@ -12,7 +12,6 @@ class Registration_deployer(object):
         self.filename=filename
         self.catalog=ClientsCatalog(self.filename)
         self.service=self.catalog.registerRequest()
-        #self.flagNew=False
 
     def GET(self,*uri,**params):
         if (len(uri))>0 and uri[0]=="reg":
