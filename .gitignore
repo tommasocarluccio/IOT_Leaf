@@ -142,3 +142,4 @@ profiles_catalog.json
 conf.json
 service_catalog.json
 
+bot/conf/conf.json
