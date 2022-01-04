@@ -26,7 +26,7 @@ class TipsREST(Generic_Service):
    
 if __name__ == '__main__':
     conf=sys.argv[1]
-    catalog=catalogREST(conf)
+    catalog=TipsREST(conf)
     if catalog.service is not False:
         conf = {
             '/': {
@@ -34,7 +34,7 @@ if __name__ == '__main__':
                 'tools.sessions.on': True
             }
         }
-        cherrypy.tree.mount(ProfilesCatalog, catalog.service, conf)
+        cherrypy.tree.mount(catalog, catalog.service, conf)
         cherrypy.config.update({'server.socket_host': catalog.serviceIP})
         cherrypy.config.update({'server.socket_port': catalog.servicePort})
         cherrypy.engine.start()
