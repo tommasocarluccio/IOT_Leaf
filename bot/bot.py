@@ -338,7 +338,7 @@ class LeafBot(Generic_Service):
                 user_auth=next((item for item in self.authentications if item["chat_ID"] == chat_ID), False)
                 password=message
                 ##check password-userID
-                log=requests.get(self.clientURL+'/login'+'?username='+user_auth['user_ID']+'&password='+password+'&chat_ID='+str(chat_ID))
+                log=requests.post(self.clientURL+'/login',json={"username":user_auth['user_ID'],'password':password,'chat_ID':str(chat_ID)})
                 #if all correct
                 if log.status_code==200:
                     user['user_ID']=user_auth['user_ID']

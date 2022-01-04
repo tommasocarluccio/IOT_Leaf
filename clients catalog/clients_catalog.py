@@ -107,12 +107,12 @@ class Registration_deployer(object):
             body=cherrypy.request.body.read()
             json_body=json.loads(body.decode('utf-8'))
             #username=str(cherrypy.request.login)
-            username=body['username']
-            password=body['password']
+            username=json_body['username']
+            password=json_body['password']
             try:
                 data=self.catalog.users.login(username,password).copy()
                 try:
-                    chatID=body['chat_ID']
+                    chatID=json_body['chat_ID']
                     user=self.catalog.users.find_user(username)
                     for platform in user['platforms_list']:
                         self.catalog.platforms.add_chatID(platform,chatID)
