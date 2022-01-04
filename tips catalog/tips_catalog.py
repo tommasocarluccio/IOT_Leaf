@@ -21,6 +21,8 @@ class TipsREST(Generic_Service):
                     raise cherrypy.HTTPError(404,"Resource not found!")
             else:
                 return json.dumps(self.catalog.new_tip())
+        else:
+            raise cherrypy.HTTPError("501 No operation!")
 
 
    
