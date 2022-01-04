@@ -1,7 +1,7 @@
 {
     "description": "Welcome to the telegram bot",
-    "service_catalog": "http://192.168.1.130:8080/service_catalog",
-    "service_name":"bot_catalog",
-    "IP_address": "192.168.1.89",
+    "service_catalog": "http://192.168.1.7:8080/service_catalog",
+    "service_name":"telegram_bot",
+    "IP_address": "192.168.1.7",
     "IP_port": 8087
 }

@@ -1,0 +1,7 @@
+{
+    "description": "Welcome to the statistics service",
+    "service_catalog": "http://192.168.1.7:8080/service_catalog",
+    "service_name": "statistics_catalog",
+    "IP_address": "192.168.1.7",
+    "IP_port": 50000
+}

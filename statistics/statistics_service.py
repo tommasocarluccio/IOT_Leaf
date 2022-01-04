@@ -75,7 +75,7 @@ if __name__ == '__main__':
 
 	# request data to thingspeak
 	channelID = '1021300'
-	period = 'week' # day OR week OR month
+	period = 'month' # day OR week OR month
 
 	# check dates
 	now = datetime.now()
@@ -146,17 +146,17 @@ if __name__ == '__main__':
 			avg_lastHum /= NUM_WEEKS
 
 			if respDEF['AQI']['avg'] > avg_lastAQI:
-				AQI_avice = f'The average AQI today is higher than the previous {NUM_WEEKS} weeks! (avg: {avg_lastAQI})'
+				AQI_avice = f'The average AQI this week is higher than the previous {NUM_WEEKS} weeks! (avg: {avg_lastAQI})'
 			else:
-				AQI_avice = f'The average AQI today is lower than the previous {NUM_WEEKS} weeks! (avg: {avg_lastAQI})'
+				AQI_avice = f'The average AQI this week is lower than the previous {NUM_WEEKS} weeks! (avg: {avg_lastAQI})'
 			if respDEF['temp']['avg'] > avg_lastTemp:
-				temp_avice = f'The average temperature today is higher than the previous {NUM_WEEKS} weeks! (avg: {avg_lastTemp})'
+				temp_avice = f'The average temperature this week is higher than the previous {NUM_WEEKS} weeks! (avg: {avg_lastTemp})'
 			else:
-				temp_avice = f'The average temperature today is lower than the previous {NUM_WEEKS} weeks! (avg: {avg_lastTemp})'
+				temp_avice = f'The average temperature this week is lower than the previous {NUM_WEEKS} weeks! (avg: {avg_lastTemp})'
 			if respDEF['hum']['avg'] > avg_lastHum:
-				hum_avice = f'The average humidity today is higher than the previous {NUM_WEEKS} weeks! (avg: {avg_lastHum})'
+				hum_avice = f'The average humidity this week is higher than the previous {NUM_WEEKS} weeks! (avg: {avg_lastHum})'
 			else:
-				hum_avice = f'The average humidity today is lower than the previous {NUM_WEEKS} weeks! (avg: {avg_lastHum})'
+				hum_avice = f'The average humidity this week is lower than the previous {NUM_WEEKS} weeks! (avg: {avg_lastHum})'
 		except:
 			'Could not find enough data'
 			AQI_avice = 'not enough data'
@@ -188,17 +188,17 @@ if __name__ == '__main__':
 			avg_lastHum /= NUM_MONTHS
 
 			if respDEF['AQI']['avg'] > avg_lastAQI:
-				AQI_avice = f'The average AQI today is higher than the previous {NUM_MONTHS} months! (avg: {avg_lastAQI})'
+				AQI_avice = f'The average AQI this month is higher than the previous {NUM_MONTHS} months! (avg: {avg_lastAQI})'
 			else:
-				AQI_avice = f'The average AQI today is lower than the previous {NUM_MONTHS} months! (avg: {avg_lastAQI})'
+				AQI_avice = f'The average AQI this month is lower than the previous {NUM_MONTHS} months! (avg: {avg_lastAQI})'
 			if respDEF['temp']['avg'] > avg_lastTemp:
-				temp_avice = f'The average temperature today is higher than the previous {NUM_MONTHS} months! (avg: {avg_lastTemp})'
+				temp_avice = f'The average temperature this month is higher than the previous {NUM_MONTHS} months! (avg: {avg_lastTemp})'
 			else:
-				temp_avice = f'The average temperature today is lower than the previous {NUM_MONTHS} months! (avg: {avg_lastTemp})'
+				temp_avice = f'The average temperature this month is lower than the previous {NUM_MONTHS} months! (avg: {avg_lastTemp})'
 			if respDEF['hum']['avg'] > avg_lastHum:
-				hum_avice = f'The average humidity today is higher than the previous {NUM_MONTHS} months! (avg: {avg_lastHum})'
+				hum_avice = f'The average humidity this month is higher than the previous {NUM_MONTHS} months! (avg: {avg_lastHum})'
 			else:
-				hum_avice = f'The average humidity today is lower than the previous {NUM_MONTHS} months! (avg: {avg_lastHum})'
+				hum_avice = f'The average humidity this month is lower than the previous {NUM_MONTHS} months! (avg: {avg_lastHum})'
 		except:
 			'Could not find enough data'
 			AQI_avice = 'not enough data'

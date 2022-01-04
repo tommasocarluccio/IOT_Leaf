@@ -4,6 +4,7 @@ import json
 import requests
 import time
 import sys
+from datetime import datetime
 from etc.adaptor_class import *
 
 class AdaptorREST():
@@ -54,6 +55,30 @@ class AdaptorREST():
                     break
             average_data=requests.get(thingspeak_url).json()
             return json.dumps(float(average_data['feeds'][0][key]))
+        
+        elif command=="period":
+
+            date_start = uri[3]
+            date_end = uri[4]
+            start = date_start.split('_')
+            date_start = ' '.join(start)
+            end = date_start.split('_')
+            date_end = ' '.join(end)
+            
+            date_start = datetime.strptime(date_start, "%Y-%m-%d %H:%M:%S")
+            date_end = datetime.strptime(date_end, "%Y-%m-%d %H:%M:%S")
+
+            # format dates
+            date_now = date_start.strftime("%Y-%m-%d %H:%M:%S").split()
+            date_last = date_end.strftime("%Y-%m-%d %H:%M:%S").split()
+            end_date = '%20'.join(date_now)
+            start_date = '%20'.join(date_last)
+
+            # format thingspeak request
+            request_url = f'https://api.thingspeak.com/channels/{channelID}/feeds.json?start={start_date}&end={end_date}'
+            res = requests.get(request_url).json()
+            return res
+
         else:
             raise cherrypy.HTTPError(501, "No operation!")
 
@@ -86,7 +111,7 @@ class AdaptorREST():
             print(result.json())
         else:
             raise cherrypy.HTTPError(501, "No operation!")
-   
+
 if __name__ == '__main__':
     conf=sys.argv[1]
     adaptorREST=AdaptorREST(conf)

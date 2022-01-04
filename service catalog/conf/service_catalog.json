@@ -1,7 +1,7 @@
 {
     "description": "Welcome to the Leaf Service Catalog",
     "service_catalog": {
-        "IP_address": "192.168.1.130",
+        "IP_address": "192.168.1.7",
         "port": 8080,
         "service": "/service_catalog"
     },
@@ -19,11 +19,19 @@
         "port": 9090,
         "service": "/clients_service"
     },
+<<<<<<< HEAD
     "profiles_catalog": {
         "IP_address": "192.168.1.130",
         "port": 8081,
         "service": "/profiles_catalog",
         "url": "http://192.168.1.130:8081/profiles_catalog"
+=======
+    "bot_catalog": {
+        "IP_address": "192.168.1.89",
+        "port": 8087,
+        "service": "/bot_catalog",
+        "url": "http://192.168.1.89:8087/bot_catalog"
+>>>>>>> b29260946338f521812037faa953b0232ebbc606
     },
     "resource_catalog": {
         "IP_address": "192.168.1.130",
@@ -31,6 +39,7 @@
         "service": "/resource_catalog",
         "url": "http://192.168.1.130:8083/resource_catalog"
     },
+<<<<<<< HEAD
     "database_adaptor": {
         "IP_address": "192.168.1.130",
         "port": 8085,
@@ -42,11 +51,36 @@
         "port": 8087,
         "service": "/telegram_bot",
         "url": "http://192.168.1.89:8087/telegram_bot"
-    },
+=======
     "clients_catalog": {
-        "IP_address": "192.168.1.130",
+        "IP_address": "192.168.1.7",
         "port": 9090,
         "service": "/clients_catalog",
-        "url": "http://192.168.1.130:9090/clients_catalog"
+        "url": "http://192.168.1.7:9090/clients_catalog"
+    },
+    "profiles_catalog": {
+        "IP_address": "192.168.1.7",
+        "port": 8081,
+        "service": "/profiles_catalog",
+        "url": "http://192.168.1.7:8081/profiles_catalog"
+>>>>>>> b29260946338f521812037faa953b0232ebbc606
+    },
+    "telegram_bot": {
+        "IP_address": "192.168.1.7",
+        "port": 8087,
+        "service": "/telegram_bot",
+        "url": "http://192.168.1.7:8087/telegram_bot"
+    },
+    "statistics_catalog": {
+        "IP_address": "192.168.1.7",
+        "port": 50000,
+        "service": "/statistics_catalog",
+        "url": "http://192.168.1.7:50000/statistics_catalog"
+    },
+    "database_adaptor": {
+        "IP_address": "192.168.1.7",
+        "port": 8085,
+        "service": "/database_adaptor",
+        "url": "http://192.168.1.7:8085/database_adaptor"
     }
 }
