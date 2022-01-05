@@ -2,5 +2,13 @@
 	"temperature":{
 		"low":["prova1","prova2"],
 		"high":["prova3","prova4"]
+	},
+	"humidity":{
+		"low":["prova1","prova2"],
+		"high":["prova3","prova4"]
+	},
+	"AQI":{
+		"low":["prova1","prova2"],
+		"high":["prova3","prova4"]
 	}
 }
