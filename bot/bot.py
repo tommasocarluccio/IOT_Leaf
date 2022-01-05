@@ -494,8 +494,7 @@ class LeafBot(Generic_Service):
                 user['flags']['new_platform_flag']=0
             
             elif message=='/help':
-                self.bot.sendMessage(chat_ID, emoji.emojize(':black_circle:\tPress /start to start the bot and open the Home menu\n'
-                                     ':black_circle:\tUse the displayed keyboard to navigate through the bot functions\n'
+                self.bot.sendMessage(chat_ID, emoji.emojize(':black_circle:\tUse the displayed keyboards to navigate through the bot functions\n'
                                      ':black_circle:\tUse the "Set your Location" button to change the previously registered location and access the data of the nearest available station through the "Current Condition" menù\n'
                                      ,use_aliases=True), reply_markup=self.back_button)
             elif message=='/home':
