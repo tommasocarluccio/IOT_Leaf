@@ -490,7 +490,7 @@ class LeafBot(Generic_Service):
                     plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(':heavy_plus_sign:\tAdd a new platform', use_aliases=True), callback_data='new_platform')]]
                     rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
                     self.bot.sendMessage(chat_ID, 'Your new platform has been correctly associated!', reply_markup=rlk)
-                user['flags']['new_platform_flag']==None
+                user['flags']['new_platform_flag']=0
             
             elif message=='/help':
                 self.bot.sendMessage(chat_ID, emoji.emojize(':black_circle:\tPress /start to start the bot and open the Home menu\n'
