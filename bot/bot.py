@@ -491,7 +491,7 @@ class LeafBot(Generic_Service):
                 if log.status_code==200:
                     self.bot.sendMessage(chat_ID, 'Your new platform has been correctly associated!', reply_markup=rlk)
                 else:
-                    self.bot.sendMessage(chat_ID, f"{log.response}", reply_markup=rlk)
+                    self.bot.sendMessage(chat_ID, f"{log.reason}", reply_markup=rlk)
                 user['flags']['new_platform_flag']=0
             
             elif message=='/help':
