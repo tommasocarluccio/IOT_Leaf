@@ -564,7 +564,8 @@ class LeafBot(Generic_Service):
                     [InlineKeyboardButton(text= emoji.emojize(':watch: Current Conditions', use_aliases=True), callback_data='act'),
                     InlineKeyboardButton(text= emoji.emojize(':key: Enter a Room', use_aliases=True), callback_data='room')],
                     [InlineKeyboardButton(text=emoji.emojize(':green_book: Tips', use_aliases=True), callback_data='tips'),
-                    InlineKeyboardButton(text=emoji.emojize(':gear: Settings',use_aliases=True), callback_data='set')]
+                    InlineKeyboardButton(text=emoji.emojize(':gear: Settings',use_aliases=True), callback_data='set')],
+                    [InlineKeyboardButton(text=emoji.emojize(':arrows_counterclockwise: Change active Platform', use_aliases=True), callback_data='active_platform')]
                     ])
 
 
@@ -857,6 +858,15 @@ class LeafBot(Generic_Service):
             rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
             self.bot.sendMessage(chat_ID, text=(emoji.emojize("Select the platform you want to delete")), reply_markup=rlk)
             user['flags']['remove_platform_flag']=1
+        
+        elif query_data=='active_platform':
+            platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
+            plt_list_keyboard=[]
+            for i in platforms_list:
+                emo=':small_blue_diamond:'
+                plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}', use_aliases=True), callback_data=i)]]
+            rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
+            self.bot.sendMessage(chat_ID, text=(emoji.emojize("Select the platform you want to visualize")), reply_markup=rlk)
             
             
 
