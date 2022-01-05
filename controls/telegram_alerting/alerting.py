@@ -44,7 +44,7 @@ class AlertingControl(warningControl):
                         for key,value in room_data.items():
 
                             if value[0]=="temperature":
-                                print(parameter)
+                                print(value[1])
                                 last_value=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],int(value[1]))
                                 print(last_value)
                         if last_value is False:
