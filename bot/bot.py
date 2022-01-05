@@ -356,6 +356,9 @@ class LeafBot(Generic_Service):
             message = msg['text']
             if message=='/start':
                 self.bot.sendMessage(chat_ID, emoji.emojize(':seedling:\t Welcome to Leaf!\t:seedling:\nBefore starting Log into your Leaf account or create one', use_aliases=True), reply_markup=self.login_keyboard)
+                user["user_ID"]=None
+                user["platform_ID"]=None
+                user["room_ID"]=None
             #user has written their userID
             elif user['flags']['userID_flag']==1 and user['flags']['password_flag']==0:
                 self.bot.sendMessage(chat_ID, f'Now type your password for {message}:', reply_markup=self.back_login)
@@ -479,6 +482,12 @@ class LeafBot(Generic_Service):
             elif message=='/home':
                 self.bot.sendMessage(chat_ID, emoji.emojize(f':seedling:\tWelcome to Leaf!\t:seedling:\nYou are logged in as {user["user_ID"]}', use_aliases=True))
                 self.bot.sendMessage(chat_ID, 'Select an option:', reply_markup=self.home_keyboard)
+            elif message=='/logout':
+                self.bot.sendMessage(chat_ID, emoji.emojize(':seedling:\t Welcome to Leaf!\t:seedling:\nBefore starting Log into your Leaf account or create one', use_aliases=True), reply_markup=self.login_keyboard)
+                user["user_ID"]=None
+                user["platform_ID"]=None
+                user["room_ID"]=None
+
             else:
                 self.bot.sendMessage(chat_ID ,'Invalid command!\n'
                                  'To restart the bot use : /start\n'
