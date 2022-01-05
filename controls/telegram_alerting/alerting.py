@@ -42,7 +42,9 @@ class AlertingControl(warningControl):
                     room_data=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/now').json()
                     print(room_data)
                     for key,value in room_data.items():
-                        print(value)
+                        if key!='created_at' and key!='entry_id':
+                            print(value[0])
+                            print(value[1])
                     if status is not False:
                         msg=self.create_msg(parameter,status)
                         try:
