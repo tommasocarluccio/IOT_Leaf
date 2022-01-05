@@ -1,9 +1,7 @@
 {
     "description": "Welcome to the adaptor database",
-    "service_catalog": "http://172.29.4.158:8080/service_catalog",
     "service_name":"database_adaptor",
     "delta":15,
     "thingspeak_url":"https://api.thingspeak.com/",
-    "IP_address": "172.29.4.158",
+    "IP_address": "192.168.1.4",
     "IP_port": 8085
-}
