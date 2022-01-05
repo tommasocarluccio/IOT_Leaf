@@ -215,7 +215,8 @@ class Registration_deployer(object):
 
         elif command=='removeChatID':
             platform_ID=uri[1]
-            self.catalog.platforms.remove_chatID(int(uri[2]))
+            self.catalog.platforms.remove_chatID(platform_ID,int(uri[2]))
+            self.catalog.platforms.save()
         
         else:
             raise cherrypy.HTTPError("501 No operation!")
