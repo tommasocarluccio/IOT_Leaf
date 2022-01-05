@@ -484,9 +484,13 @@ class LeafBot(Generic_Service):
                 self.bot.sendMessage(chat_ID, 'Select an option:', reply_markup=self.home_keyboard)
             elif message=='/logout':
                 self.bot.sendMessage(chat_ID, emoji.emojize(':seedling:\t Welcome to Leaf!\t:seedling:\nBefore starting Log into your Leaf account or create one', use_aliases=True), reply_markup=self.login_keyboard)
+                platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
+                for platform in platforms_list:
+                    log=requests.delete(self.clientURL+'/removeChatID/'+platform+'/'+chat_ID)
                 user["user_ID"]=None
                 user["platform_ID"]=None
                 user["room_ID"]=None
+
 
             else:
                 self.bot.sendMessage(chat_ID ,'Invalid command!\n'
