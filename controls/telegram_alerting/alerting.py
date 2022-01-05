@@ -41,8 +41,9 @@ class AlertingControl(warningControl):
                     status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
                     if status is not False:
                         room_data=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/now').json()
+                        print(room_data)
                         for key,value in room_data.items():
-                            print(value[1])
+
                             if value[0]==parameter:
                                 print(parameter)
                                 last_value=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],int(value[1]))
