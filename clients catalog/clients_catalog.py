@@ -123,26 +123,32 @@ class Registration_deployer(object):
                 return json.dumps(data)
             except:
                 raise cherrypy.HTTPError("401 Login failed")
-    def PUT(self,*uri):
+    def PUT(self,*uri,**params):
         command=str(uri[0])
         body=cherrypy.request.body.read()
         json_body=json.loads(body.decode('utf-8'))
+        print(json_body)
         if command=="newPlatform":
             user=self.catalog.users.find_user(json_body['username'])
-            if not self.catalog.check_association(json_body['platformID']) and user is not False:
-                profiles_catalog=self.catalog.retrieveService("profiles_catalog")
-                r=requests.put(profiles_catalog['url']+"/insertProfile",json={"platform_ID":json_body['platformID']})
-                if r.status_code==200:
-                    user['platforms_list'].append(json_body['platformID'])
-                    self.catalog.platforms.set_value(params['platformID'],"associated",True)
-                    self.catalog.users.save()
-                    self.catalog.platforms.save()
-                    print("Platform {} correctly associated.".format(platform_ID))
-                        
+            if self.catalog.platforms.find_platform(json_body['platformID']) is not False:
+                if not self.catalog.check_association(json_body['platformID']) and user is not False:
+                    profiles_catalog=self.catalog.retrieveService("profiles_catalog")
+                    r=requests.put(profiles_catalog['url']+"/insertProfile",json={"platform_ID":json_body['platformID']})
+                    print(r)
+                    if r.status_code==200:
+                        user['platforms_list'].append(json_body['platformID'])
+                        self.catalog.platforms.set_value(params['platformID'],"associated",True)
+                        self.catalog.users.save()
+                        self.catalog.platforms.save()
+                        print("Platform {} correctly associated.".format(platform_ID))
+                            
+                    else:
+                        return r
                 else:
-                    return r
+                    raise cherrypy.HTTPError("409 Already exists!")
             else:
-                raise cherrypy.HTTPError("409 Already exists!")
+                raise cherrypy.HTTPError("404 Platform not found!")
+                
 
         elif command=="newRoom":
             output=self.catalog.platforms.associate_room_thingspeak(json_body['platformID'],json_body['roomID'])

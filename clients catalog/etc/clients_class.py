@@ -9,6 +9,7 @@ class PlatformsCatalog():
     def set_value(self,platform_ID,field,value):
         platform=self.find_platform(platform_ID)
         platform[field]=value
+        
 
     def add_chatID(self,platform_ID,chatID):
         platform=self.find_platform(platform_ID)
@@ -155,13 +156,7 @@ class ClientsCatalog(Generic_Service):
         
     def check_association(self,platform_ID):
         platform=self.platforms.find_platform(platform_ID)
-        if platform is not False:
-            if platform['associated']:
-                return True
-            else:
-                return False
-        else:
-            return False
+        return platform['associated']
             
         
             

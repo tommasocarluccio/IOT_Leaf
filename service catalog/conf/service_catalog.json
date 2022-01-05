@@ -26,17 +26,17 @@
         "service": "/resource_catalog",
         "url": "http://192.168.1.130:8083/resource_catalog"
     },
-    "tips_catalog": {
-        "IP_address": "192.168.1.130",
-        "port": 8099,
-        "service": "/tips_catalog",
-        "url": "http://192.168.1.130:8099/tips_catalog"
-    },
     "database_adaptor": {
         "IP_address": "192.168.1.130",
         "port": 8085,
         "service": "/database_adaptor",
         "url": "http://192.168.1.130:8085/database_adaptor"
+    },
+    "tips_catalog": {
+        "IP_address": "192.168.1.130",
+        "port": 8099,
+        "service": "/tips_catalog",
+        "url": "http://192.168.1.130:8099/tips_catalog"
     },
     "telegram_bot": {
         "IP_address": "192.168.1.89",
