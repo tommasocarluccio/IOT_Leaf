@@ -53,6 +53,7 @@ class AlertingControl(warningControl):
         msg=self.conf_content['msg']
         msg['parameter']=parameter
         msg['status']=status
+        msg['tip']=self.retrieve_tip(parameter,status)
         return msg
 
     def compare_value(self,minimum,maximum,value):
@@ -62,6 +63,14 @@ class AlertingControl(warningControl):
             return "HIGH"
         else:
             return False
+
+    def retrieve_tip(self,parameter,status):
+        tips_catalog=requests.get(self.serviceCatalogAddress+'/tips_catalog').json()['url']
+        tip=requests.get(tips_catalog+"/tip/"+parameter+"/"+status)
+        if tip.status_code==200:
+            return tip.text
+        else:
+            return None
 
 
 if __name__ == '__main__':

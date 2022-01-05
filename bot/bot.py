@@ -38,9 +38,6 @@ class LeafBot(Generic_Service):
 
         self.users_data={"users": []}
 
-        with open('etc/Tips.txt') as f:
-            self.lines = f.readlines()
-
         self.aqi_state_dict=[
             {
             "circle":":green_circle:",
@@ -375,7 +372,7 @@ class LeafBot(Generic_Service):
                 user_auth=next((item for item in self.authentications if item["chat_ID"] == chat_ID), False)
                 password=message
                 ##check password-userID
-                log=requests.get(self.clientURL+'/login'+'?username='+user_auth['user_ID']+'&password='+password+'&chat_ID='+str(chat_ID))
+                log=requests.post(self.clientURL+'/login',json={"username":user_auth['user_ID'],'password':password,'chat_ID':str(chat_ID)})
                 #if all correct
                 if log.status_code==200:
                     user['user_ID']=user_auth['user_ID']
@@ -717,7 +714,9 @@ class LeafBot(Generic_Service):
 
         elif query_data=='tips':
             self.bot.answerCallbackQuery(query_id, text='Tips')
-            self.bot.sendMessage(chat_ID, random.choice(self.lines), reply_markup=self.other_tip_keyboard)
+            tipsURL=requests.get(self.serviceURL+'/tips_catalog').json()['url']
+            tip=requests.get(tipsURL+'/tip').text
+            self.bot.sendMessage(chat_ID, tip , reply_markup=self.other_tip_keyboard)
 
         elif query_data=='send_loc':
             self.bot.sendMessage(chat_ID, 'Push the button to share your location', reply_markup=self.location_keyboard)
@@ -771,7 +770,9 @@ class LeafBot(Generic_Service):
             self.bot.answerCallbackQuery(query_id, text='Tips')
             self.bot.editMessageReplyMarkup(message_id_tuple, reply_markup=None)
             self.bot.deleteMessage(message_id_tuple)
-            self.bot.sendMessage(chat_ID, random.choice(self.lines), reply_markup=self.other_tip_keyboard)
+            tipsURL=requests.get(self.serviceURL+'/tips_catalog').json()['url']
+            tip=requests.get(tipsURL+'/tip').text
+            self.bot.sendMessage(chat_ID, tip, reply_markup=self.other_tip_keyboard)
 
         elif query_data=='set_dev':
             self.bot.answerCallbackQuery(query_id, text='Device setting')

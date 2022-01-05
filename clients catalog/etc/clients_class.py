@@ -72,6 +72,11 @@ class PlatformsCatalog():
         for spec in platform['specs']['thingspeak']:
             self.removeRoom(platform_ID,spec['room'])
 
+    def remove_chatID(self,platform_ID,chatID):
+        platform=self.find_platform(platform_ID)
+        chatID_list=platform['specs']['chatIDs']
+        chatID_list.remove(chatID)
+
     def save(self):
         with open(self.db_filename,'w') as file:
             json.dump(self.content,file, indent=4)

@@ -1,0 +1,43 @@
+{
+    "description": "Welcome to resources server",
+    "platforms_list": [
+        {
+            "platform_ID": "Leaf_002",
+            "rooms": [
+                {
+                    "room_ID": "room_1",
+                    "room_name": "Bedroom",
+                    "devices": [
+                        {
+                            "deviceID": "DISPLAY",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": null,
+                                    "u": null,
+                                    "topic": "Leaf_monitoring/data/Leaf_002/room_1/DISPLAY"
+                                }
+                            ],
+                            "timestamp": 1641398793.752615,
+                            "date": "05/01/2022 17:06"
+                        },
+                        {
+                            "deviceID": "LED_1_AQI",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "AQI_warning",
+                                    "u": null,
+                                    "topic": "Leaf_monitoring/actuators/Leaf_002/room_1/LED_1_AQI"
+                                }
+                            ],
+                            "timestamp": 1641398817.5350218,
+                            "date": "05/01/2022 17:06"
+                        }
+                    ]
+                }
+            ],
+            "creation_date": "15/12/2021 21:30"
+        }
+    ]
+}
