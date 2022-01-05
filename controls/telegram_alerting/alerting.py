@@ -6,6 +6,7 @@ class AlertingControl(warningControl):
     def __init__(self,conf_filename):
         warningControl.__init__(self,conf_filename)
         self.bot_url=requests.get(self.serviceCatalogAddress+'/telegram_bot').json()['url']
+        self.database_url=requests.get(self.serviceCatalogAddress+'/database_adaptor').json()['url']
 
     def setup(self,clientID):
         try:
@@ -38,11 +39,9 @@ class AlertingControl(warningControl):
                 parameter=meas['n']
                 try:
                     status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
-
+                    room_data=requests.get()
                     if status is not False:
                         msg=self.create_msg(parameter,status)
-                        th_dict['pending_alert']=True
-                        r=requests.post("{}/setRoomParameter/{}/{}".format(profiles_catalog,platform_ID,room_ID),json=th_dict)
                         try:
                             requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
                             print("{}-{}. Sending Message:".format(platform_ID,room_ID))
