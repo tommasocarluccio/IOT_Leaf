@@ -608,13 +608,6 @@ class LeafBot(Generic_Service):
                 [InlineKeyboardButton(text=emoji.emojize(':house: Go to the main menu', use_aliases=True), callback_data= 'home')],
                 ])
 
-        self.device_setting=InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text= emoji.emojize(':house: Add a new room', use_aliases=True), callback_data='add_room'),
-                InlineKeyboardButton(text= emoji.emojize(':heavy_multiplication_x: Remove a room', use_aliases=True), callback_data='remove_room')],
-                [InlineKeyboardButton(text= emoji.emojize(':pencil2: Change platform name', use_aliases=True), callback_data='change_platform_name')],
-                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
-                ])
-
 
         self.room_menu=InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text= emoji.emojize(':bar_chart: Room statistics', use_aliases=True), callback_data='stat'),
