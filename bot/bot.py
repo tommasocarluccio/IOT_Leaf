@@ -466,7 +466,7 @@ class LeafBot(Generic_Service):
                         self.bot.sendMessage(chat_ID, 'Update succesfull!')
                         self.bot.sendMessage(chat_ID, f'Your new thresholds for {parameter} are: {min_th},{max_th}', reply_markup=self.room_menu)
                     else:
-                        self.bot.sendMessage(chat_ID, 'Update was unsuccesfull! Please try again', reply_markup=self.room_menu)
+                        self.bot.sendMessage(chat_ID, f'{log.reason} Please try again', reply_markup=self.room_menu)
                     user['flags']['room_name_flag']=0
                     self.thresholds=[i for i in self.thresholds if i['chat_ID']!=chat_ID]
                 except:
@@ -481,6 +481,7 @@ class LeafBot(Generic_Service):
                     'platformID':message
                 }
                 log=requests.put(self.clientURL+'/newPlatform', json=body)
+                print(log.status_code)
                 platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
                 plt_list_keyboard=[]
                 for i in platforms_list:
