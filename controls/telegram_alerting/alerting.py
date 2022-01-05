@@ -41,7 +41,6 @@ class AlertingControl(warningControl):
                     #avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
                     status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
                     if status is not False:
-                        print(meas['v'])
                         """
                         avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
                         print(avg_value)
@@ -52,20 +51,19 @@ class AlertingControl(warningControl):
                         for key,value in room_data.items():
 
                             if value[0]==parameter:
-                                print(value[1])
+                                #print(value[1])
                                 last_value=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],int(value[1]))
-                                print(last_value)
+                                #print(last_value)
                         if last_value is False:
                             msg=self.create_msg(parameter,status)
-                            print(msg)
-                            """
+                            #print(msg)
                             try:
                                 requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
                                 print("{}-{}. Sending Message:".format(platform_ID,room_ID))
                                 print(msg) 
                             except:
                                 print("Bot Communication failed")
-                            """
+
                 except Exception as e:
                     print(e)
     def create_msg(self,parameter, status):
