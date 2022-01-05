@@ -41,6 +41,8 @@ class AlertingControl(warningControl):
 
                     if status is not False:
                         msg=self.create_msg(parameter,status)
+                        th_dict['pending_alert']=True
+                        r=requests.post("{}/setRoomParameter/{}/{}".format(profiles_catalog,platform_ID,room_ID),json=th_dict)
                         try:
                             requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
                             print("{}-{}. Sending Message:".format(platform_ID,room_ID))

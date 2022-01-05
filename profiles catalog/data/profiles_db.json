@@ -32,7 +32,7 @@
                         },
                         "thresholds": {
                             "temperature": {
-                                "min": 16,
+                                "min": 17,
                                 "max": 25
                             },
                             "humidity": {
