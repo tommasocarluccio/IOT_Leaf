@@ -63,6 +63,7 @@ class AlertingControl(warningControl):
         return msg
 
     def compare_value(self,minimum,maximum,value):
+        print(maximum)
         if float(value)<float(minimum):
             return "LOW"   
         elif float(value)>=float(maximum):
