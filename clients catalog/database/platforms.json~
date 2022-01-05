@@ -44,7 +44,12 @@
         {
             "platform_ID": "Leaf_003",
             "associated": true,
-            "specs": {}
+            "specs": {
+                "chatIDs": [
+                    306741166,
+                    70387018
+                ]
+            }
         }
     ],
     "tokens": {

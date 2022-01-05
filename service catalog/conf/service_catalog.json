@@ -32,11 +32,11 @@
         "service": "/tips_catalog",
         "url": "http://192.168.1.130:8099/tips_catalog"
     },
-    "telegram_bot": {
-        "IP_address": "192.168.1.89",
-        "port": 8087,
-        "service": "/telegram_bot",
-        "url": "http://192.168.1.89:8087/telegram_bot"
+    "profiles_catalog": {
+        "IP_address": "192.168.1.130",
+        "port": 8081,
+        "service": "/profiles_catalog",
+        "url": "http://192.168.1.130:8081/profiles_catalog"
     },
     "clients_catalog": {
         "IP_address": "192.168.1.130",
@@ -44,10 +44,10 @@
         "service": "/clients_catalog",
         "url": "http://192.168.1.130:9090/clients_catalog"
     },
-    "profiles_catalog": {
-        "IP_address": "192.168.1.130",
-        "port": 8081,
-        "service": "/profiles_catalog",
-        "url": "http://192.168.1.130:8081/profiles_catalog"
+    "telegram_bot": {
+        "IP_address": "192.168.1.89",
+        "port": 8087,
+        "service": "/telegram_bot",
+        "url": "http://192.168.1.89:8087/telegram_bot"
     }
 }
