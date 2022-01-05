@@ -36,15 +36,14 @@
                     }
                 ],
                 "chatIDs": [
-                    306741166,
-                    306741166,
+                    70387018,
                     306741166
                 ]
             }
         },
         {
             "platform_ID": "Leaf_003",
-            "associated": false,
+            "associated": true,
             "specs": {}
         }
     ],

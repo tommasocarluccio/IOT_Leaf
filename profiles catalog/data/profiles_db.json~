@@ -1,5 +1,5 @@
 {
-    "last_creation": "05/01/2022 18:44",
+    "last_creation": "05/01/2022 19:45",
     "profiles": [
         {
             "platform_ID": "Leaf_002",
@@ -52,49 +52,13 @@
             "creation_date": "15/12/2021 21:29"
         },
         {
-            "platform_ID": "Leag_003",
-            "platform_name": "Leag_003",
-            "warning": true,
-            "room_cnt": 0,
-            "location": null,
-            "rooms": [],
-            "creation_date": "05/01/2022 18:40"
-        },
-        {
             "platform_ID": "Leaf_003",
             "platform_name": "Leaf_003",
             "warning": true,
             "room_cnt": 0,
             "location": null,
             "rooms": [],
-            "creation_date": "05/01/2022 18:41"
-        },
-        {
-            "platform_ID": "Leaf_004",
-            "platform_name": "Leaf_004",
-            "warning": true,
-            "room_cnt": 0,
-            "location": null,
-            "rooms": [],
-            "creation_date": "05/01/2022 18:42"
-        },
-        {
-            "platform_ID": "/logout",
-            "platform_name": "/logout",
-            "warning": true,
-            "room_cnt": 0,
-            "location": null,
-            "rooms": [],
-            "creation_date": "05/01/2022 18:42"
-        },
-        {
-            "platform_ID": "/home",
-            "platform_name": "/home",
-            "warning": true,
-            "room_cnt": 0,
-            "location": null,
-            "rooms": [],
-            "creation_date": "05/01/2022 18:44"
+            "creation_date": "05/01/2022 19:45"
         }
     ]
 }
