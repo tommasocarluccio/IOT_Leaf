@@ -223,7 +223,7 @@ class LeafBot(Generic_Service):
         print(room_body)
         log=requests.put(profileURL+'/insertRoom/'+user['platform_ID'], json=room_body, headers={}).json()
         print(log)
-        if log['result']==True:
+        if log:
             return True
         else:
             return False
@@ -302,6 +302,43 @@ class LeafBot(Generic_Service):
             except: pass
         return output
 
+    def get_statistics(self, chat_ID, period):
+        statisticsURL=requests.get(self.serviceURL+'/statistics_catalog').json()['url']
+        print(statisticsURL)
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
+        room_name=self.get_room_name(chat_ID, user['room_ID'])
+        output=f'Statistics for {room_name} for the last {period}\n'
+        log=requests.get(statisticsURL+'/'+user['platform_ID']+'/'+user['room_ID']+'/'+period).json()
+        print(log)
+
+        for key, value in log.items():
+            if key=='temp':
+                key='temperature'
+            elif key=='hum':
+                key='humidity'
+            try:
+                emo=self.emoji_dic[key]
+            except:
+                emo=':small_blue_diamond:'
+            try:
+                unit=self.unit_dict[key]
+            except:
+                unit=''
+            output+=emo+key+'\n'
+            if value['avg']=='no_data':
+                output+='\t'+'Average'+': '+value['avg']+'\n'
+            else:
+                output+='\t'+'Average'+': '+str(round(value['avg'], 2))+' '+unit+'\n'
+            if value['min']=='no_data':
+                output+='\t'+'Min'+': '+value['min']+'\n'
+            else:
+                output+='\t'+'Min'+': '+str(round(value['min'], 2))+' '+unit+'\n'
+            if value['max']=='no_data':
+                output+='\t'+'Max'+': '+value['max']+'\n'
+            else:
+                output+='\t'+'Max'+': '+str(round(value['max'], 2))+' '+unit+'\n'
+        return output
+     
     def get_room_name(self, chat_ID, room_ID):
         profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
         user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
@@ -436,6 +473,19 @@ class LeafBot(Generic_Service):
                     self.bot.sendMessage(chat_ID, 'Update was unsuccesfull! Please try again', reply_markup=self.room_menu)
                     user['flags']['room_name_flag']=0
                     self.thresholds=[i for i in self.thresholds if i['chat_ID']!=chat_ID]
+            
+            elif message=='/help':
+                self.bot.sendMessage(chat_ID, emoji.emojize(':black_circle:\tPress /start to start the bot and open the Home menu\n'
+                                     ':black_circle:\tUse the displayed keyboard to navigate through the bot functions\n'
+                                     ':black_circle:\tUse the "Set your Location" button to change the previously registered location and access the data of the nearest available station through the "Current Condition" menù\n'
+                                     ,use_aliases=True), reply_markup=self.back_button)
+            elif message=='/home':
+                self.bot.sendMessage(chat_ID, emoji.emojize(f':seedling:\tWelcome to Leaf!\t:seedling:\nYou are logged in as {user["user_ID"]}', use_aliases=True))
+                self.bot.sendMessage(chat_ID, 'Select an option:', reply_markup=self.home_keyboard)
+            else:
+                self.bot.sendMessage(chat_ID ,'Invalid command!\n'
+                                 'To restart the bot use : /start\n'
+                                 'To get help use: /help')
             """
             elif user['flags']['new_platform_flag']==1:
                 clientURL=requests.get(self.serviceURL+'/clients_catalog').json()['url']
@@ -448,6 +498,8 @@ class LeafBot(Generic_Service):
                     user['platform_ID']=message
                     self.bot.sendMessage(chat_ID, 'Your new platform has been correctly associated!', reply_markup=)
             """
+
+           
 
              
         elif content_type=='location':
@@ -490,7 +542,7 @@ class LeafBot(Generic_Service):
                 ])
 
         self.home_keyboard = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text= emoji.emojize(':watch: Actual Conditions', use_aliases=True), callback_data='act'),
+                    [InlineKeyboardButton(text= emoji.emojize(':watch: Current Conditions', use_aliases=True), callback_data='act'),
                     InlineKeyboardButton(text= emoji.emojize(':key: Enter a Room', use_aliases=True), callback_data='room')],
                     [InlineKeyboardButton(text=emoji.emojize(':green_book: Tips', use_aliases=True), callback_data='tips'),
                     InlineKeyboardButton(text=emoji.emojize(':gear: Settings',use_aliases=True), callback_data='set')]
@@ -547,7 +599,7 @@ class LeafBot(Generic_Service):
         self.room_menu=InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text= emoji.emojize(':bar_chart: Room statistics', use_aliases=True), callback_data='stat'),
                     InlineKeyboardButton(text= emoji.emojize(':gear: Room settings', use_aliases=True), callback_data='room_set')],
-                    [InlineKeyboardButton(text=emoji.emojize(':watch: Room actual conditions', use_aliases=True), callback_data='room_act')],
+                    [InlineKeyboardButton(text=emoji.emojize(':watch: Room Current conditions', use_aliases=True), callback_data='room_act')],
                     [InlineKeyboardButton(text=emoji.emojize(':house: Go to the main menu', use_aliases=True), callback_data='home')]
                     ])
 
@@ -612,6 +664,13 @@ class LeafBot(Generic_Service):
                 [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
                 ])
 
+        self.period_keyboard=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text=emoji.emojize(':date:DAY', use_aliases=True), callback_data='day')],
+                [InlineKeyboardButton(text=emoji.emojize(':calendar: WEEK', use_aliases=True), callback_data='week')],
+                [InlineKeyboardButton(text=emoji.emojize(':spiral_calendar: MONTH', use_aliases=True), callback_data='month')],
+                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                ])
+
     def on_callback_query(self, msg):
         query_id, chat_ID, query_data= telepot.glance(msg, flavor='callback_query')
         message_id_tuple=telepot.origin_identifier(msg)
@@ -643,13 +702,6 @@ class LeafBot(Generic_Service):
             self.bot.deleteMessage(message_id_tuple)
             self.bot.sendMessage(chat_ID, emoji.emojize(f':seedling:\tWelcome to Leaf!\t:seedling:\nYou are logged in as {user["user_ID"]}', use_aliases=True))
             self.bot.sendMessage(chat_ID, 'Select an option:', reply_markup=self.home_keyboard)
-            # self.room_flag=0
-            # self.user_flag=0
-            # self.userID_flag=0
-            # self.password_flag=0
-            # self.new_sensor_flag=0
-            # self.new_room_flag=0
-            # self.enter_room_flag==0
 
         elif query_data=='set_loc':
             self.bot.sendMessage(chat_ID, 'Chose how to set your location', reply_markup=self.location_opt_keyboard)
@@ -660,7 +712,7 @@ class LeafBot(Generic_Service):
             self.bot.deleteMessage(message_id_tuple)
 
         elif query_data=='act':
-            self.bot.answerCallbackQuery(query_id, text='Actual Conditions')
+            self.bot.answerCallbackQuery(query_id, text='Current Conditions')
             self.bot.sendMessage(chat_ID, 'Do you want the internal or the external conditions?', reply_markup=self.actual_menu)
 
         elif query_data=='tips':
@@ -686,7 +738,7 @@ class LeafBot(Generic_Service):
                 station_str=f"Selected station name: {station}\n"
             except:
                 station_str=''
-            self.bot.answerCallbackQuery(query_id, text='Actual External Conditions')
+            self.bot.answerCallbackQuery(query_id, text='Current External Conditions')
             ext_data=self.get_external_conditions(chat_ID)
             if type(ext_data['aqi'])==str:
                 index=6
@@ -771,6 +823,14 @@ class LeafBot(Generic_Service):
         elif query_data=='new_platform':
             self.bot.sendMessage(chat_ID, 'Write the unique platform_ID associated to your new platform')
             user['flags']['new_platform_flag']=1
+
+        elif query_data=='stat':
+            self.bot.sendMessage(chat_ID, 'Choose the time period:', reply_markup=self.period_keyboard)
+
+        elif query_data=='day' or query_data=='week' or query_data=='month':
+            out=self.get_statistics(chat_ID, query_data)
+            self.bot.sendMessage(chat_ID, text=(emoji.emojize(out)), reply_markup=self.back_button)
+
         else:
             profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
             #when user clicks on a room
@@ -780,8 +840,8 @@ class LeafBot(Generic_Service):
                     if query_data==room['preferences']['room_name']:
                         #when user want to remove room
                         if user['flags']['remove_room_flag']==1:
-                            log=requests.delete(profileURL+'/removeRoom/'+user['platform_ID']+'/'+room['room_ID']).json()
-                            if log['result']:
+                            log=requests.delete(profileURL+'/removeRoom/'+user['user_ID']+'/'+user['platform_ID']+'/'+room['room_ID']).json()
+                            if log:
                                 self.bot.sendMessage(chat_ID, f"Room {room['preferences']['room_name']} succesfully removed!", reply_markup=self.home_keyboard)
                             else:
                                 self.bot.sendMessage(chat_ID, f"Error while removing room {room['preferences']['room_name']}! Please try again.", reply_markup=self.home_keyboard)
@@ -852,8 +912,9 @@ class LeafBot(Generic_Service):
             jsonBody=json.loads(body)
             status=jsonBody["status"]
             parameter=jsonBody["parameter"]
-            tosend="ATTENTION!!!\n{} is {} in {} - {}".format(parameter,status,room,platform)
+            tosend="WARNING!!!\n{} is {} in {} - {}".format(parameter,status,room,platform)
             chat_IDs=requests.get(self.clientURL+"/info/"+platform_ID+"/specs/chatIDs").json()
+            chat_IDs = list(dict.fromkeys(chat_IDs))
             for chat_ID in chat_IDs:
                 try:
                     self.bot.sendMessage(chat_ID, text=tosend)

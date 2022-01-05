@@ -5,7 +5,7 @@
             "platform_ID": "Leaf_002",
             "platform_name": "Leaf_002",
             "warning": true,
-            "room_cnt": 1,
+            "room_cnt": 5,
             "location": null,
             "coord": {
                 "lat": 45.104332,
@@ -44,7 +44,7 @@
                                 "max": 650
                             }
                         },
-                        "room_name": "Bedroom"
+                        "room_name": "Kitchen"
                     },
                     "connection_timestamp": 1639599066.9826908
                 }

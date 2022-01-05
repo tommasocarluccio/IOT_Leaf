@@ -18,7 +18,7 @@ class Stats(Generic_Service):
         self.conf_content = json.load(open(configuration_file,"r"))
         self.serviceURL = self.conf_content['service_catalog']
 
-    def calculateStats(json_response):
+    def calculateStats(self, json_response):
 
         # get element into list
         AQI = []
@@ -83,14 +83,13 @@ class Stats(Generic_Service):
         
         if command=="day":
             last_period_date = now + relativedelta(days=-1)
-            #res = retrieveData(channelID, now, last_period_date)
             last = str(last_period_date).split(' ')
             nnow = str(now).split(' ')
             last_period_date = '_'.join(last).split('.')[0]
             now = '_'.join(nnow).split('.')[0]
             print(last_period_date)
 
-            res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}')
+            res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
             print(res)
         
             respDEF = self.calculateStats(res)
@@ -106,7 +105,12 @@ class Stats(Generic_Service):
                     now = last_period_date
                     last_period_date = now + relativedelta(days=-1)
 
-                    #res = retrieveData(channelID, now, last_period_date)
+                    last = str(last_period_date).split(' ')
+                    nnow = str(now).split(' ')
+                    last_period_date = '_'.join(last).split('.')[0]
+                    now = '_'.join(nnow).split('.')[0]
+                    print(last_period_date)
+
                     res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
 
                     resp = self.calculateStats(res)
@@ -139,10 +143,12 @@ class Stats(Generic_Service):
         elif command=="week":
 
             last_period_date = now + relativedelta(weeks=-1)
-            #res = retrieveData(channelID, now, last_period_date)
+            last = str(last_period_date).split(' ')
+            nnow = str(now).split(' ')
+            last_period_date = '_'.join(last).split('.')[0]
+            now = '_'.join(nnow).split('.')[0]
             
             res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
-
             respDEF = self.calculateStats(res)
 
             NUM_WEEKS = 4
@@ -154,8 +160,11 @@ class Stats(Generic_Service):
                 for d in range(NUM_WEEKS):
                     now = last_period_date
                     last_period_date = now + relativedelta(weeks=-1)
-                    #res = retrieveData(channelID, now, last_period_date)
-                    
+                    last = str(last_period_date).split(' ')
+                    nnow = str(now).split(' ')
+                    last_period_date = '_'.join(last).split('.')[0]
+                    now = '_'.join(nnow).split('.')[0]
+                    print(last_period_date)                    
                     res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
 
                     resp = self.calculateStats(res)
@@ -186,10 +195,11 @@ class Stats(Generic_Service):
 
         elif command=="month":
             last_period_date = now + relativedelta(months=-1)
-            #res = retrieveData(channelID, now, last_period_date)
-            
+            last = str(last_period_date).split(' ')
+            nnow = str(now).split(' ')
+            last_period_date = '_'.join(last).split('.')[0]
+            now = '_'.join(nnow).split('.')[0]
             res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
-
             respDEF = self.calculateStats(res)
 
             NUM_MONTHS = 2
@@ -201,7 +211,11 @@ class Stats(Generic_Service):
                 for d in range(NUM_MONTHS):
                     now = last_period_date
                     last_period_date = now + relativedelta(months=-1)
-                    #res = retrieveData(channelID, now, last_period_date)
+                    last = str(last_period_date).split(' ')
+                    nnow = str(now).split(' ')
+                    last_period_date = '_'.join(last).split('.')[0]
+                    now = '_'.join(nnow).split('.')[0]
+                    print(last_period_date)
                     
                     res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
 
@@ -237,7 +251,7 @@ class Stats(Generic_Service):
         respDEF['temp']['Advice'] = temp_avice
         respDEF['hum']['Advice'] = hum_avice
 
-        return respDEF
+        return json.dumps(respDEF)
 
 
 if __name__ == "__main__":

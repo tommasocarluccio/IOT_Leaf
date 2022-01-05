@@ -62,9 +62,9 @@ class AdaptorREST():
             date_end = uri[4]
             start = date_start.split('_')
             date_start = ' '.join(start)
-            end = date_start.split('_')
+            end = date_end.split('_')
             date_end = ' '.join(end)
-            
+
             date_start = datetime.strptime(date_start, "%Y-%m-%d %H:%M:%S")
             date_end = datetime.strptime(date_end, "%Y-%m-%d %H:%M:%S")
 
@@ -77,7 +77,7 @@ class AdaptorREST():
             # format thingspeak request
             request_url = f'https://api.thingspeak.com/channels/{channelID}/feeds.json?start={start_date}&end={end_date}'
             res = requests.get(request_url).json()
-            return res
+            return json.dumps(res)
 
         else:
             raise cherrypy.HTTPError(501, "No operation!")
