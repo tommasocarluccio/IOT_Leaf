@@ -6,7 +6,7 @@ class AlertingControl(warningControl):
     def __init__(self,conf_filename):
         warningControl.__init__(self,conf_filename)
         self.bot_url=requests.get(self.serviceCatalogAddress+'/telegram_bot').json()['url']
-        self.database_url=requests.get(self.serviceCatalogAddress+'/database_adaptor').json()['url']
+        self.adaptor_url=requests.get(self.serviceCatalogAddress+'/database_adaptor').json()['url']
 
     def setup(self,clientID):
         try:
@@ -39,7 +39,7 @@ class AlertingControl(warningControl):
                 parameter=meas['n']
                 try:
                     status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
-                    room_data=requests.get(adaptorURL+'/'+user['platform_ID']+'/'+room_ID+'/now').json()
+                    room_data=requests.get(self.adaptor_url+'/'+user['platform_ID']+'/'+room_ID+'/now').json()
                     for key, value in room_data.items():
                         print(value[0],value[1])
                     if status is not False:
