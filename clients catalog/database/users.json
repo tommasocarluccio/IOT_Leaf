@@ -11,7 +11,8 @@
             "username": "Elias",
             "password": "Psw",
             "platforms_list": [
-                "Leaf_002"
+                "Leaf_002",
+                "Leaf_003"
             ]
         }
     ]

@@ -123,7 +123,7 @@ class Registration_deployer(object):
                 return json.dumps(data)
             except:
                 raise cherrypy.HTTPError("401 Login failed")
-    def PUT(self,*uri,**params):
+    def PUT(self,*uri):
         command=str(uri[0])
         body=cherrypy.request.body.read()
         json_body=json.loads(body.decode('utf-8'))
@@ -134,13 +134,12 @@ class Registration_deployer(object):
                 if not self.catalog.check_association(json_body['platformID']) and user is not False:
                     profiles_catalog=self.catalog.retrieveService("profiles_catalog")
                     r=requests.put(profiles_catalog['url']+"/insertProfile",json={"platform_ID":json_body['platformID']})
-                    print(r)
                     if r.status_code==200:
                         user['platforms_list'].append(json_body['platformID'])
-                        self.catalog.platforms.set_value(params['platformID'],"associated",True)
+                        self.catalog.platforms.set_value(json_body['platformID'],"associated",True)
                         self.catalog.users.save()
                         self.catalog.platforms.save()
-                        print("Platform {} correctly associated.".format(platform_ID))
+                        print("Platform {} correctly associated.".format(json_body['platformID']))
                             
                     else:
                         return r
