@@ -38,7 +38,8 @@ class AlertingControl(warningControl):
             for meas in e:
                 parameter=meas['n']
                 try:
-                    status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
+                    avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
+                    status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],avg_value)
                     if status is not False:
                         """
                         avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
