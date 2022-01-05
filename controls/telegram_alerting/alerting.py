@@ -43,7 +43,9 @@ class AlertingControl(warningControl):
                         room_data=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/now').json()
                         for key,value in room_data.items():
                             if value[0]==parameter:
+                                print(parameter)
                                 last_value=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],int(value[1]))
+                                print(last_value)
                         if last_value is False:
                             msg=self.create_msg(parameter,status)
                             try:
