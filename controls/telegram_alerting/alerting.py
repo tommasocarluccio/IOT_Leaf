@@ -39,13 +39,21 @@ class AlertingControl(warningControl):
                 parameter=meas['n']
                 try:
                     status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
-
                     if status is not False:
+                        """
                         avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
                         print(avg_value)
                         avg_status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],avg_value)
                         print(avg_status)
-                        if avg_status is False:
+                        """
+                        room_data=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/now').json()
+                        for key,value in room_data.items():
+
+                            if value[0]==parameter:
+                                print(parameter)
+                                last_value=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],int(value[1]))
+                                print(last_value)
+                        if last_value is False:
                             msg=self.create_msg(parameter,status)
                             try:
                                 requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
@@ -63,7 +71,6 @@ class AlertingControl(warningControl):
         return msg
 
     def compare_value(self,minimum,maximum,value):
-        print(maximum)
         if float(value)<float(minimum):
             return "LOW"   
         elif float(value)>=float(maximum):
