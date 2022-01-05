@@ -41,9 +41,9 @@ class AlertingControl(warningControl):
                     status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
 
                     if status is not False:
-                        room_data=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
-                        print(room_data)
-                        if last_value is False:
+                        avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
+                        avg_status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],avg_value)
+                        if avg_status is False:
                             msg=self.create_msg(parameter,status)
                             try:
                                 requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
