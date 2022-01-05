@@ -486,7 +486,6 @@ class LeafBot(Generic_Service):
                     'platformID':message
                 }
                 log=requests.put(self.clientURL+'/newPlatform', json=body)
-                print(log.status_code)
                 keyboard=self.create_platforms_keyboard(chat_ID)
                 if log.status_code==200:
                     self.bot.sendMessage(chat_ID, 'Your new platform has been correctly associated!', reply_markup=keyboard)
