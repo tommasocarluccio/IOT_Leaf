@@ -56,12 +56,15 @@ class AlertingControl(warningControl):
                                 print(last_value)
                         if last_value is False:
                             msg=self.create_msg(parameter,status)
+                            print(msg)
+                            """
                             try:
                                 requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
                                 print("{}-{}. Sending Message:".format(platform_ID,room_ID))
                                 print(msg) 
                             except:
                                 print("Bot Communication failed")
+                            """
                 except Exception as e:
                     print(e)
     def create_msg(self,parameter, status):
