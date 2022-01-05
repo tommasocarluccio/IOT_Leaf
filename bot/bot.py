@@ -486,7 +486,7 @@ class LeafBot(Generic_Service):
                 self.bot.sendMessage(chat_ID, emoji.emojize(':seedling:\t Welcome to Leaf!\t:seedling:\nBefore starting Log into your Leaf account or create one', use_aliases=True), reply_markup=self.login_keyboard)
                 platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
                 for platform in platforms_list:
-                    log=requests.delete(self.clientURL+'/removeChatID/'+platform+'/'+str(chat_ID))
+                    log=requests.delete(self.clientURL+'/removeChatID/'+str(platform)+'/'+str(chat_ID))
                 user["user_ID"]=None
                 user["platform_ID"]=None
                 user["room_ID"]=None
@@ -926,14 +926,14 @@ class LeafBot(Generic_Service):
             status=jsonBody["status"]
             parameter=jsonBody["parameter"]
             tip=jsonBody["tip"]
-            tosend="WARNING!!!\n{} is {} in {} - {}".format(parameter,status,room,platform)
+            tosend=":warning:WARNING!!!\n{} is {} in {} - {}".format(parameter,status,room,platform)
             if tip!=None:
                 tosend+=f'\nTip: {tip}'
             chat_IDs=requests.get(self.clientURL+"/info/"+platform_ID+"/specs/chatIDs").json()
             chat_IDs = list(dict.fromkeys(chat_IDs))
             for chat_ID in chat_IDs:
                 try:
-                    self.bot.sendMessage(chat_ID, text=tosend)
+                    self.bot.sendMessage(chat_ID, text=emoji.emojize(tosend))
                 except:
                     pass
 
