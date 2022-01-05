@@ -99,7 +99,8 @@ class LeafBot(Generic_Service):
                     'remove_room_flag':0,
                     'room_name_flag':0,
                     'thresholds_flag':0,
-                    'new_platform_flag':0
+                    'new_platform_flag':0,
+                    'remove_platform_flag':0
                 }
             }
         return user
@@ -254,6 +255,18 @@ class LeafBot(Generic_Service):
         parameters_keyboard=InlineKeyboardMarkup(inline_keyboard=parameters_list_keyboard)
         return parameters_keyboard
 
+    def create_platforms_keyboard(self, chat_ID):
+        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
+        platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
+        plt_list_keyboard=[]
+        for i in platforms_list:
+            emo=':small_blue_diamond:'
+            plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}', use_aliases=True), callback_data=i)]]
+        plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(':heavy_plus_sign:\tAdd a new platform', use_aliases=True), callback_data='new_platform')]]
+        rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
+        return rlk
+
     def get_room_measures(self, chat_ID, room_ID):
         adaptorURL=requests.get(self.serviceURL+'/database_adaptor').json()['url']
         #check in the db user with the current chatID
@@ -380,16 +393,8 @@ class LeafBot(Generic_Service):
                 if log.status_code==200:
                     user['user_ID']=user_auth['user_ID']
                     self.bot.sendMessage(chat_ID, emoji.emojize(f':seedling:\tWelcome to Leaf!\t:seedling:\nYou are logged in as {user["user_ID"]}', use_aliases=True))
-                    platforms_list=log.json()['platforms_list']
-
-                    plt_list_keyboard=[]
-                    for i in platforms_list:
-                        emo=':small_blue_diamond:'
-                        plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}', use_aliases=True), callback_data=i)]]
-                    plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(':heavy_plus_sign:\tAdd a new platform', use_aliases=True), callback_data='new_platform')]]
-                    rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
-
-                    self.bot.sendMessage(chat_ID, 'Choose the registered platform you want to visualize or register a new one', reply_markup=rlk)
+                    keyboard=self.create_platforms_keyboard(chat_ID)
+                    self.bot.sendMessage(chat_ID, 'Choose the registered platform you want to visualize or register a new one', reply_markup=keyboard)
 
                 else:
                     self.bot.sendMessage(chat_ID, f'Wrong username or password!\nPlease try again', reply_markup=self.login_keyboard)
@@ -482,17 +487,11 @@ class LeafBot(Generic_Service):
                 }
                 log=requests.put(self.clientURL+'/newPlatform', json=body)
                 print(log.status_code)
-                platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
-                plt_list_keyboard=[]
-                for i in platforms_list:
-                    emo=':small_blue_diamond:'
-                    plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}', use_aliases=True), callback_data=i)]]
-                plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(':heavy_plus_sign:\tAdd a new platform', use_aliases=True), callback_data='new_platform')]]
-                rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
+                keyboard=self.create_platforms_keyboard(chat_ID)
                 if log.status_code==200:
-                    self.bot.sendMessage(chat_ID, 'Your new platform has been correctly associated!', reply_markup=rlk)
+                    self.bot.sendMessage(chat_ID, 'Your new platform has been correctly associated!', reply_markup=keyboard)
                 else:
-                    self.bot.sendMessage(chat_ID, f"{log.reason}", reply_markup=rlk)
+                    self.bot.sendMessage(chat_ID, f"{log.reason}", reply_markup=keyboard)
                 user['flags']['new_platform_flag']=0
             
             elif message=='/help':
@@ -580,7 +579,8 @@ class LeafBot(Generic_Service):
         self.device_setting=InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text= emoji.emojize(':house: Add a new room', use_aliases=True), callback_data='add_room'),
                 InlineKeyboardButton(text= emoji.emojize(':heavy_multiplication_x: Remove a room', use_aliases=True), callback_data='remove_room')],
-                [InlineKeyboardButton(text= emoji.emojize(':pencil2: Change platform name', use_aliases=True), callback_data='change_platform_name')],
+                [InlineKeyboardButton(text= emoji.emojize(':pencil2: Change platform name', use_aliases=True), callback_data='change_platform_name'),
+                InlineKeyboardButton(text= emoji.emojize(':heavy_multiplication_x: Remove a platform', use_aliases=True), callback_data='remove_platform')],
                 [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
                 ])
 
@@ -856,6 +856,18 @@ class LeafBot(Generic_Service):
             out=self.get_statistics(chat_ID, query_data)
             self.bot.sendMessage(chat_ID, text=(emoji.emojize(out)), reply_markup=self.back_button)
 
+        elif query_data=='remove_platform':
+            platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
+            plt_list_keyboard=[]
+            for i in platforms_list:
+                emo=':small_blue_diamond:'
+                plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}', use_aliases=True), callback_data=i)]]
+            rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
+            self.bot.sendMessage(chat_ID, text=(emoji.emojize("Select the platform you want to delete")), reply_markup=rlk)
+            user['flags']['remove_platform_flag']=1
+            
+            
+
         else:
             profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
             #when user clicks on a room
@@ -899,12 +911,23 @@ class LeafBot(Generic_Service):
                 platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
                 for i in platforms_list:
                     if query_data==i:
-                        user['platform_ID']=i
-                        self.users_data['users']=[user if x['chat_ID']==chat_ID else x for x in self.users_data['users']]
-                        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
-                        platform_name=requests.get(profileURL+'/'+user['platform_ID']+'/platform_name').json()
-                        self.bot.sendMessage(chat_ID, f'You are now visualizing Platform: {user["platform_ID"]} ({platform_name})')
-                        self.bot.sendMessage(chat_ID, 'Before starting, go to Settings to set your position and configure your device or go to the main menu', reply_markup=self.starting_keyboard)
+                        #when user wants to delete a platform
+                        if user['flags']['remove_platform_flag']==1:
+                            log=requests.delete(profileURL+'/removeProfile/'+user["user_ID"]+'/'+user["platform_ID"])
+                            if log.status_code==200:
+                                self.bot.sendMessage(chat_ID, f"Platform {i} succesfully removed!")
+                                keyboard=self.create_platforms_keyboard(chat_ID)
+                                self.bot.sendMessage(chat_ID, 'Choose the registered platform you want to visualize or register a new one', reply_markup=keyboard)
+                            else:
+                                self.bot.sendMessage(chat_ID, f"{log.reason} Please try again.", reply_markup=self.home_keyboard)
+                            user['flags']['remove_platform_flag']=0
+                        else:
+                            user['platform_ID']=i
+                            self.users_data['users']=[user if x['chat_ID']==chat_ID else x for x in self.users_data['users']]
+                            profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+                            platform_name=requests.get(profileURL+'/'+user['platform_ID']+'/platform_name').json()
+                            self.bot.sendMessage(chat_ID, f'You are now visualizing Platform: {user["platform_ID"]} ({platform_name})')
+                            self.bot.sendMessage(chat_ID, 'Before starting, go to Settings to set your position and configure your device or go to the main menu', reply_markup=self.starting_keyboard)
             except:
                 pass
 
