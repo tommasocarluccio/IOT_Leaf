@@ -41,7 +41,7 @@ class AlertingControl(warningControl):
                     status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
 
                     if status is not False:
-                        room_data=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&wnd_size=60").json()
+                        room_data=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
                         print(room_data)
                         if last_value is False:
                             msg=self.create_msg(parameter,status)
