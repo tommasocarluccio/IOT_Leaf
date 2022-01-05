@@ -45,7 +45,8 @@ class AlertingControl(warningControl):
 
                             if value[0]==parameter:
                                 last_value=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],int(value[1]))
-                        if int(value[1])>20:
+                                v=int(value[1])
+                        if v>20:
                             msg=self.create_msg(parameter,status)
                             try:
                                 requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
