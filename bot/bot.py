@@ -473,6 +473,23 @@ class LeafBot(Generic_Service):
                     self.bot.sendMessage(chat_ID, 'Update was unsuccesfull! Please try again', reply_markup=self.room_menu)
                     user['flags']['room_name_flag']=0
                     self.thresholds=[i for i in self.thresholds if i['chat_ID']!=chat_ID]
+
+            elif user['flags']['new_platform_flag']==1:
+                clientURL=requests.get(self.serviceURL+'/clients_catalog').json()['url']
+                body={
+                    'username':user['user_ID'],
+                    'platformID':message
+                }
+                log=requests.put(clientURL+'/newPlatform', json=body)
+                if log.status_code==200:
+                    platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
+                    plt_list_keyboard=[]
+                    for i in platforms_list:
+                        emo=':small_blue_diamond:'
+                        plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}', use_aliases=True), callback_data=i)]]
+                    plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(':heavy_plus_sign:\tAdd a new platform', use_aliases=True), callback_data='new_platform')]]
+                    rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
+                    self.bot.sendMessage(chat_ID, 'Your new platform has been correctly associated!', reply_markup=rlk)
             
             elif message=='/help':
                 self.bot.sendMessage(chat_ID, emoji.emojize(':black_circle:\tPress /start to start the bot and open the Home menu\n'
@@ -495,18 +512,9 @@ class LeafBot(Generic_Service):
                 self.bot.sendMessage(chat_ID ,'Invalid command!\n'
                                  'To restart the bot use : /start\n'
                                  'To get help use: /help')
-            """
-            elif user['flags']['new_platform_flag']==1:
-                clientURL=requests.get(self.serviceURL+'/clients_catalog').json()['url']
-                body={
-                    'username':user['user_ID'],
-                    'platformID':message
-                }
-                log=requests.put(clientURL+'/newPlatform', json=body)
-                if log.status_code==200:
-                    user['platform_ID']=message
-                    self.bot.sendMessage(chat_ID, 'Your new platform has been correctly associated!', reply_markup=)
-            """
+            
+            
+            
 
            
 
