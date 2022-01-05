@@ -481,15 +481,17 @@ class LeafBot(Generic_Service):
                     'platformID':message
                 }
                 log=requests.put(self.clientURL+'/newPlatform', json=body)
+                platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
+                plt_list_keyboard=[]
+                for i in platforms_list:
+                    emo=':small_blue_diamond:'
+                    plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}', use_aliases=True), callback_data=i)]]
+                plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(':heavy_plus_sign:\tAdd a new platform', use_aliases=True), callback_data='new_platform')]]
+                rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
                 if log.status_code==200:
-                    platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
-                    plt_list_keyboard=[]
-                    for i in platforms_list:
-                        emo=':small_blue_diamond:'
-                        plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}', use_aliases=True), callback_data=i)]]
-                    plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(':heavy_plus_sign:\tAdd a new platform', use_aliases=True), callback_data='new_platform')]]
-                    rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
                     self.bot.sendMessage(chat_ID, 'Your new platform has been correctly associated!', reply_markup=rlk)
+                else:
+                    self.bot.sendMessage(chat_ID, 'Error adding the new platform!', reply_markup=rlk)
                 user['flags']['new_platform_flag']=0
             
             elif message=='/help':
@@ -904,22 +906,6 @@ class LeafBot(Generic_Service):
                         self.bot.sendMessage(chat_ID, 'Before starting, go to Settings to set your position and configure your device or go to the main menu', reply_markup=self.starting_keyboard)
             except:
                 pass
-
-        
-        """
-        elif query_data=='act_int':
-            self.get_home_measures(chat_ID)
-            
-            self.bot.sendMessage(chat_ID, emoji.emojize(f"{self.strin}", use_aliases=True),reply_markup=self.back_or_home)
-            #except:
-                #self.bot.sendMessage(chat_ID, emoji.emojize("No information", use_aliases=True),reply_markup=back_or_home)
-        """
-
-        
-        # elif query_data=='stat':
-        #     self.bot.answerCallbackQuery(query_id, text='Statistics')
-        #     self.bot.sendMessage(chat_ID, 'Choose the period of time for your statistic:', reply_markup=self.time_menu)
-
 
         self.users_data['users']=[user if x['chat_ID']==chat_ID else x for x in self.users_data['users']]
 
