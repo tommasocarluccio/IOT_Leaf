@@ -49,7 +49,7 @@ class AdaptorREST():
         elif command=="check_warning":
             parameter=str(params['parameter'])
             wnd_size=str(str(params['time']))
-            thingspeak_url="{}/channels/{}/feeds.json?average={}".format(self.adaptor.thingspeak_url, channelID,time)
+            thingspeak_url="{}/channels/{}/feeds.json?average={}".format(self.adaptor.thingspeak_url, channelID,int(time))
             for key,value in fields.items():
                 if value==parameter:
                     break
