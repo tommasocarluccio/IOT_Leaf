@@ -53,8 +53,9 @@ class AdaptorREST():
             for key,value in fields.items():
                 if value==parameter:
                     break
+
             average_data=requests.get(thingspeak_url).json()
-            print(average_data)
+            print(thingspeak_url)
             return json.dumps(float(average_data['feeds'][-1][key]))
         
         elif command=="period":
