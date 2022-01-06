@@ -97,7 +97,7 @@ class AlertingControl(warningControl):
         try:
             last_status=self.logs[platform_ID][room_ID][parameter].get('status')
             last_time=self.logs[platform_ID][room_ID][parameter].get('timestamp')
-            if last_status is not status and time.time()-last_time<5:
+            if last_status is not status and time.time()-last_time<60:
                 return True
             else:
                 return False
