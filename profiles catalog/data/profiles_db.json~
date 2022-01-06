@@ -32,19 +32,20 @@
                         },
                         "thresholds": {
                             "temperature": {
-                                "min": 17,
-                                "max": 25,
-                                "pending_alert": false
+                                "min": 20.0,
+                                "max": 25.0
                             },
                             "humidity": {
                                 "min": 40,
-                                "max": 70,
-                                "pending_alert": false
+                                "max": 70
                             },
                             "AQI": {
                                 "min": 0,
-                                "max": 650,
-                                "pending_alert": false
+                                "max": 650
+                            },
+                            "false": {
+                                "min": 19.0,
+                                "max": 25.0
                             }
                         },
                         "room_name": "Kitchen"

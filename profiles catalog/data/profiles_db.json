@@ -3,7 +3,7 @@
     "profiles": [
         {
             "platform_ID": "Leaf_002",
-            "platform_name": "Leaf_002",
+            "platform_name": "My Home",
             "warning": true,
             "room_cnt": 5,
             "location": null,
@@ -32,19 +32,19 @@
                         },
                         "thresholds": {
                             "temperature": {
-                                "min": 17,
-                                "max": 25
+                                "min": 18.0,
+                                "max": 25.0
                             },
                             "humidity": {
-                                "min": 40,
-                                "max": 70
+                                "min": 40.0,
+                                "max": 65.0
                             },
                             "AQI": {
                                 "min": 0,
                                 "max": 650
                             }
                         },
-                        "room_name": "Kitchen"
+                        "room_name": "Bedroom"
                     },
                     "connection_timestamp": 1639600205.3839352
                 }

@@ -1,8 +1,8 @@
 {
-	"service_catalog": "http://192.168.1.130/service_catalog",
+	"service_catalog": "http://192.168.1.130:8080/service_catalog",
 	"sensorID": "mq5",
 	"end_points": "MQTT",
-	"time_sleep":3,
+	"time_sleep":15,
 	"parameters": [{
 		"parameter": "AQI",
 		"value": null,
