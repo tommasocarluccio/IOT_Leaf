@@ -59,8 +59,6 @@ class AlertingControl(warningControl):
                         if avg_status is not False:
                             if not self.check_last_log(platform_ID,room_ID,parameter,status):
                                 msg=self.create_msg(parameter,status)
-                                self.logs['ciao']="ciao"
-                                print(self.logs)
                                 self.logs[platform_ID][room_ID][parameter]={"status":status,"timestamp":time.time()}
                                 print(self.logs)
                                 try:
@@ -104,7 +102,7 @@ class AlertingControl(warningControl):
             else:
                 return False
         except:
-            return False
+            self.logs[platform_ID]={room_ID:{parameter:{"status":status}}}
 
 if __name__ == '__main__':
     conf=sys.argv[1]
