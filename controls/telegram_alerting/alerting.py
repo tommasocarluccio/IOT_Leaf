@@ -103,6 +103,7 @@ class AlertingControl(warningControl):
                 return False
         except:
             self.logs[platform_ID]={room_ID:{parameter:{"status":status}}}
+            return False
 
 if __name__ == '__main__':
     conf=sys.argv[1]
