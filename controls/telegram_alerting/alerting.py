@@ -5,7 +5,6 @@ from etc.warning_class import *
 class AlertingControl(warningControl):
     def __init__(self,conf_filename):
         warningControl.__init__(self,conf_filename)
-        self.bot_url=requests.get(self.serviceCatalogAddress+'/telegram_bot').json()['url']
         self.adaptor_url=requests.get(self.serviceCatalogAddress+'/database_adaptor').json()['url']
         self.logs={}
 
@@ -61,6 +60,7 @@ class AlertingControl(warningControl):
                                 msg=self.create_msg(parameter,status)
                                 self.logs[platform_ID][room_ID][parameter]={"status":status,"timestamp":time.time()}
                                 try:
+                                    self.bot_url=requests.get(self.serviceCatalogAddress+'/telegram_bot').json()['url']
                                     requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
                                     print("{}-{}. Sending Message:".format(platform_ID,room_ID))
                                     print(msg) 
