@@ -1,0 +1,74 @@
+{
+    "description": "Welcome to resources server",
+    "platforms_list": [
+        {
+            "platform_ID": "Leaf_002",
+            "rooms": [
+                {
+                    "room_ID": "room_1",
+                    "room_name": "Bedroom",
+                    "devices": [
+                        {
+                            "deviceID": "LED_1_AQI",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "AQI_warning",
+                                    "u": null,
+                                    "topic": "Leaf_monitoring/actuators/Leaf_002/room_1/LED_1_AQI"
+                                }
+                            ],
+                            "timestamp": 1641416026.4655664,
+                            "date": "05/01/2022 21:53"
+                        },
+                        {
+                            "deviceID": "DISPLAY",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": null,
+                                    "u": null,
+                                    "topic": "Leaf_monitoring/data/Leaf_002/room_1/DISPLAY"
+                                }
+                            ],
+                            "timestamp": 1641416029.021801,
+                            "date": "05/01/2022 21:53"
+                        },
+                        {
+                            "deviceID": "mq5",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "AQI",
+                                    "u": "ppm",
+                                    "topic": "Leaf_monitoring/data/Leaf_002/room_1/mq5"
+                                }
+                            ],
+                            "timestamp": 1641416030.948969,
+                            "date": "05/01/2022 21:53"
+                        },
+                        {
+                            "deviceID": "dht11",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "temperature",
+                                    "u": "C",
+                                    "topic": "Leaf_monitoring/data/Leaf_002/room_1/dht11"
+                                },
+                                {
+                                    "n": "humidity",
+                                    "u": "%",
+                                    "topic": "Leaf_monitoring/data/Leaf_002/room_1/dht11"
+                                }
+                            ],
+                            "timestamp": 1641416034.673896,
+                            "date": "05/01/2022 21:53"
+                        }
+                    ]
+                }
+            ],
+            "creation_date": "15/12/2021 21:30"
+        }
+    ]
+}
