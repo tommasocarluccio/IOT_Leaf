@@ -95,6 +95,10 @@ class AlertingControl(warningControl):
 
     def check_last_log(self, platform_ID,room_ID,parameter,status):
         try:
+            room=self.logs[platform_ID][room_ID]
+        except:
+            self.logs[platform_ID]={room_ID:{}}
+        try:
             last_status=self.logs[platform_ID][room_ID][parameter].get('status')
             last_time=self.logs[platform_ID][room_ID][parameter].get('timestamp')
             if last_status!=status:
@@ -104,7 +108,7 @@ class AlertingControl(warningControl):
             else:
                 return False
         except:
-            self.logs[platform_ID]={room_ID:{parameter:{"status":status}}}
+            self.logs[platform_ID][room_ID][parameter]={"status":status}
             return False
 
 if __name__ == '__main__':
