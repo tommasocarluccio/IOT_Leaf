@@ -260,9 +260,13 @@ class LeafBot(Generic_Service):
         user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
         platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
         plt_list_keyboard=[]
+        emo=':small_blue_diamond:'
         for i in platforms_list:
-            emo=':small_blue_diamond:'
-            plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}', use_aliases=True), callback_data=i)]]
+            try:
+                platform_name=self.get_platform_name(chat_ID, i)
+            except:
+                platform_name=i
+            plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}\t({platform_name})', use_aliases=True), callback_data=i)]]
         plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(':heavy_plus_sign:\tAdd a new platform', use_aliases=True), callback_data='new_platform')]]
         rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
         return rlk
@@ -279,10 +283,7 @@ class LeafBot(Generic_Service):
             room_emo=self.emoji_dic[room_name]
         except:
             room_emo=':small_blue_diamond:'
-
         output=f'{room_emo} {room_name}\nLast update: {date} at {time}\n'
-        print(room_data)
-        print(room_data.items())
         for key, value in room_data.items():
             if key!='created_at' and key!='entry_id':
                 try:
@@ -293,18 +294,36 @@ class LeafBot(Generic_Service):
                     unit=self.unit_dict[value[0]]
                 except:
                     unit=''
-                #print("par: ",value[0])
-                #print("mes: ",value[1])
-                output+=emo+' '+value[0]+': '+str(value[1])+' '+unit+'\n'
-        print(output)
+                if self.check_values(chat_ID, room_ID, value[0], value[1]):
+                    warning_emo=":warning:"
+                else:
+                    warning_emo=""
+                output+=emo+' '+value[0]+': '+str(value[1])+' '+unit+'  '+warning_emo+'\n'
         return output
-    
+
+    def check_values(self, chat_ID, room_ID, param, value):
+        th=self.get_thresholds(chat_ID, room_ID, param, False)
+        if float(value)<=th["max"] and float(value) >=th["min"]:
+            return False 
+        else:
+            return True #return True when value is outside the thresholds
+
+    def get_thresholds(self, chat_ID, room_ID, param, optimal):
+        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
+        if optimal:
+            th=requests.get(profileURL+'/'+user["platform_ID"]+'/rooms/'+room_ID+'/preferences/optimal').json()[param]
+        else:
+            th=requests.get(profileURL+'/'+user["platform_ID"]+'/rooms/'+room_ID+'/preferences/thresholds').json()[param]
+        return th
+
     def get_home_measures(self, chat_ID):
         clientURL=requests.get(self.serviceURL+'/clients_catalog').json()['url']
         user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
         rooms_list=requests.get(clientURL+'/associated_rooms/'+user['platform_ID']+'/thingspeak').json()
-        print(rooms_list)
-        output=f':house:Current condition in your house:\n\n'
+        print(f"rooms_list: {rooms_list}")
+        platform_name=self.get_platform_name(chat_ID, user["platform_ID"])
+        output=f':house:Current condition in {platform_name}:\n\n'
         for room in rooms_list:
             try:
                 room_output=self.get_room_measures(chat_ID, room)
@@ -353,6 +372,11 @@ class LeafBot(Generic_Service):
         profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
         user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
         return requests.get(profileURL+'/'+user['platform_ID']+'/rooms/'+room_ID+'/preferences/room_name').json()
+    
+    def get_platform_name(self, chat_ID, platform_ID):
+        profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+        user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
+        return requests.get(profileURL+'/'+platform_ID).json()["platform_name"]
 
     def on_chat_message(self, msg):
         content_type, chat_type, chat_ID = telepot.glance(msg)
@@ -511,15 +535,9 @@ class LeafBot(Generic_Service):
 
             else:
                 self.bot.sendMessage(chat_ID ,'Invalid command!\n'
-                                 'To restart the bot use : /start\n'
+                                 'To go to the main menu use : /home\n'
                                  'To get help use: /help')
             
-            
-            
-
-           
-
-             
         elif content_type=='location':
             location=msg['location']
             api_data=self.set_location(chat_ID, location, True)
@@ -827,7 +845,6 @@ class LeafBot(Generic_Service):
         elif query_data=='change_thresholds':
             parameters_keyboard=self.create_parameters_keyboard(chat_ID)
             self.bot.sendMessage(chat_ID, f'Select the parameter for which you want to change the threshold', reply_markup=parameters_keyboard)
-            user['flags']['thresholds_flag']=1
 
         elif query_data=='room_act':
             output=self.get_room_measures(chat_ID, user['room_ID'])
@@ -861,9 +878,13 @@ class LeafBot(Generic_Service):
         elif query_data=='active_platform':
             platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
             plt_list_keyboard=[]
+            emo=':small_blue_diamond:'
             for i in platforms_list:
-                emo=':small_blue_diamond:'
-                plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}', use_aliases=True), callback_data=i)]]
+                try:
+                    platform_name=self.get_platform_name(chat_ID, i)
+                except:
+                    platform_name=i
+                plt_list_keyboard=plt_list_keyboard+[[InlineKeyboardButton(text=emoji.emojize(f'{emo}\t{i}\t({platform_name})', use_aliases=True), callback_data=i)]]
             rlk=InlineKeyboardMarkup(inline_keyboard=plt_list_keyboard)
             self.bot.sendMessage(chat_ID, text=(emoji.emojize("Select the platform you want to visualize")), reply_markup=rlk)
             
@@ -900,7 +921,10 @@ class LeafBot(Generic_Service):
                 room_info=requests.get(profileURL+'/'+user['platform_ID']+'/rooms/'+user['room_ID']).json()
                 for parameter in room_info['preferences']['thresholds'].keys():
                     if query_data==parameter:
-                        self.bot.sendMessage(chat_ID, f"The current thresholds for {parameter} are: {room_info['preferences']['thresholds'][parameter]['min']} {room_info['preferences']['thresholds'][parameter]['max']}")
+                        th_current=self.get_thresholds(chat_ID, parameter, False)
+                        th_optimal=self.get_thresholds(chat_ID, parameter, True)
+                        self.bot.sendMessage(chat_ID, f"The current thresholds for {parameter} are: {th_current['min']} {th_current['max']}")
+                        self.bot.sendMessage(chat_ID, f"The optimal thresholds for {parameter} are: {th_optimal['min']} {th_optimal['max']}")
                         self.bot.sendMessage(chat_ID, 'Type the new threshold values as min and max value separated by a space')
                         self.thresholds.append({"chat_ID":chat_ID,"parameter":parameter})
                         user['flags']['thresholds_flag']=1
@@ -939,12 +963,12 @@ class LeafBot(Generic_Service):
             platform_ID=uri[1]
             room_ID=uri[2]
             profileURL=self.retrieveService('profiles_catalog')['url']
-            platform=requests.get(profileURL+"/"+platform_ID+"/platform_name").json()
-            room=requests.get(profileURL+"/"+platform_ID+"/rooms/"+room_ID+"/preferences/room_name").json()
             body=cherrypy.request.body.read()
             jsonBody=json.loads(body)
             status=jsonBody["status"]
             parameter=jsonBody["parameter"]
+            platform=requests.get(profileURL+"/"+platform_ID+"/platform_name").json()
+            room=requests.get(profileURL+"/"+platform_ID+"/rooms/"+room_ID+"/preferences/room_name").json()
             tip=jsonBody["tip"]
             tosend=":warning:WARNING!!!\n{} is {} in {} - {}".format(parameter,status,room,platform)
             if tip!=None:
@@ -953,9 +977,10 @@ class LeafBot(Generic_Service):
             chat_IDs = list(dict.fromkeys(chat_IDs))
             for chat_ID in chat_IDs:
                 try:
-                    self.bot.sendMessage(chat_ID, text=emoji.emojize(tosend))
+                    self.bot.sendMessage(chat_ID, text=emoji.emojize(tosend), reply_markup=self.back_button)
                 except:
                     pass
+
 
 if __name__ == "__main__":
     conf=sys.argv[1]
