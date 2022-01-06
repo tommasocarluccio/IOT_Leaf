@@ -96,12 +96,14 @@ class AlertingControl(warningControl):
             return None
 
     def check_last_log(self, platform_ID,room_ID,parameter,status):
-        print("ciaooo")
-        last_status=self.logs[platform_ID][room_ID][parameter].get('status')
-        last_time=self.logs[platform_ID][room_ID][parameter].get('timestamp')
-        if last_status is not status and time.time()-last_time<5:
-            return True
-        else:
+        try:
+            last_status=self.logs[platform_ID][room_ID][parameter].get('status')
+            last_time=self.logs[platform_ID][room_ID][parameter].get('timestamp')
+            if last_status is not status and time.time()-last_time<5:
+                return True
+            else:
+                return False
+        except:
             return False
 
 if __name__ == '__main__':
