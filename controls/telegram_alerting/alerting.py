@@ -46,7 +46,6 @@ class AlertingControl(warningControl):
                         avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
                         print(parameter+": avg value "+str(avg_value))
                         avg_status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],avg_value)
-                        print(avg_status)
                         
                         room_data=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/now').json()
                         for key,value in room_data.items():
