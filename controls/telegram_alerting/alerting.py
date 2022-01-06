@@ -60,7 +60,6 @@ class AlertingControl(warningControl):
                             if not self.check_last_log(platform_ID,room_ID,parameter,status):
                                 msg=self.create_msg(parameter,status)
                                 self.logs[platform_ID][room_ID][parameter]={"status":status,"timestamp":time.time()}
-                                print(self.logs)
                                 try:
                                     requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
                                     print("{}-{}. Sending Message:".format(platform_ID,room_ID))
