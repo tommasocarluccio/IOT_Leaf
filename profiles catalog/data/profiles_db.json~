@@ -1,5 +1,5 @@
 {
-    "last_creation": "05/01/2022 19:45",
+    "last_creation": "05/01/2022 19:54",
     "profiles": [
         {
             "platform_ID": "Leaf_002",
@@ -32,8 +32,8 @@
                         },
                         "thresholds": {
                             "temperature": {
-                                "min": 16,
-                                "max": 25
+                                "min": 20.0,
+                                "max": 25.0
                             },
                             "humidity": {
                                 "min": 40,
@@ -42,6 +42,10 @@
                             "AQI": {
                                 "min": 0,
                                 "max": 650
+                            },
+                            "false": {
+                                "min": 19.0,
+                                "max": 25.0
                             }
                         },
                         "room_name": "Kitchen"
@@ -50,15 +54,6 @@
                 }
             ],
             "creation_date": "15/12/2021 21:29"
-        },
-        {
-            "platform_ID": "Leaf_003",
-            "platform_name": "Leaf_003",
-            "warning": true,
-            "room_cnt": 0,
-            "location": null,
-            "rooms": [],
-            "creation_date": "05/01/2022 19:45"
         }
     ]
 }

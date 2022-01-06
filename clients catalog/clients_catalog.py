@@ -146,7 +146,7 @@ class Registration_deployer(object):
                 else:
                     raise cherrypy.HTTPError("409 Already exists!")
             else:
-                raise cherrypy.HTTPError("404 Platform not found!")
+                raise cherrypy.HTTPError("404 Platform not available!")
                 
 
         elif command=="newRoom":

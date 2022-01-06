@@ -1,6 +1,5 @@
 {
   "default": {
-  	"inactive_time": 3600,
     "optimal": {
       "temperature": {
         "min": 20,
@@ -9,20 +8,27 @@
       "humidity": {
         "min": 40,
         "max": 60
+      },
+      "AQI":{
+        "min": 0,
+        "max": 650    
       }
     },
     "thresholds": {
       "temperature": {
         "min": 16,
-        "max": 25
+        "max": 25,
+        "pending_alert":false
       },
       "humidity": {
         "min": 40,
-        "max": 70
-      }
+        "max": 70,
+        "pending_alert":false
+      },
       "AQI":{
       	"min": 0,
-        "max": 650  	
+        "max": 650,
+        "pending_alert":false  	
       }
     }
   }

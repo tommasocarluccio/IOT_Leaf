@@ -5,7 +5,8 @@ from etc.warning_class import *
 class AlertingControl(warningControl):
     def __init__(self,conf_filename):
         warningControl.__init__(self,conf_filename)
-        self.bot_url=requests.get(self.serviceCatalogAddress+'/telegram_bot').json()['url']
+        self.adaptor_url=requests.get(self.serviceCatalogAddress+'/database_adaptor').json()['url']
+        self.logs={}
 
     def setup(self,clientID):
         try:
@@ -37,16 +38,35 @@ class AlertingControl(warningControl):
             for meas in e:
                 parameter=meas['n']
                 try:
+                    #avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
+                    #print(parameter+": measured value "+str(meas['v']))
                     status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
-
                     if status is not False:
-                        msg=self.create_msg(parameter,status)
-                        try:
-                            requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
-                            print("{}-{}. Sending Message:".format(platform_ID,room_ID))
-                            print(msg) 
-                        except:
-                            print("Bot Communication failed")
+                        
+                        avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
+                        avg_status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],avg_value)
+                        """
+                        room_data=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/now').json()
+                        for key,value in room_data.items():
+
+                            if value[0]==parameter:
+                                #print(value[1])
+                                print(parameter+": last value "+str(value[1]))
+                                last_value=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],int(value[1]))
+                                #print(last_value)
+                        """
+                        if avg_status is not False:
+                            if not self.check_last_log(platform_ID,room_ID,parameter,status):
+                                msg=self.create_msg(parameter,status)
+                                self.logs[platform_ID][room_ID][parameter]={"status":status,"timestamp":time.time()}
+                                try:
+                                    self.bot_url=requests.get(self.serviceCatalogAddress+'/telegram_bot').json()['url']
+                                    requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
+                                    print("{}-{}. Sending Message:".format(platform_ID,room_ID))
+                                    print(msg) 
+                                except:
+                                    print("Bot Communication failed")
+
                 except Exception as e:
                     print(e)
     def create_msg(self,parameter, status):
@@ -72,6 +92,23 @@ class AlertingControl(warningControl):
         else:
             return None
 
+    def check_last_log(self, platform_ID,room_ID,parameter,status):
+        try:
+            room=self.logs[platform_ID][room_ID]
+        except:
+            self.logs[platform_ID]={room_ID:{}}
+        try:
+            last_status=self.logs[platform_ID][room_ID][parameter].get('status')
+            last_time=self.logs[platform_ID][room_ID][parameter].get('timestamp')
+            if last_status!=status:
+                return False
+            elif last_status==status and time.time()-last_time<3600:
+                return True
+            else:
+                return False
+        except:
+            self.logs[platform_ID][room_ID][parameter]={"status":status}
+            return False
 
 if __name__ == '__main__':
     conf=sys.argv[1]

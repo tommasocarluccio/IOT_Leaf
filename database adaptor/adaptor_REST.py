@@ -49,12 +49,14 @@ class AdaptorREST():
         elif command=="check_warning":
             parameter=str(params['parameter'])
             wnd_size=str(str(params['time']))
-            thingspeak_url="{}/channels/{}/feeds.json?average={}".format(self.adaptor.thingspeak_url, channelID,time)
+            thingspeak_url="{}/channels/{}/feeds.json?average={}".format(self.adaptor.thingspeak_url, channelID,wnd_size)
             for key,value in fields.items():
                 if value==parameter:
                     break
+
             average_data=requests.get(thingspeak_url).json()
-            return json.dumps(float(average_data['feeds'][0][key]))
+            print(thingspeak_url)
+            return json.dumps(float(average_data['feeds'][-1][key]))
         
         elif command=="period":
 

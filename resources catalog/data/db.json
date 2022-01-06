@@ -9,19 +9,6 @@
                     "room_name": "Bedroom",
                     "devices": [
                         {
-                            "deviceID": "LED_1_AQI",
-                            "endpoints": "MQTT",
-                            "resources": [
-                                {
-                                    "n": "AQI_warning",
-                                    "u": null,
-                                    "topic": "Leaf_monitoring/actuators/Leaf_002/room_1/LED_1_AQI"
-                                }
-                            ],
-                            "timestamp": 1641408394.944186,
-                            "date": "05/01/2022 19:46"
-                        },
-                        {
                             "deviceID": "DISPLAY",
                             "endpoints": "MQTT",
                             "resources": [
@@ -31,21 +18,8 @@
                                     "topic": "Leaf_monitoring/data/Leaf_002/room_1/DISPLAY"
                                 }
                             ],
-                            "timestamp": 1641408397.7442973,
-                            "date": "05/01/2022 19:46"
-                        },
-                        {
-                            "deviceID": "mq5",
-                            "endpoints": "MQTT",
-                            "resources": [
-                                {
-                                    "n": "AQI",
-                                    "u": "ppm",
-                                    "topic": "Leaf_monitoring/data/Leaf_002/room_1/mq5"
-                                }
-                            ],
-                            "timestamp": 1641408399.546134,
-                            "date": "05/01/2022 19:46"
+                            "timestamp": 1641467395.9253407,
+                            "date": "06/01/2022 12:09"
                         },
                         {
                             "deviceID": "dht11",
@@ -62,8 +36,34 @@
                                     "topic": "Leaf_monitoring/data/Leaf_002/room_1/dht11"
                                 }
                             ],
-                            "timestamp": 1641408422.4466639,
-                            "date": "05/01/2022 19:47"
+                            "timestamp": 1641467389.4437776,
+                            "date": "06/01/2022 12:09"
+                        },
+                        {
+                            "deviceID": "mq5",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "AQI",
+                                    "u": "ppm",
+                                    "topic": "Leaf_monitoring/data/Leaf_002/room_1/mq5"
+                                }
+                            ],
+                            "timestamp": 1641467374.937407,
+                            "date": "06/01/2022 12:09"
+                        },
+                        {
+                            "deviceID": "LED_1_AQI",
+                            "endpoints": "MQTT",
+                            "resources": [
+                                {
+                                    "n": "AQI_warning",
+                                    "u": null,
+                                    "topic": "Leaf_monitoring/actuators/Leaf_002/room_1/LED_1_AQI"
+                                }
+                            ],
+                            "timestamp": 1641467373.1827416,
+                            "date": "06/01/2022 12:09"
                         }
                     ]
                 }
