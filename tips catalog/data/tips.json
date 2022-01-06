@@ -1,14 +1,36 @@
 {
 	"temperature":{
-		"low":["prova1","prova2"],
-		"high":["prova3","prova4"]
+		"low":["Check your openings! Maybe you have drafty windows...","You should consider to turn on your heating system!","It's a bit cold, isn't it?"],
+		"high":["Check your heating system and save money!","Have you ever considered a cooling system?","Turn on the fan... If you have!"]
 	},
 	"humidity":{
-		"low":["prova1","prova2"],
-		"high":["prova3","prova4"]
+		"low":["Low humidity causes static electricity, dry skin and hair, increased susceptibility to colds and respiratory illness",
+			"If you have a humidifier, turn it down or off"],
+		"high":["Use a dehumidifier, if you have...",
+			"Open the window!",
+			"Use ceiling fans and keep the flow of air going",
+			"Pay attention to the laundry!",
+			"Check your air conditioning filters!",
+			"High values of humidity will result in mold and moisture. Always keep humidity under control!",
+			"Also your furninture could be damaged.",
+			"Make sure your room is isolated and ventilated."]
 	},
 	"AQI":{
-		"low":["prova1","prova2"],
-		"high":["prova3","prova4"]
+		"low":[],
+		"high":["Open the window and get fresh air!","Use an air purifier.",
+			"This condition can be dangerous for your health!",
+			"Bad air quality will affect your focusing.",
+			"Electricity and other sources of energy creates air pollution",
+			"Use your fan!",
+			"Clearly, don't smoke inside!",
+			"Dust and other environmental pollutants such as mites contribute to indoor air pollution.",
+			"Check for chemical pollutants!",
+			"Keep your workplace clean",
+			"Rembember: Observe proper ventilation",
+			"Regularly mop floors to remove dust!",
+			"Use non-toxic household cleaning products.",
+			"Maybe it's the right time to buy some plants!",
+			"Pay attention to moisture and humidity too!",
+			""]
 	}
 }
