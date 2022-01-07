@@ -38,23 +38,12 @@ class AlertingControl(warningControl):
             for meas in e:
                 parameter=meas['n']
                 try:
-                    #avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
-                    #print(parameter+": measured value "+str(meas['v']))
                     status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
                     if status is not False:
                         
                         avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
                         avg_status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],avg_value)
-                        """
-                        room_data=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/now').json()
-                        for key,value in room_data.items():
 
-                            if value[0]==parameter:
-                                #print(value[1])
-                                print(parameter+": last value "+str(value[1]))
-                                last_value=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],int(value[1]))
-                                #print(last_value)
-                        """
                         if avg_status is not False:
                             if not self.check_last_log(platform_ID,room_ID,parameter,status):
                                 msg=self.create_msg(parameter,status)
@@ -102,7 +91,7 @@ class AlertingControl(warningControl):
             last_time=self.logs[platform_ID][room_ID][parameter].get('timestamp')
             if last_status!=status:
                 return False
-            elif last_status==status and time.time()-last_time<3600:
+            elif last_status==status and time.time()-last_time<3*3600:
                 return True
             else:
                 return False
