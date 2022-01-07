@@ -921,14 +921,15 @@ class LeafBot(Generic_Service):
                 room_info=requests.get(profileURL+'/'+user['platform_ID']+'/rooms/'+user['room_ID']).json()
                 for parameter in room_info['preferences']['thresholds'].keys():
                     if query_data==parameter:
-                        th_current=self.get_thresholds(chat_ID, parameter, False)
-                        th_optimal=self.get_thresholds(chat_ID, parameter, True)
+                        th_current=self.get_thresholds(chat_ID, user['room_ID'],parameter, False)
+                        th_optimal=self.get_thresholds(chat_ID, user['room_ID'],parameter, True)
                         self.bot.sendMessage(chat_ID, f"The current thresholds for {parameter} are: {th_current['min']} {th_current['max']}")
                         self.bot.sendMessage(chat_ID, f"The optimal thresholds for {parameter} are: {th_optimal['min']} {th_optimal['max']}")
                         self.bot.sendMessage(chat_ID, 'Type the new threshold values as min and max value separated by a space')
                         self.thresholds.append({"chat_ID":chat_ID,"parameter":parameter})
                         user['flags']['thresholds_flag']=1
-            except:
+            except Exception as e:
+                print(e)
                 pass
 
             try:
