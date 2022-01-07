@@ -64,6 +64,7 @@ class AlertingControl(warningControl):
                             if not avg_status:
                                 self.logs[platform_ID][room_ID][parameter]={"status":status,"timestamp":time.time()}
                                 msg=self.create_msg(parameter,"OK")
+                                msg['tip']="Well done!"
                                 try:
                                     self.bot_url=requests.get(self.serviceCatalogAddress+'/telegram_bot').json()['url']
                                     requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
@@ -114,7 +115,11 @@ class AlertingControl(warningControl):
                 return False
         except:
             self.logs[platform_ID][room_ID][parameter]={"status":status}
-            return False
+            if not status:
+                return True
+            else:
+                return False
+
 
 if __name__ == '__main__':
     conf=sys.argv[1]
