@@ -974,7 +974,7 @@ class LeafBot(Generic_Service):
             if status!="OK":
                 tosend=":warning:WARNING!!!\n{} is {} in {} - {}".format(parameter,status,room,platform)
             else:
-                tosend=":pray:Good news!!!\n{} is {} again in {} - {}".format(parameter,status,room,platform)
+                tosend=":confetti_ball:Good news!!!\n{} is {} again in {} - {}".format(parameter,status,room,platform)
             if tip!=None:
                 tosend+=f'\nTip: {tip}'
             chat_IDs=requests.get(self.clientURL+"/info/"+platform_ID+"/specs/chatIDs").json()
