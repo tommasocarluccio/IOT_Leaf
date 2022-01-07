@@ -57,7 +57,7 @@ class AlertingControl(warningControl):
                                     print("Bot Communication failed")
                     #optional: if you want an alerting when conditions come back to normal
                     else:
-                        if self.logs[platform_ID][room_ID][parameter]['status'] is not False:
+                        if not self.check_last_log(platform_ID,room_ID,parameter,status):
                             avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
                             avg_status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],avg_value)
 
