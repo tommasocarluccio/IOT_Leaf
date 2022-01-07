@@ -55,6 +55,23 @@ class AlertingControl(warningControl):
                                     print(msg) 
                                 except:
                                     print("Bot Communication failed")
+                    #optional: if you want an alerting when conditions come back to normal
+                    else:
+                        if self.logs[platform_ID][room_ID][parameter]['status'] is not False:
+                            avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
+                            avg_status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],avg_value)
+
+                            if not avg_status:
+                                self.logs[platform_ID][room_ID][parameter]={"status":status,"timestamp":time.time()}
+                                msg=self.create_msg(parameter,"OK")
+                                try:
+                                    self.bot_url=requests.get(self.serviceCatalogAddress+'/telegram_bot').json()['url']
+                                    requests.post(self.bot_url+'/warning/'+platform_ID+'/'+room_ID, json=msg)
+                                    print("{}-{}. Sending Message:".format(platform_ID,room_ID))
+                                    print(msg) 
+                                except:
+                                    print("Bot Communication failed")
+
 
                 except Exception as e:
                     print(e)
