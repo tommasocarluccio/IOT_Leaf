@@ -27,6 +27,9 @@ The system has been programmed for managing different users and hardware platfor
 - User interface
 - Sensor network
 
+Each service is supported by one or more configuration file (JSON file).\
+Eventually, services communications are based on HTTP and MQTT protocols, ensuring a distributed system which load can be splitted among different nodes.
+
 ## Getting started
 It is suggested to use a virtual **Python 3** environment, installing the necessary requirements:
 
