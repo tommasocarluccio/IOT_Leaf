@@ -36,6 +36,7 @@ It is suggested to use a virtual **Python 3** environment, installing the necess
 ``
 pip3 install -r requirements.txt
 ``
+
 Scripts have similar structure and they required to be individually launched, indicating the configuration file.
 Configuration files can be accessed and edited under:
 > /conf
