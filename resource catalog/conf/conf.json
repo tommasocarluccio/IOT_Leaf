@@ -1,0 +1,9 @@
+{
+    "description": "Welcome to resources service",
+    "database_owner": "Andrea Avignone",
+    "service_catalog": "http://192.168.1.191:8080/service_catalog",
+	 "service_name":"resource_catalog",  
+	 "delta":300,  
+    "IP_address": "192.168.1.191",
+    "IP_port": 8083
+}

@@ -19,6 +19,44 @@ class Stats(Generic_Service):
         self.serviceURL = self.conf_content['service_catalog']
 
     def calculateStats(self, json_response):
+        AQI = {
+            "values": [],
+            "field":"field1",
+            "name":"AQI"
+        }
+        temp = {
+            "values": [],
+            "field":"field3",
+            "name":"temp"
+        }
+        hum = {
+            "values": [],
+            "field":"field5",
+            "name":"hum"
+        }
+        resp={}
+        for param in [AQI, temp, hum]:
+            for feed in json_response['feeds']:
+                param["values"].append(feed[param["field"]])
+
+            param['values']=np.array(param['values']).astype(float)
+            param['values']=param['values'][~(np.isnan(param['values']))]
+
+            resp[param["name"]]={}
+
+            if param['values'].size > 0:
+                resp[param['name']]['avg'] = param['values'].mean()
+                resp[param['name']]['max'] = param['values'].max()
+                resp[param['name']]['min'] = param['values'].min()
+            else:
+                resp[param]['avg'] = 'no_data'
+                resp[param]['max'] = 'no_data'
+                resp[param]['min'] = 'no_data'
+
+        return resp
+                
+    #OLD
+    def calculateStats2(self, json_response):
 
         # get element into list
         AQI = []
@@ -28,6 +66,7 @@ class Stats(Generic_Service):
             AQI.append(feed['field1'])
             temp.append(feed['field3'])
             hum.append(feed['field5'])
+
         AQI = np.array(AQI).astype(float)
         temp = np.array(temp).astype(float)
         hum = np.array(hum).astype(float)

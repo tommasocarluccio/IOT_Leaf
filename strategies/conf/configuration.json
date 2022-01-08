@@ -1,0 +1,7 @@
+{
+	"service_catalog":"http://192.168.1.191:8080/service_catalog",
+	"resource catalog":"resource_catalog",
+	"clients catalog":"clients_catalog",
+	"time_sleep":300,
+	"thingspeak_url":"https://api.thingspeak.com/"
+}
