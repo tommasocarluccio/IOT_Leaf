@@ -44,3 +44,18 @@ Configuration files can be accessed and edited under:
 Classes and scripts necessary for the service to properly work are stored in:
 
 > /etc
+
+Services can be run using the specific command or by launching the autorun bash script.
+After setting the right permissions:
+
+``
+chmod +x /run.sh
+``
+
+Run the command:
+
+``
+./run.sh
+``
+
+
