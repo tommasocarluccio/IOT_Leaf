@@ -7,3 +7,8 @@
 
 Source code for the project ***Leaf***🌱, a low-cost IoT system developed for monitoring the indoor air quality and conditions.
 
+## Authors
+Andrea Avignone
+Tommaso Carluccio
+Vincenzo Madaghiele
+
