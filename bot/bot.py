@@ -396,6 +396,21 @@ class LeafBot(Generic_Service):
                 user["user_ID"]=None
                 user["platform_ID"]=None
                 user["room_ID"]=None
+
+            elif message=='/home':
+                self.bot.sendMessage(chat_ID, emoji.emojize(f':seedling:\tWelcome to Leaf!\t:seedling:\nYou are logged in as {user["user_ID"]}', use_aliases=True))
+                self.bot.sendMessage(chat_ID, 'Select an option:', reply_markup=self.home_keyboard)
+                user['flags']=dict.fromkeys(user['flags'], 0)
+            
+            elif message=='/logout':
+                self.bot.sendMessage(chat_ID, emoji.emojize(':seedling:\t Welcome to Leaf!\t:seedling:\nBefore starting Log into your Leaf account or create one', use_aliases=True), reply_markup=self.login_keyboard)
+                platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
+                user['flags']=dict.fromkeys(user['flags'], 0)
+                for platform in platforms_list:
+                    log=requests.delete(self.clientURL+'/removeChatID/'+str(platform)+'/'+str(chat_ID))
+                user["user_ID"]=None
+                user["platform_ID"]=None
+                user["room_ID"]=None
             #user has written their userID
             elif user['flags']['userID_flag']==1 and user['flags']['password_flag']==0:
                 self.bot.sendMessage(chat_ID, f'Now type your password for {message}:', reply_markup=self.back_login)
@@ -478,7 +493,7 @@ class LeafBot(Generic_Service):
                 max_th=float(message.split(" ")[1])
                 if min_th>max_th:
                     self.bot.sendMessage(chat_ID, 'The minimum cannot be greater than the maximum value! Please try again!', reply_markup=self.room_menu)
-                    user['flags']['thresholds_flag']==0
+                    user['flags']['thresholds_flag']=0
                 try:
                     profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
                     parameter=next((item['parameter'] for item in self.thresholds if item["chat_ID"] == chat_ID), False)
@@ -496,11 +511,11 @@ class LeafBot(Generic_Service):
                         self.bot.sendMessage(chat_ID, f'Your new thresholds for {parameter} are: {min_th},{max_th}', reply_markup=self.room_menu)
                     else:
                         self.bot.sendMessage(chat_ID, f'{log.reason} Please try again', reply_markup=self.room_menu)
-                    user['flags']['room_name_flag']=0
+                    user['flags']['thresholds_flag']=0
                     self.thresholds=[i for i in self.thresholds if i['chat_ID']!=chat_ID]
                 except:
                     self.bot.sendMessage(chat_ID, 'Update was unsuccesfull! Please try again', reply_markup=self.room_menu)
-                    user['flags']['room_name_flag']=0
+                    user['flags']['thresholds_flag']=0
                     self.thresholds=[i for i in self.thresholds if i['chat_ID']!=chat_ID]
 
             elif user['flags']['new_platform_flag']==1:
@@ -521,17 +536,6 @@ class LeafBot(Generic_Service):
                 self.bot.sendMessage(chat_ID, emoji.emojize(':black_circle:\tUse the displayed keyboards to navigate through the bot functions\n'
                                      ':black_circle:\tUse the "Set your Location" button to change the previously registered location and access the data of the nearest available station through the "Current Condition" menù\n'
                                      ,use_aliases=True), reply_markup=self.back_button)
-            elif message=='/home':
-                self.bot.sendMessage(chat_ID, emoji.emojize(f':seedling:\tWelcome to Leaf!\t:seedling:\nYou are logged in as {user["user_ID"]}', use_aliases=True))
-                self.bot.sendMessage(chat_ID, 'Select an option:', reply_markup=self.home_keyboard)
-            elif message=='/logout':
-                self.bot.sendMessage(chat_ID, emoji.emojize(':seedling:\t Welcome to Leaf!\t:seedling:\nBefore starting Log into your Leaf account or create one', use_aliases=True), reply_markup=self.login_keyboard)
-                platforms_list=requests.get(self.clientURL+'/platforms_list'+'?username='+user['user_ID']).json()
-                for platform in platforms_list:
-                    log=requests.delete(self.clientURL+'/removeChatID/'+str(platform)+'/'+str(chat_ID))
-                user["user_ID"]=None
-                user["platform_ID"]=None
-                user["room_ID"]=None
 
             else:
                 self.bot.sendMessage(chat_ID ,'Invalid command!\n'
