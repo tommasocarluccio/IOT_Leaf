@@ -107,7 +107,7 @@ class Grafana(Generic_Service):
         print(clients_catalog)
         clients_result=requests.get(clients_catalog['url']+"/info/"+platformID+"/thingspeak").json()
         client=next((item for item in clients_result if item["room"] == roomID), False)
-        channelID=client["channelID"]
+        channelID=str(client["channelID"])
         print(channelID)
 
         org_key=requests.get(clients_catalog['url']+"/info/"+platformID+"/grafana").json()["org_key"]
@@ -124,7 +124,7 @@ class Grafana(Generic_Service):
         new_dashboard_data["Dashboard"]["uid"]=platformID+roomID
 
         dash_string=json.dumps(new_dashboard_data)
-        dash_string=dash_string.replace("xxxxxxx", "channel_ID")
+        dash_string=dash_string.replace("xxxxxxx", channelID)
         new_dashboard_data=json.loads(dash_string)
         r=requests.post(url=url, headers=headers, json=new_dashboard_data, verify=False)
         print(r.json())
