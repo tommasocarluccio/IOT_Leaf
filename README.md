@@ -61,6 +61,7 @@ Run the command:
 ## Main actors
 
 Each software component is in charge of some specific functionalities only, following the micro-services approach.
+
 #### Catalogue
 
 The main components are:
@@ -70,3 +71,13 @@ The main components are:
 - **Resources Catalog**, tracking all the present and available devices (i.e. sensors, LED, display) following a hierarchical structure according to platforms and rooms
 - **Tips Catalog**, exposing useful tips for the final user
 
+#### Controls
+
+Also controls strategies have been included in order to analyze collected data and inform the user about critical conditions.
+In particular:
+- **LED Controller**, sending real-time the actuation command to registered LEDs according to the associated parameter value and the corresponding thresolds retrieved by the Profiles Catalog.
+- **Telegram Alerting**, crucial for the monitoring functionalities. It sends warning notifications concerning the environmental conditions of the last hour, including tips related to the specific situation.
+
+#### Database
+
+Thingspeak has been implemented for storing historical data. However, services and final user interact with an intermediary element: the **Database Adaptor**.
