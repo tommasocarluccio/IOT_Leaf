@@ -121,8 +121,9 @@ class Grafana(Generic_Service):
         r=requests.get(url=url, headers=headers, verify=False)
         data=r.json()
         print(data)
+        public_grafanaURL=requests.get(clients_catalog['url']+"/grafana/public").json()
         try:
-            dash_url=self.grafanaURL+data["meta"]["url"]+"?orgId="+org_ID
+            dash_url=public_grafanaURL+data["meta"]["url"]+"?orgId="+org_ID
             print(dash_url)
             return dash_url
         except:
