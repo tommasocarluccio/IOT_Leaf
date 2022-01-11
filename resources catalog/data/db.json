@@ -18,8 +18,8 @@
                                     "topic": "Leaf_monitoring/data/Leaf_002/room_1/DISPLAY"
                                 }
                             ],
-                            "timestamp": 1641899168.7129157,
-                            "date": "11/01/2022 12:06"
+                            "timestamp": 1641899228.8344302,
+                            "date": "11/01/2022 12:07"
                         },
                         {
                             "deviceID": "dht11",
@@ -36,8 +36,8 @@
                                     "topic": "Leaf_monitoring/data/Leaf_002/room_1/dht11"
                                 }
                             ],
-                            "timestamp": 1641899172.8638003,
-                            "date": "11/01/2022 12:06"
+                            "timestamp": 1641899232.9555683,
+                            "date": "11/01/2022 12:07"
                         },
                         {
                             "deviceID": "mq5",
@@ -49,8 +49,8 @@
                                     "topic": "Leaf_monitoring/data/Leaf_002/room_1/mq5"
                                 }
                             ],
-                            "timestamp": 1641899186.9902601,
-                            "date": "11/01/2022 12:06"
+                            "timestamp": 1641899247.1097128,
+                            "date": "11/01/2022 12:07"
                         },
                         {
                             "deviceID": "LED_1_AQI",
@@ -62,8 +62,8 @@
                                     "topic": "Leaf_monitoring/actuators/Leaf_002/room_1/LED_1_AQI"
                                 }
                             ],
-                            "timestamp": 1641899208.2843788,
-                            "date": "11/01/2022 12:06"
+                            "timestamp": 1641899268.3721561,
+                            "date": "11/01/2022 12:07"
                         }
                     ]
                 }

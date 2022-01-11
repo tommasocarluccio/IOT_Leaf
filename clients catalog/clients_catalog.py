@@ -87,11 +87,11 @@ class Registration_deployer(object):
                 raise cherrypy.HTTPError("404 Platform not found!")
 
 
-        elif(len(uri))==4 and uri[0]=="info":
+        elif(len(uri))==3 and uri[0]=="info":
             platform=self.catalog.platforms.find_platform(uri[1])
             if platform is not False:
                 try:
-                    result=json.dumps(platform['specs'][uri[3]])
+                    result=json.dumps(platform['specs'][uri[2]])
                     return result
                 except:
                     raise cherrypy.HTTPError(400, "Bad request!")
