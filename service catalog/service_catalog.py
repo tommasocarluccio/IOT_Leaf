@@ -21,7 +21,7 @@ class ServiceCatalogREST():
                     except:
                         raise cherrypy.HTTPError(404,"Service: Not found")
                 else:
-                    aise cherrypy.HTTPError(400, "Bad request")
+                    raise cherrypy.HTTPError(400, "Bad request")
 
             else: 
                 try:
