@@ -1,0 +1,9 @@
+
+authtoken: xxxxxx
+region: eu
+web_addr: 192.168.1.130:4040
+tunnels:
+  grafana:
+    addr: 192.168.1.130:3000
+    proto: http
+    bind_tls: true
