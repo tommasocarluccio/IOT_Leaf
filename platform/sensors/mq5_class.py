@@ -18,6 +18,6 @@ class mq5(SensorPublisher):
         except:
             gas=None     
         outputResult.append({'parameter':'AQI','value':gas,'time':timestamp})
-        if gas is not None:
+        if gas is not None and gas<1000:
             return outputResult
            

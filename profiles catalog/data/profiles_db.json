@@ -8,8 +8,8 @@
             "room_cnt": 5,
             "location": null,
             "coord": {
-                "lat": 45.104332,
-                "long": 7.6964231
+                "lat": 45.922590754029,
+                "long": 6.869920034221
             },
             "rooms": [
                 {
@@ -32,12 +32,12 @@
                         },
                         "thresholds": {
                             "temperature": {
-                                "min": 18.0,
-                                "max": 25.0
+                                "min": 20.0,
+                                "max": 23.0
                             },
                             "humidity": {
                                 "min": 40.0,
-                                "max": 65.0
+                                "max": 70.0
                             },
                             "AQI": {
                                 "min": 0,
