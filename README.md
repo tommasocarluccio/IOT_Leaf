@@ -81,3 +81,10 @@ In particular:
 #### Database
 
 Thingspeak has been implemented for storing historical data. However, services and final user interact with an intermediary element: the **Database Adaptor**.
+
+#### User interface
+
+The final user can interact with the system by exploting:
+- **Telegram Bot**, to visualize all data and information, receiving notifications and setting preferences.
+- **Grafana**, offering a fascinating dashboard for data visualization
+- **Statics**, presenting interesting insights according to different time period
