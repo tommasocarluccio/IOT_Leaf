@@ -82,7 +82,7 @@ In particular:
 
 This section is in charge of allowing the physical platform to communicate with the system:
 - **Room**, for performing the association of the hardware kit with the virtual instance
-- *Sensors**, for collecting environmental data
+- **Sensors**, for collecting environmental data
 - **Display**, showing real-time overview
 - **LED**, used for alerting
 
