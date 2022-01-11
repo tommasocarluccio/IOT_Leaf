@@ -34,9 +34,7 @@ class GrafanaREST():
         try:
             platform_ID=uri[0]
             room_ID=uri[1]
-            command=uri[2]
-            print(command)
-            
+            command=uri[2]            
         except:
             raise cherrypy.HTTPError(400,"Check your request and try again!")    
         
@@ -44,6 +42,7 @@ class GrafanaREST():
             log=self.grafana.createDashboard(platform_ID, room_ID)
             if log==True:
                 print("Successfully created dashboard")
+        
         else:
             raise cherrypy.HTTPError(501, "No operation!")
 
