@@ -1,0 +1,1147 @@
+{
+	"Dashboard": {
+		"annotations": {
+			"list": [{
+				"builtIn": 1,
+				"datasource": "-- Grafana --",
+				"enable": true,
+				"hide": true,
+				"iconColor": "rgba(0, 211, 255, 1)",
+				"name": "Annotations & Alerts",
+				"target": {
+					"limit": 100,
+					"matchAny": false,
+					"tags": [],
+					"type": "dashboard"
+				},
+				"type": "dashboard"
+			}]
+		},
+		"editable": false,
+		"fiscalYearStartMonth": 0,
+		"graphTooltip": 0,
+		"id": null,
+		"links": [],
+		"liveNow": false,
+		"panels": [{
+			"collapsed": false,
+			"gridPos": {
+				"h": 1,
+				"w": 24,
+				"x": 0,
+				"y": 0
+			},
+			"id": 12,
+			"panels": [],
+			"title": "Current Internal Conditions",
+			"type": "row"
+		}, {
+			"description": "",
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "thresholds"
+					},
+					"decimals": 0,
+					"displayName": "IAQI",
+					"mappings": [],
+					"max": 400,
+					"min": 0,
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [{
+							"color": "green",
+							"value": null
+						}, {
+							"color": "yellow",
+							"value": 50
+						}, {
+							"color": "semi-dark-orange",
+							"value": 100
+						}, {
+							"color": "dark-red",
+							"value": 150
+						}, {
+							"color": "dark-purple",
+							"value": 200
+						}, {
+							"color": "#332503",
+							"value": 300
+						}]
+					},
+					"unit": "none"
+				},
+				"overrides": []
+			},
+			"gridPos": {
+				"h": 8,
+				"w": 4,
+				"x": 0,
+				"y": 1
+			},
+			"id": 8,
+			"options": {
+				"orientation": "auto",
+				"reduceOptions": {
+					"calcs": ["lastNotNull"],
+					"fields": "",
+					"values": false
+				},
+				"showThresholdLabels": false,
+				"showThresholdMarkers": true,
+				"text": {
+					"valueSize": 40
+				}
+			},
+			"pluginVersion": "8.3.0",
+			"targets": [{
+				"columns": [{
+					"selector": "field1",
+					"text": "AQI",
+					"type": "number"
+				}],
+				"csv_options": {
+					"columns": "",
+					"comment": "",
+					"delimiter": ",",
+					"relax_column_count": false,
+					"skip_empty_lines": false,
+					"skip_lines_with_error": false
+				},
+				"data": "",
+				"datasource": {
+					"type": "yesoreyeram-infinity-datasource",
+					"uid": "0s26Unhnz"
+				},
+				"filters": [],
+				"format": "table",
+				"global_query_id": "",
+				"refId": "A",
+				"root_selector": "",
+				"source": "url",
+				"type": "json",
+				"url": "https://api.thingspeak.com/channels/xxxxxxx/fields/1/last.json",
+				"url_options": {
+					"data": "",
+					"method": "GET"
+				}
+			}],
+			"transparent": true,
+			"type": "gauge"
+		}, {
+			"description": "",
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "thresholds"
+					},
+					"decimals": 0,
+					"displayName": "Air Temperature",
+					"mappings": [],
+					"max": 32,
+					"min": 10,
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [{
+							"color": "dark-blue",
+							"value": null
+						}, {
+							"color": "light-blue",
+							"value": 15
+						}, {
+							"color": "green",
+							"value": 18
+						}, {
+							"color": "dark-orange",
+							"value": 24
+						}, {
+							"color": "dark-red",
+							"value": 27
+						}]
+					},
+					"unit": "celsius"
+				},
+				"overrides": []
+			},
+			"gridPos": {
+				"h": 8,
+				"w": 4,
+				"x": 4,
+				"y": 1
+			},
+			"id": 9,
+			"options": {
+				"orientation": "auto",
+				"reduceOptions": {
+					"calcs": ["lastNotNull"],
+					"fields": "",
+					"values": false
+				},
+				"showThresholdLabels": false,
+				"showThresholdMarkers": true,
+				"text": {
+					"valueSize": 40
+				}
+			},
+			"pluginVersion": "8.3.0",
+			"targets": [{
+				"columns": [{
+					"selector": "field3",
+					"text": "Temperature",
+					"type": "number"
+				}],
+				"csv_options": {
+					"columns": "",
+					"comment": "",
+					"delimiter": ",",
+					"relax_column_count": false,
+					"skip_empty_lines": false,
+					"skip_lines_with_error": false
+				},
+				"data": "",
+				"datasource": {
+					"type": "yesoreyeram-infinity-datasource",
+					"uid": "0s26Unhnz"
+				},
+				"filters": [],
+				"format": "table",
+				"global_query_id": "",
+				"refId": "A",
+				"root_selector": "",
+				"source": "url",
+				"type": "json",
+				"url": "https://api.thingspeak.com/channels/xxxxxxx/fields/3/last.json",
+				"url_options": {
+					"data": "",
+					"method": "GET"
+				}
+			}],
+			"transparent": true,
+			"type": "gauge"
+		}, {
+			"description": "",
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "thresholds"
+					},
+					"decimals": 0,
+					"displayName": "Humidity",
+					"mappings": [],
+					"max": 100,
+					"min": 0,
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [{
+							"color": "dark-red",
+							"value": null
+						}, {
+							"color": "yellow",
+							"value": 25
+						}, {
+							"color": "green",
+							"value": 40
+						}, {
+							"color": "#6ED0E0",
+							"value": 60
+						}, {
+							"color": "dark-blue",
+							"value": 75
+						}]
+					},
+					"unit": "humidity"
+				},
+				"overrides": []
+			},
+			"gridPos": {
+				"h": 8,
+				"w": 4,
+				"x": 8,
+				"y": 1
+			},
+			"id": 27,
+			"options": {
+				"orientation": "auto",
+				"reduceOptions": {
+					"calcs": ["lastNotNull"],
+					"fields": "",
+					"values": false
+				},
+				"showThresholdLabels": false,
+				"showThresholdMarkers": true,
+				"text": {
+					"valueSize": 40
+				}
+			},
+			"pluginVersion": "8.3.0",
+			"targets": [{
+				"columns": [{
+					"selector": "field5",
+					"text": "Humidity",
+					"type": "number"
+				}],
+				"csv_options": {
+					"columns": "",
+					"comment": "",
+					"delimiter": ",",
+					"relax_column_count": false,
+					"skip_empty_lines": false,
+					"skip_lines_with_error": false
+				},
+				"data": "",
+				"datasource": {
+					"type": "yesoreyeram-infinity-datasource",
+					"uid": "0s26Unhnz"
+				},
+				"filters": [],
+				"format": "table",
+				"global_query_id": "",
+				"refId": "A",
+				"root_selector": "",
+				"source": "url",
+				"type": "json",
+				"url": "https://api.thingspeak.com/channels/xxxxxxx/fields/5/last.json",
+				"url_options": {
+					"data": "",
+					"method": "GET"
+				}
+			}],
+			"transparent": true,
+			"type": "gauge"
+		}, {
+			"datasource": {
+				"type": "datasource",
+				"uid": "-- Mixed --"
+			},
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "palette-classic"
+					},
+					"custom": {
+						"axisLabel": "",
+						"axisPlacement": "auto",
+						"barAlignment": 0,
+						"drawStyle": "line",
+						"fillOpacity": 4,
+						"gradientMode": "none",
+						"hideFrom": {
+							"legend": false,
+							"tooltip": false,
+							"viz": false
+						},
+						"lineInterpolation": "linear",
+						"lineWidth": 1,
+						"pointSize": 5,
+						"scaleDistribution": {
+							"type": "linear"
+						},
+						"showPoints": "always",
+						"spanNulls": false,
+						"stacking": {
+							"group": "A",
+							"mode": "none"
+						},
+						"thresholdsStyle": {
+							"mode": "off"
+						}
+					},
+					"mappings": [],
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [{
+							"color": "green",
+							"value": null
+						}, {
+							"color": "red",
+							"value": 80
+						}]
+					}
+				},
+				"overrides": [{
+					"matcher": {
+						"id": "byName",
+						"options": "Temperature"
+					},
+					"properties": [{
+						"id": "custom.axisPlacement",
+						"value": "left"
+					}, {
+						"id": "custom.axisLabel",
+						"value": "Temperature"
+					}, {
+						"id": "unit",
+						"value": "celsius"
+					}, {
+						"id": "min",
+						"value": 10
+					}, {
+						"id": "max",
+						"value": 32
+					}]
+				}, {
+					"matcher": {
+						"id": "byName",
+						"options": "Humidity"
+					},
+					"properties": [{
+						"id": "custom.axisPlacement",
+						"value": "right"
+					}, {
+						"id": "custom.axisLabel",
+						"value": "Relative Humidity"
+					}, {
+						"id": "unit",
+						"value": "humidity"
+					}, {
+						"id": "min",
+						"value": 0
+					}, {
+						"id": "max",
+						"value": 100
+					}]
+				}]
+			},
+			"gridPos": {
+				"h": 8,
+				"w": 12,
+				"x": 12,
+				"y": 1
+			},
+			"id": 22,
+			"options": {
+				"legend": {
+					"calcs": [],
+					"displayMode": "list",
+					"placement": "bottom"
+				},
+				"tooltip": {
+					"mode": "single"
+				}
+			},
+			"targets": [{
+				"columns": [{
+					"selector": "field3",
+					"text": "Temperature",
+					"type": "number"
+				}, {
+					"selector": "created_at",
+					"text": "Time",
+					"type": "timestamp"
+				}],
+				"csv_options": {
+					"columns": "",
+					"comment": "",
+					"delimiter": ",",
+					"relax_column_count": false,
+					"skip_empty_lines": false,
+					"skip_lines_with_error": false
+				},
+				"data": "",
+				"datasource": {
+					"type": "yesoreyeram-infinity-datasource",
+					"uid": "0s26Unhnz"
+				},
+				"filters": [],
+				"format": "timeseries",
+				"global_query_id": "",
+				"hide": false,
+				"refId": "A",
+				"root_selector": "feeds",
+				"source": "url",
+				"type": "json",
+				"url": "https://api.thingspeak.com/channels/xxxxxxx/feeds.json?sampletime=300",
+				"url_options": {
+					"data": "",
+					"method": "GET"
+				}
+			}, {
+				"columns": [{
+					"selector": "field5",
+					"text": "Humidity",
+					"type": "number"
+				}, {
+					"selector": "created_at",
+					"text": "Time",
+					"type": "timestamp"
+				}],
+				"csv_options": {
+					"columns": "",
+					"comment": "",
+					"delimiter": ",",
+					"relax_column_count": false,
+					"skip_empty_lines": false,
+					"skip_lines_with_error": false
+				},
+				"data": "",
+				"datasource": {
+					"type": "yesoreyeram-infinity-datasource",
+					"uid": "0s26Unhnz"
+				},
+				"filters": [],
+				"format": "timeseries",
+				"global_query_id": "",
+				"hide": false,
+				"refId": "B",
+				"root_selector": "feeds",
+				"source": "url",
+				"type": "json",
+				"url": "https://api.thingspeak.com/channels/xxxxxxx/feeds.json?sampletime=300",
+				"url_options": {
+					"data": "",
+					"method": "GET"
+				}
+			}],
+			"transparent": true,
+			"type": "timeseries"
+		}, {
+			"description": "",
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "thresholds"
+					},
+					"custom": {
+						"axisLabel": "",
+						"axisPlacement": "left",
+						"axisSoftMax": 400,
+						"axisSoftMin": 0,
+						"barAlignment": 0,
+						"drawStyle": "line",
+						"fillOpacity": 22,
+						"gradientMode": "hue",
+						"hideFrom": {
+							"legend": false,
+							"tooltip": false,
+							"viz": false
+						},
+						"lineInterpolation": "linear",
+						"lineWidth": 1,
+						"pointSize": 5,
+						"scaleDistribution": {
+							"type": "linear"
+						},
+						"showPoints": "auto",
+						"spanNulls": false,
+						"stacking": {
+							"group": "A",
+							"mode": "none"
+						},
+						"thresholdsStyle": {
+							"mode": "off"
+						}
+					},
+					"decimals": 0,
+					"displayName": "IAQI",
+					"mappings": [],
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [{
+							"color": "green",
+							"value": null
+						}, {
+							"color": "yellow",
+							"value": 50
+						}, {
+							"color": "semi-dark-orange",
+							"value": 100
+						}, {
+							"color": "dark-red",
+							"value": 150
+						}, {
+							"color": "dark-purple",
+							"value": 200
+						}, {
+							"color": "#332503",
+							"value": 300
+						}]
+					},
+					"unit": "none"
+				},
+				"overrides": []
+			},
+			"gridPos": {
+				"h": 9,
+				"w": 10,
+				"x": 0,
+				"y": 9
+			},
+			"id": 24,
+			"options": {
+				"legend": {
+					"calcs": [],
+					"displayMode": "list",
+					"placement": "bottom"
+				},
+				"tooltip": {
+					"mode": "single"
+				}
+			},
+			"pluginVersion": "8.3.0",
+			"targets": [{
+				"columns": [{
+					"selector": "field1",
+					"text": "IAQI",
+					"type": "number"
+				}, {
+					"selector": "created_at",
+					"text": "Time",
+					"type": "timestamp"
+				}],
+				"csv_options": {
+					"columns": "",
+					"comment": "",
+					"delimiter": ",",
+					"relax_column_count": false,
+					"skip_empty_lines": false,
+					"skip_lines_with_error": false
+				},
+				"data": "",
+				"datasource": {
+					"type": "yesoreyeram-infinity-datasource",
+					"uid": "0s26Unhnz"
+				},
+				"filters": [],
+				"format": "table",
+				"global_query_id": "",
+				"refId": "A",
+				"root_selector": "",
+				"source": "url",
+				"type": "json",
+				"url": "https://api.thingspeak.com/channels/xxxxxxx/fields/1.json",
+				"url_options": {
+					"data": "",
+					"method": "GET"
+				}
+			}],
+			"transparent": true,
+			"type": "timeseries"
+		}, {
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "thresholds"
+					},
+					"custom": {
+						"align": "left",
+						"displayMode": "color-text",
+						"filterable": false,
+						"minWidth": 1
+					},
+					"mappings": [],
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [{
+							"color": "green",
+							"value": null
+						}, {
+							"color": "red",
+							"value": 80
+						}]
+					}
+				},
+				"overrides": [{
+					"matcher": {
+						"id": "byName",
+						"options": "IAQI"
+					},
+					"properties": [{
+						"id": "thresholds",
+						"value": {
+							"mode": "absolute",
+							"steps": [{
+								"color": "green",
+								"value": null
+							}, {
+								"color": "dark-yellow",
+								"value": 50
+							}, {
+								"color": "dark-orange",
+								"value": 100
+							}, {
+								"color": "dark-red",
+								"value": 150
+							}, {
+								"color": "dark-purple",
+								"value": 200
+							}, {
+								"color": "#332503",
+								"value": 300
+							}]
+						}
+					}, {
+						"id": "custom.width",
+						"value": 85
+					}]
+				}, {
+					"matcher": {
+						"id": "byName",
+						"options": "Temperature"
+					},
+					"properties": [{
+						"id": "thresholds",
+						"value": {
+							"mode": "absolute",
+							"steps": [{
+								"color": "dark-blue",
+								"value": null
+							}, {
+								"color": "blue",
+								"value": 15
+							}, {
+								"color": "green",
+								"value": 18
+							}, {
+								"color": "dark-orange",
+								"value": 24
+							}, {
+								"color": "dark-red",
+								"value": 27
+							}]
+						}
+					}, {
+						"id": "custom.width",
+						"value": 109
+					}]
+				}, {
+					"matcher": {
+						"id": "byName",
+						"options": "Humidity"
+					},
+					"properties": [{
+						"id": "thresholds",
+						"value": {
+							"mode": "absolute",
+							"steps": [{
+								"color": "dark-red",
+								"value": null
+							}, {
+								"color": "dark-orange",
+								"value": 25
+							}, {
+								"color": "green",
+								"value": 40
+							}, {
+								"color": "#6ED0E0",
+								"value": 60
+							}, {
+								"color": "dark-blue",
+								"value": 75
+							}]
+						}
+					}, {
+						"id": "custom.width",
+						"value": 104
+					}]
+				}]
+			},
+			"gridPos": {
+				"h": 9,
+				"w": 7,
+				"x": 10,
+				"y": 9
+			},
+			"id": 6,
+			"options": {
+				"footer": {
+					"fields": "",
+					"reducer": ["mean"],
+					"show": false
+				},
+				"showHeader": true,
+				"sortBy": [{
+					"desc": true,
+					"displayName": "Time"
+				}]
+			},
+			"pluginVersion": "8.3.0",
+			"targets": [{
+				"columns": [{
+					"selector": "created_at",
+					"text": "Time",
+					"type": "timestamp"
+				}, {
+					"selector": "field1",
+					"text": "IAQI",
+					"type": "number"
+				}, {
+					"selector": "field3",
+					"text": "Temperature",
+					"type": "number"
+				}, {
+					"selector": "field5",
+					"text": "Humidity",
+					"type": "number"
+				}],
+				"csv_options": {
+					"columns": "",
+					"comment": "",
+					"delimiter": ",",
+					"relax_column_count": false,
+					"skip_empty_lines": false,
+					"skip_lines_with_error": false
+				},
+				"data": "",
+				"datasource": {
+					"type": "yesoreyeram-infinity-datasource",
+					"uid": "0s26Unhnz"
+				},
+				"filters": [],
+				"format": "table",
+				"global_query_id": "",
+				"refId": "A",
+				"root_selector": "feeds",
+				"source": "url",
+				"type": "json",
+				"url": "https://api.thingspeak.com/channels/xxxxxxx/feeds.json",
+				"url_options": {
+					"data": "",
+					"method": "GET"
+				}
+			}],
+			"title": "Last values",
+			"transparent": true,
+			"type": "table"
+		}, {
+			"description": "",
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "thresholds"
+					},
+					"decimals": 0,
+					"mappings": [],
+					"min": 0,
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [{
+							"color": "green",
+							"value": null
+						}, {
+							"color": "yellow",
+							"value": 50
+						}, {
+							"color": "semi-dark-orange",
+							"value": 100
+						}, {
+							"color": "dark-red",
+							"value": 150
+						}, {
+							"color": "dark-purple",
+							"value": 200
+						}, {
+							"color": "#332503",
+							"value": 300
+						}]
+					},
+					"unit": "none"
+				},
+				"overrides": [{
+					"matcher": {
+						"id": "byName",
+						"options": "Air Temperature"
+					},
+					"properties": [{
+						"id": "min",
+						"value": 10
+					}, {
+						"id": "max",
+						"value": 32
+					}]
+				}, {
+					"matcher": {
+						"id": "byName",
+						"options": "AQI"
+					},
+					"properties": [{
+						"id": "thresholds",
+						"value": {
+							"mode": "absolute",
+							"steps": [{
+								"color": "green",
+								"value": null
+							}, {
+								"color": "dark-yellow",
+								"value": 50
+							}, {
+								"color": "dark-orange",
+								"value": 100
+							}, {
+								"color": "dark-red",
+								"value": 120
+							}, {
+								"color": "dark-purple",
+								"value": 200
+							}, {
+								"color": "#332503",
+								"value": 300
+							}]
+						}
+					}]
+				}, {
+					"matcher": {
+						"id": "byName",
+						"options": "Humidity"
+					},
+					"properties": [{
+						"id": "thresholds",
+						"value": {
+							"mode": "absolute",
+							"steps": [{
+								"color": "dark-red",
+								"value": null
+							}, {
+								"color": "dark-orange",
+								"value": 25
+							}, {
+								"color": "green",
+								"value": 40
+							}, {
+								"color": "#6ED0E0",
+								"value": 60
+							}, {
+								"color": "dark-blue",
+								"value": 75
+							}]
+						}
+					}]
+				}]
+			},
+			"gridPos": {
+				"h": 9,
+				"w": 7,
+				"x": 17,
+				"y": 9
+			},
+			"id": 25,
+			"options": {
+				"colorMode": "background",
+				"graphMode": "none",
+				"justifyMode": "auto",
+				"orientation": "horizontal",
+				"reduceOptions": {
+					"calcs": ["mean"],
+					"fields": "",
+					"values": false
+				},
+				"text": {
+					"titleSize": 40,
+					"valueSize": 80
+				},
+				"textMode": "auto"
+			},
+			"pluginVersion": "8.3.0",
+			"targets": [{
+				"columns": [{
+					"selector": "field1",
+					"text": "AQI",
+					"type": "number"
+				}, {
+					"selector": "field3",
+					"text": "Air Temperature",
+					"type": "number"
+				}, {
+					"selector": "field5",
+					"text": "Humidity",
+					"type": "number"
+				}],
+				"csv_options": {
+					"columns": "",
+					"comment": "",
+					"delimiter": ",",
+					"relax_column_count": false,
+					"skip_empty_lines": false,
+					"skip_lines_with_error": false
+				},
+				"data": "",
+				"datasource": {
+					"type": "yesoreyeram-infinity-datasource",
+					"uid": "0s26Unhnz"
+				},
+				"filters": [],
+				"format": "table",
+				"global_query_id": "",
+				"refId": "A",
+				"root_selector": "feeds",
+				"source": "url",
+				"type": "json",
+				"url": "https://api.thingspeak.com/channels/xxxxxxx/feeds.json",
+				"url_options": {
+					"data": "",
+					"method": "GET"
+				}
+			}],
+			"title": "Average values over selected time interval",
+			"type": "stat"
+		}, {
+			"fieldConfig": {
+				"defaults": {
+					"mappings": [],
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [{
+							"color": "green",
+							"value": null
+						}, {
+							"color": "red",
+							"value": 80
+						}]
+					},
+					"unit": "none"
+				},
+				"overrides": []
+			},
+			"gridPos": {
+				"h": 7,
+				"w": 6,
+				"x": 0,
+				"y": 18
+			},
+			"id": 20,
+			"options": {
+				"colorMode": "value",
+				"graphMode": "none",
+				"justifyMode": "auto",
+				"orientation": "auto",
+				"reduceOptions": {
+					"calcs": ["lastNotNull"],
+					"fields": "/^Weather Station$/",
+					"values": false
+				},
+				"textMode": "value"
+			},
+			"pluginVersion": "8.3.0",
+			"targets": [{
+				"columns": [{
+					"selector": "metadata",
+					"text": "Weather Station",
+					"type": "string"
+				}],
+				"csv_options": {
+					"columns": "",
+					"comment": "",
+					"delimiter": ",",
+					"relax_column_count": false,
+					"skip_empty_lines": false,
+					"skip_lines_with_error": false
+				},
+				"data": "",
+				"datasource": {
+					"type": "yesoreyeram-infinity-datasource",
+					"uid": "0s26Unhnz"
+				},
+				"filters": [],
+				"format": "table",
+				"global_query_id": "",
+				"refId": "A",
+				"root_selector": "channel",
+				"source": "url",
+				"type": "json",
+				"url": "https://api.thingspeak.com/channels/xxxxxxx/feeds.json?metadata=true",
+				"url_options": {
+					"data": "",
+					"method": "GET"
+				}
+			}],
+			"title": "Weather Station",
+			"transparent": true,
+			"type": "stat"
+		}, {
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "thresholds"
+					},
+					"mappings": [],
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [{
+							"color": "green",
+							"value": null
+						}, {
+							"color": "red",
+							"value": 80
+						}]
+					}
+				},
+				"overrides": []
+			},
+			"gridPos": {
+				"h": 7,
+				"w": 7,
+				"x": 6,
+				"y": 18
+			},
+			"id": 18,
+			"options": {
+				"controls": {
+					"mouseWheelZoom": true,
+					"showAttribution": true,
+					"showDebug": false,
+					"showScale": false,
+					"showZoom": true
+				},
+				"view": {
+					"id": "coords",
+					"lat": 45.280394,
+					"lon": 8.950085,
+					"zoom": 7
+				}
+			},
+			"pluginVersion": "8.3.0",
+			"targets": [{
+				"columns": [{
+					"selector": "latitude",
+					"text": "",
+					"type": "number"
+				}, {
+					"selector": "longitude",
+					"text": "",
+					"type": "number"
+				}],
+				"csv_options": {
+					"columns": "",
+					"comment": "",
+					"delimiter": ",",
+					"relax_column_count": false,
+					"skip_empty_lines": false,
+					"skip_lines_with_error": false
+				},
+				"data": "",
+				"datasource": {
+					"type": "yesoreyeram-infinity-datasource",
+					"uid": "0s26Unhnz"
+				},
+				"filters": [],
+				"format": "table",
+				"global_query_id": "",
+				"refId": "A",
+				"root_selector": "channel",
+				"source": "url",
+				"type": "json",
+				"url": "https://api.thingspeak.com/channels/xxxxxxx/feeds.json",
+				"url_options": {
+					"data": "",
+					"method": "GET"
+				}
+			}],
+			"type": "geomap"
+		}],
+		"schemaVersion": 33,
+		"style": "dark",
+		"tags": [],
+		"templating": {
+			"list": []
+		},
+		"time": {
+			"from": "now-5m",
+			"to": "now"
+		},
+		"timepicker": {},
+		"timezone": "",
+		"title": "",
+		"uid": "",
+		"version": 9,
+		"weekStart": ""
+	}
+}

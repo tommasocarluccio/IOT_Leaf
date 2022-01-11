@@ -9,6 +9,10 @@
             "platform_ID": "Leaf_002",
             "associated": true,
             "specs": {
+                "grafana":{
+                    "org_ID":"2",
+                    "org_key":"eyJrIjoiaUh6bElYMGo1ZG91eGJQY3M0WDR6Q3lWUXBqT1pFU00iLCJuIjoia2V5IiwiaWQiOjJ9"
+                },
                 "thingspeak": [
                     {
                         "room": "room_1",
