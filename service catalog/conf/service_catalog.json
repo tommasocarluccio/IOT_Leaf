@@ -1,6 +1,6 @@
 {
     "description": "Welcome to the Leaf Service Catalog",
-    "ngrok":"http://192.168.1.130:4040",
+    "ngrok": "http://192.168.1.130:4040",
     "service_catalog": {
         "IP_address": "192.168.1.130",
         "port": 8080,
@@ -56,16 +56,16 @@
         "service": "/telegram_bot",
         "url": "http://192.168.1.89:8087/telegram_bot"
     },
-    "grafana_catalog": {
-        "IP_address": "192.168.1.130",
-        "port": 9999,
-        "service": "/grafana_catalog",
-        "url": "http://192.168.1.130:9999/grafana_catalog"
-    },
     "database_adaptor": {
         "IP_address": "192.168.1.130",
         "port": 8085,
         "service": "/database_adaptor",
         "url": "http://192.168.1.130:8085/database_adaptor"
+    },
+    "grafana_catalog": {
+        "IP_address": "192.168.1.130",
+        "port": 9999,
+        "service": "/grafana_catalog",
+        "url": "http://192.168.1.130:9999/grafana_catalog"
     }
 }

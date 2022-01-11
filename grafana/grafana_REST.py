@@ -24,7 +24,6 @@ class GrafanaREST():
         if command=='dashboardURL':
             log=self.grafana.getDashboardURL(platform_ID, room_ID)
             if log is not False:
-                print("Successfully created dashboard")
                 return log
             else:
                 raise cherrypy.HTTPError(404, "Resource not found!")
