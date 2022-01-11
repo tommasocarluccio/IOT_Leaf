@@ -4,6 +4,6 @@
     "service_name":"database_adaptor",
     "delta":15,
     "thingspeak_url":"https://api.thingspeak.com/",
-    "IP_address": "192.168.1.191",
+    "IP_address": "192.168.1.130",
     "IP_port": 8085
 }
