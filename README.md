@@ -78,6 +78,14 @@ In particular:
 - **LED Controller**, sending real-time the actuation command to registered LEDs according to the associated parameter value and the corresponding thresolds retrieved by the Profiles Catalog.
 - **Telegram Alerting**, crucial for the monitoring functionalities. It sends warning notifications concerning the environmental conditions of the last hour, including tips related to the specific situation.
 
+#### Platform
+
+This section is in charge of allowing the physical platform to communicate with the system:
+- **Room**, for performing the association of the hardware kit with the virtual instance
+- *Sensors**, for collecting environmental data
+- **Display**, showing real-time overview
+- **LED**, used for alerting
+
 #### Database
 
 Thingspeak has been implemented for storing historical data. However, services and final user interact with an intermediary element: the **Database Adaptor**.
