@@ -12,7 +12,6 @@ class GrafanaREST():
     def __init__(self,conf_filename):
         self.grafana=Grafana(conf_filename)
         self.service=self.grafana.registerRequest()        
-        print(self.grafana)
 
     def GET(self, *uri):
         
