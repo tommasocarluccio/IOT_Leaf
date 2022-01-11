@@ -37,7 +37,7 @@ It is suggested to use a virtual **Python 3** environment, installing the necess
 pip3 install -r requirements.txt
 ``
 
-Scripts have similar structure and they required to be individually launched, indicating the configuration file.
+Scripts have similar structure and they require to be individually launched, indicating the configuration file.
 Configuration files can be accessed and edited under:
 > /conf
 
@@ -58,4 +58,15 @@ Run the command:
 ./run.sh
 ``
 
+## Main actors
+
+Each software component is in charge of some specific functionalities only, following the micro-services approach.
+#### Catalogue
+
+The main components are:
+- **Service Catalog**, for registering and retrieving services information
+- **Clients Catalog**, storing information concerning the formally deployed platforms and registered users
+- **Profiles Catalog**, where preferences set by the user referred to platforms are collected
+- **Resources Catalog**, tracking all the present and available devices (i.e. sensors, LED, display) following a hierarchical structure according to platforms and rooms
+- **Tips Catalog**, exposing useful tips for the final user
 
