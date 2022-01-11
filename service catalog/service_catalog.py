@@ -14,11 +14,15 @@ class ServiceCatalogREST():
                 
     def GET(self,*uri):
         if len(uri)!=0:
-            if uri[1]=='public':
-                try:
-                    output=requests.get(self.catalog.content['ngrok']+"/api/tunnels/"+uri[0]).json()['public_url']
-                except:
-                    raise cherrypy.HTTPError(404,"Service: Not found")
+            if len(uri)==2:
+                if uri[1]=='public':
+                    try:
+                        output=requests.get(self.catalog.content['ngrok']+"/api/tunnels/"+uri[0]).json()['public_url']
+                    except:
+                        raise cherrypy.HTTPError(404,"Service: Not found")
+                else:
+                    aise cherrypy.HTTPError(400, "Bad request")
+
             else: 
                 try:
                     output=self.catalog.content[str(uri[0])]
