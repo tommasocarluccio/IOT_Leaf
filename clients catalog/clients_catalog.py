@@ -153,6 +153,9 @@ class Registration_deployer(object):
             output=self.catalog.platforms.associate_room_thingspeak(json_body['platformID'],json_body['roomID'])
             if output is not False:
                 self.catalog.platforms.save()
+                if output=="Available thingspeak channel found! Registered...":
+                    grafana_catalog=self.catalog.retrieveService('grafana_catalog')
+                    log=requests.post(grafana_catalog['url']+"/"+json_body['platformID']+"/"+json_body['roomID']+"/createDashboard")
                 print("{} - {}".format(json_body['platformID'],json_body['roomID']))
                 print(output)
                 return json.dumps({'msg':output})
@@ -192,6 +195,12 @@ class Registration_deployer(object):
             if self.catalog.users.find_user(username) and platform_ID in self.catalog.users.find_user(username)["platforms_list"]:
                 outputFlag=self.catalog.platforms.removeRoom(platform_ID,room_ID)
                 if outputFlag:
+                    platform=self.catalog.platforms.find_platform(platform_ID)
+                    org_key=platform['specs']['grafana']["org_key"]
+                    print(org_key)
+                    grafana_catalog=self.catalog.retrieveService('grafana_catalog')
+                    print(grafana_catalog)
+                    log=requests.delete(grafana_catalog['url']+"/"+platform_ID+"/"+room_ID+"/deleteDashboard/"+org_key)
                     output="Platform '{}' - room '{}' removed".format(platform_ID,room_ID)
                     print(output)
                     self.catalog.platforms.save()

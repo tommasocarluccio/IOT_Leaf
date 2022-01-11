@@ -632,7 +632,7 @@ class LeafBot(Generic_Service):
 
 
         self.room_menu=InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text= emoji.emojize(':bar_chart: Room statistics', use_aliases=True), callback_data='stat'),
+                    [InlineKeyboardButton(text= emoji.emojize(':bar_chart: Room analytics', use_aliases=True), callback_data='stat'),
                     InlineKeyboardButton(text= emoji.emojize(':gear: Room settings', use_aliases=True), callback_data='room_set')],
                     [InlineKeyboardButton(text=emoji.emojize(':watch: Room Current conditions', use_aliases=True), callback_data='room_act')],
                     [InlineKeyboardButton(text=emoji.emojize(':house: Go to the main menu', use_aliases=True), callback_data='home')]
@@ -644,67 +644,13 @@ class LeafBot(Generic_Service):
                 [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
                 ])
 
-
-
-
-        self.find_more=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text=emoji.emojize(':exclamation_question_mark: Find out more', use_aliases=True), callback_data='act_int'),
-             InlineKeyboardButton(text=emoji.emojize(':back: Ignore', use_aliases=True), callback_data='back')]
-            ])
-
-
-
-
-
         self.home_button=InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text=emoji.emojize(':house: HOME', use_aliases=True), callback_data='home')]
                     ])
 
         
 
-        #stat_menu=InlineKeyboardMarkup(inline_keyboard=[
-                #[InlineKeyboardButton(text= emoji.emojize(':globe_with_meridians: AQI', use_aliases=True), callback_data='aqi'),
-                 #InlineKeyboardButton(text= emoji.emojize(':thermometer: Temperature', use_aliases=True), callback_data='temp')],
-                 #[InlineKeyboardButton(text= emoji.emojize(':droplet: Humidity', use_aliases=True), callback_data='hum'),
-                 #InlineKeyboardButton(text= emoji.emojize(':hot_face: Apparent Temperature', use_aliases=True), callback_data='app_temp')],
-                 #[InlineKeyboardButton(text= emoji.emojize(':dash: GAS', use_aliases=True), callback_data='gas')],
-                 #[InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
-                 #])
-
-        self.time_menu=InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text= emoji.emojize(':date: DAY statistics', use_aliases=True), callback_data='day')],
-                [InlineKeyboardButton(text= emoji.emojize(':calendar: WEEK statistics', use_aliases=True), callback_data='week')],
-                [InlineKeyboardButton(text= emoji.emojize(':spiral_calendar: MONTH statistics', use_aliases=True), callback_data='month')],
-                [InlineKeyboardButton(text= emoji.emojize(':watch: REAL TIME statistics', use_aliases=True), callback_data='real_time')],
-                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
-                ])
-
-        self.day_keyboard=InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text=emoji.emojize(':green_circle:Day Statistics:green_circle:', use_aliases=True), url='192.168.1.130:8091/day')],
-                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
-                ])
-
-        self.week_keyboard=InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text=emoji.emojize(':green_circle:Week Statistics:green_circle:', use_aliases=True), url='192.168.1.130:8091/week')],
-                    [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
-                    ])
-
-        self.month_keyboard=InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text=emoji.emojize(':green_circle:Month Statistics:green_circle:', use_aliases=True), url='192.168.1.130:8091/month')],
-                    [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
-                    ])
-
-        self.rt_keyboard=InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text=emoji.emojize(':green_circle:Real Time Statistics:green_circle:', use_aliases=True), url='192.168.1.130:8091/actual')],
-                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
-                ])
-
-        self.period_keyboard=InlineKeyboardMarkup(inline_keyboard=[
-                [InlineKeyboardButton(text=emoji.emojize(':date:DAY', use_aliases=True), callback_data='day')],
-                [InlineKeyboardButton(text=emoji.emojize(':calendar: WEEK', use_aliases=True), callback_data='week')],
-                [InlineKeyboardButton(text=emoji.emojize(':spiral_calendar: MONTH', use_aliases=True), callback_data='month')],
-                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
-                ])
+        
 
     def on_callback_query(self, msg):
         query_id, chat_ID, query_data= telepot.glance(msg, flavor='callback_query')
@@ -863,7 +809,22 @@ class LeafBot(Generic_Service):
             user['flags']['new_platform_flag']=1
 
         elif query_data=='stat':
-            self.bot.sendMessage(chat_ID, 'Choose the time period:', reply_markup=self.period_keyboard)
+            grafanaURL=requests.get(self.serviceURL+'/grafana_catalog').json()['url']
+            r=requests.get(grafanaURL+"/"+user['platform_ID']+"/"+user["room_ID"]+"/dashboardURL")
+            if r.status_code==200:
+                dashboard_url=r.text
+                period_keyboard=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text=emoji.emojize(':chart_with_upwards_trend:Dashboard', use_aliases=True), url=dashboard_url)],
+                [InlineKeyboardButton(text=emoji.emojize(':date:DAY statistics', use_aliases=True), callback_data='day')],
+                [InlineKeyboardButton(text=emoji.emojize(':calendar: WEEK statistics', use_aliases=True), callback_data='week')],
+                [InlineKeyboardButton(text=emoji.emojize(':spiral_calendar: MONTH statistics', use_aliases=True), callback_data='month')],
+                [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
+                ])
+                self.bot.sendMessage(chat_ID, 'Choose your analysis:', reply_markup=period_keyboard)
+            else:
+                self.bot.sendMessage(chat_ID, f"{r.reason}")
+            
+            
 
         elif query_data=='day' or query_data=='week' or query_data=='month':
             out=self.get_statistics(chat_ID, query_data)

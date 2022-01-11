@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import cherrypy
 from etc.generic_service import *
 
 #server_url="587f7d3d617a.ngrok.io"
@@ -47,30 +48,16 @@ class Grafana(Generic_Service):
         else:
             return False
 
-    def deleteDashboard(self, platformID, roomID):
-        pos=self.findPos(platformID)
-        if pos is not False:
-            key=self.orgContent['organizations'][pos]['key']
-            headers= {
-                "Authorization": "Bearer "+key,
+    def deleteDashboard(self, platformID, roomID, org_key):
+        headers= {
+                "Authorization": "Bearer "+org_key,
                 "Content-Type":"application/json",
                 "Accept":"application/json"}
-            url=self.server_url+"/api/dashboards/uid/"+platformID+roomID
-            r=requests.delete(url=url, headers=headers, verify=False)
-            posRoom=self.findRoomPos(self.orgContent['organizations'][pos]['dashboards'],roomID)
-            if posRoom is not False:
-                self.orgContent['organizations'][pos]['dashboards'].pop(posRoom)
-                headers= {
-                        "Authorization": "Bearer "+key,
-                        "Content-Type":"application/json",
-                        "Accept":"application/json"}
-                url=self.server_url+"/api/dashboards/uid/"+platformID+roomID
-                r=requests.delete(url=url, headers=headers, verify=False)
-                return True
-            else:
-                return False
-        else:
-            return False
+        
+        url=self.grafanaURL+"/api/dashboards/uid/"+platformID+roomID
+        r=requests.delete(url=url, headers=headers, verify=False)
+        if r.status_code!=200:
+            raise cherrypy.HTTPError(r.reason)
 
     def getDashboard(self, platformID, roomID):
         clients_catalog=self.retrieveService('clients_catalog')
@@ -138,9 +125,12 @@ class Grafana(Generic_Service):
         r=requests.get(url=url, headers=headers, verify=False)
         data=r.json()
         print(data)
-        dash_url=self.grafanaURL+data["meta"]["url"]+"?orgId="+org_ID
-        print(dash_url)
-        return dash_url
+        try:
+            dash_url=self.grafanaURL+data["meta"]["url"]+"?orgId="+org_ID
+            print(dash_url)
+            return dash_url
+        except:
+            return False
 
     def getHomeURL(self, platformID):
         notFound=1
