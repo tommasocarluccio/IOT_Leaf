@@ -73,7 +73,7 @@ class Adaptor(Generic_Service):
                 break
         try:
             clients_catalog=self.retrieveService('clients_catalog')
-            clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+"/specs/thingspeak").json()
+            clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+"/thingspeak").json()
             for room in clients_result:
                 if room['room']==room_ID:
                     break

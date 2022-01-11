@@ -43,7 +43,7 @@ class AlertingControl(warningControl):
                         
                         avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
                         avg_status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],avg_value)
-
+                        print(avg_status)
                         if avg_status is not False:
                             if not self.check_last_log(platform_ID,room_ID,parameter,status):
                                 msg=self.create_msg(parameter,status)

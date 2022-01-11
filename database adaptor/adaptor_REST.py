@@ -20,7 +20,7 @@ class AdaptorREST():
             command=uri[2]
             try:
                 clients_catalog=self.adaptor.retrieveService('clients_catalog')
-                clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+'/'+room_ID+"/thingspeak").json()
+                clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+"/thingspeak").json()
                 client=next((item for item in clients_result if item["room"] == room_ID), False)
                 channelID=client["channelID"]
                 fields=client['fields']
@@ -55,7 +55,6 @@ class AdaptorREST():
                     break
 
             average_data=requests.get(thingspeak_url).json()
-            print(thingspeak_url)
             return json.dumps(float(average_data['feeds'][-1][key]))
         
         elif command=="period":

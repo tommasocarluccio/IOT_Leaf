@@ -9,6 +9,10 @@
             "platform_ID": "Leaf_002",
             "associated": true,
             "specs": {
+                "grafana":{
+                    "org_ID":"2",
+                    "org_key":"eyJrIjoiWEY5TDZLUHFDY0pCSTNGZURGamt2Snh4TjhNbExCNFUiLCJuIjoiY3JlYXRlIiwiaWQiOjU5fQ=="
+                },
                 "thingspeak": [
                     {
                         "room": "room_1",
@@ -37,14 +41,41 @@
                 ],
                 "chatIDs": [
                     70387018,
+                    1013178107,
                     306741166
                 ]
             }
         },
         {
             "platform_ID": "Leaf_003",
-            "associated": true,
+            "associated": false,
             "specs": {
+                "thingspeak": [
+                    {
+                        "room": null,
+                        "channelID": "1021300",
+                        "write_key": "58EQ7229TU9O5RXP",
+                        "read_key": "D27OY6P75NOTG7UA",
+                        "put_key": "B6PLW4MR0Z7AEJ2C",
+                        "fields": {
+                            "field5": "humidity",
+                            "field1": "AQI",
+                            "field3": "temperature"
+                        }
+                    },
+                    {
+                        "room": null,
+                        "channelID": "1021300",
+                        "write_key": "58EQ7229TU9O5RXP",
+                        "read_key": "D27OY6P75NOTG7UA",
+                        "put_key": "B6PLW4MR0Z7AEJ2C",
+                        "fields": {
+                            "field5": "humidity",
+                            "field1": "AQI",
+                            "field3": "temperature"
+                        }
+                    }
+                ],
                 "chatIDs": [
                     306741166,
                     70387018
