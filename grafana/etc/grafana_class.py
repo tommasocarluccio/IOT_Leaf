@@ -12,10 +12,6 @@ class Grafana(Generic_Service):
         grafanaIP=self.retrieveService('grafana')["IP_address"]
         grafanaPORT=str(self.retrieveService('grafana')["port"])
         self.grafanaURL="http://"+grafanaIP+':'+grafanaPORT
-        print(self.grafanaURL)
-
-     
-    #platformID=org_name
 
     def createDashboard(self, platformID, roomID):
         clients_catalog=self.retrieveService('clients_catalog')
