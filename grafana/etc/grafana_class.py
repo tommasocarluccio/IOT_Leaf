@@ -120,11 +120,9 @@ class Grafana(Generic_Service):
         url=self.grafanaURL+"/api/dashboards/uid/"+uid
         r=requests.get(url=url, headers=headers, verify=False)
         data=r.json()
-        print(data)
-        public_grafanaURL=requests.get(clients_catalog['url']+"/grafana/public").json()
+        public_grafanaURL=requests.get(clients_catalog['url']+"/grafana/public").json()['url']
         try:
             dash_url=public_grafanaURL+data["meta"]["url"]+"?orgId="+org_ID
-            print(dash_url)
             return dash_url
         except:
             return False

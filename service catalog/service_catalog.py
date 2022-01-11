@@ -17,7 +17,8 @@ class ServiceCatalogREST():
             if len(uri)==2:
                 if uri[1]=='public':
                     try:
-                        output=requests.get(self.catalog.content['ngrok']+"/api/tunnels/"+uri[0]).json()['public_url']
+                        url=requests.get(self.catalog.content['ngrok']+"/api/tunnels/"+uri[0]).json()['public_url']+"/"uri[0]
+                        output={"url":url}
                     except:
                         raise cherrypy.HTTPError(404,"Service: Not found")
                 else:
