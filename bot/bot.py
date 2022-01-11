@@ -942,7 +942,7 @@ class LeafBot(Generic_Service):
                 tosend=":confetti_ball:Good news!!!\n{} is {} again in {} - {}".format(parameter,status,room,platform)
             if tip!=None:
                 tosend+=f'\nTip: {tip}'
-            chat_IDs=requests.get(self.clientURL+"/info/"+platform_ID+"/specs/chatIDs").json()
+            chat_IDs=requests.get(self.clientURL+"/info/"+platform_ID+"/chatIDs").json()
             chat_IDs = list(dict.fromkeys(chat_IDs))
             for chat_ID in chat_IDs:
                 try:
