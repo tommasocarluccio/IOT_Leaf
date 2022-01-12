@@ -50,7 +50,6 @@ class Registration_deployer(object):
                 return open("etc/correct_reg.html")
         
         elif(len(uri))>0 and uri[0]=="platforms_list":
-            #username=str(cherrypy.request.login)
             username=params['username']
             try:
                 data=self.catalog.users.find_user(username).copy()
@@ -68,10 +67,12 @@ class Registration_deployer(object):
             result=self.catalog.platforms.content['tokens']
             return json.dumps(result)
 
+        #avoiding sharing keys on github
         elif(len(uri))>0 and uri[0]=="temp_tokens":
             result=json.load(open('database/temp_token.json',"r"))
             return json.dumps(result)
 
+        #get rooms list associated with thingspeak channel
         elif (len(uri))>0 and uri[0]=="associated_rooms":
             platform=self.catalog.platforms.find_platform(uri[1])
             if platform is not False:
@@ -101,6 +102,7 @@ class Registration_deployer(object):
                 
         else:
             raise cherrypy.HTTPError("501 No operation!")
+            
     def POST(self,*uri):
         if(len(uri))>0 and uri[0]=="login":
             body=cherrypy.request.body.read()
@@ -239,8 +241,6 @@ class Registration_deployer(object):
 if __name__ == '__main__':
     clients_db=sys.argv[1]
     clientsCatalog=Registration_deployer(clients_db)
-    #get_ha1 = cherrypy.lib.auth_digest.get_ha1_dict_plain(clientsCatalog.catalog.users.userpassdict)
-    #clientsCatalog.checkpassword = cherrypy.lib.auth_basic.checkpassword_dict(clientsCatalog.catalog.users.userpassdict)
     if clientsCatalog.service is not False:
         conf = {
             '/': {

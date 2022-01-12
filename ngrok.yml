@@ -7,3 +7,7 @@ tunnels:
     addr: 192.168.1.130:3000
     proto: http
     bind_tls: true
+  clients_catalog:
+    addr: 192.168.1.130:9090
+    proto: http
+    bind_tls: true

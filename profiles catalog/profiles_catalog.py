@@ -95,6 +95,7 @@ class catalogREST():
                 output="Room '{}' cannot be added to platform '{}'".format(room_name,platform_ID)
                 raise cherrypy.HTTPError("400 Platform not found")
                 
+        #from physical platform        
         elif command=='associateRoom':
             try:
                 platform_ID=uri[1]
