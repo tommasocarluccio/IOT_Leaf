@@ -9,4 +9,4 @@ where [platform_ID] should be replaced with the proper platform ID. Example:
 
 > python3 room_run.py conf/default.json Leaf_002
 
-The system will register the new room association performed returning useful information (e.g. room_ID and room_name). If the room was previously correctly associated, request will be discarded.
+The system will register the new room association performed returning useful information (e.g. room_ID). If the room was previously correctly associated, request will be discarded.
