@@ -39,6 +39,7 @@ class RoomConfiguration(object):
             resourcesAddress=self.findService('resource_catalog')
             server_msg={"room_ID":self.room_ID,"room_name":self.room_name,"devices":self.content['room_info']['devices']}
             r=requests.put(f'{resourcesAddress}/insertRoom/{self.platform_ID}',json=server_msg)
+            self.content['room_info']['connection_flag]=True
             r.raise_for_status()
             return True
         except Exception as e:
@@ -61,6 +62,3 @@ if __name__ == '__main__':
         else:
             print("Error connection.")
     print("Exiting...")
-    #time.sleep(3)
-    #if room.content['room_info']['connection_flag']:
-        #os.system("./sensors_autorun")
