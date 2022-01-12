@@ -30,34 +30,6 @@ The system has been programmed for managing different users and hardware platfor
 Each service is supported by one or more configuration file (JSON file).\
 Eventually, services communications are based on HTTP REST and MQTT protocols, ensuring a distributed system which load can be splitted among different nodes.
 
-## Getting started
-It is suggested to use a virtual **Python 3** environment, installing the necessary requirements:
-
-``
-pip3 install -r requirements.txt
-``
-
-Scripts have similar structure and they require to be individually launched, indicating the configuration file.
-Configuration files can be accessed and edited under:
-> /conf
-
-Classes and scripts necessary for the service to properly work are stored in:
-
-> /etc
-
-Services can be run using the specific command or by launching the autorun bash script.
-After setting the right permissions:
-
-``
-chmod +x /run.sh
-``
-
-Run the command:
-
-``
-./run.sh
-``
-
 ## Main actors
 
 Each software component is in charge of some specific functionalities only, following the micro-services approach.
@@ -96,3 +68,32 @@ The final user can interact with the system by exploting:
 - **Telegram Bot**, to visualize all data and information, receiving notifications and setting preferences.
 - **Grafana**, offering a fascinating dashboard for data visualization
 - **Statics**, presenting interesting insights according to different time period
+
+
+## Getting started
+It is suggested to use a virtual **Python 3** environment, installing the necessary requirements:
+
+``
+pip3 install -r requirements.txt
+``
+
+Scripts have similar structure and they require to be individually launched, indicating the configuration file.
+Configuration files can be accessed and edited under:
+> /conf
+
+Classes and scripts necessary for the service to properly work are stored in:
+
+> /etc
+
+Services can be run using the specific command or by launching the autorun bash script.
+After setting the right permissions:
+
+``
+chmod +x /run.sh
+``
+
+Run the command:
+
+``
+./run.sh
+``
