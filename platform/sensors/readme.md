@@ -12,3 +12,5 @@ In particular, to run the gas sensor for a testing platform which input is comin
 For the temperature and humidity sensor:
 
 > python3 main.py Leaf_002 room_1 dht11 4
+
+Sensors will automatically be registered to the resources catalog and they will start to send data as MQTT publishers.
