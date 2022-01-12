@@ -1,0 +1,11 @@
+{
+    "service_catalog": "http://192.168.1.130:8080/service_catalog",
+    "room_info": {
+        "room_ID": "",
+        "room_name": "",
+        "connection_flag": false,
+        "devices": [],
+        "connection_timestamp": null
+    },
+    "platform_ID": ""
+}
