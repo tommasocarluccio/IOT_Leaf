@@ -29,7 +29,7 @@ if __name__ == '__main__':
 	parser.add_argument("-gr", "--grafana", dest = "grafana", default = "192.168.1.130:3000")
 
 	args = parser.parse_args()
-	"""
+	
 	set_ip("clients catalog/conf/","clients_catalog.json",args.service_catalog_ip)
 	set_ip("profiles catalog/conf/","profiles_catalog.json",args.service_catalog_ip)
 	set_ip("database adaptor/conf/","adaptor.json",args.service_catalog_ip)
@@ -48,7 +48,7 @@ if __name__ == '__main__':
 	set_ip("platform/sensors/conf/","mq135_settings.json",args.service_catalog_ip)
 
 	set_ip("bot/conf/","conf.json",args.service_catalog_ip)
-	"""
+	
 	services_dict={"service_catalog":args.service_catalog_ip,"broker":args.broker,"grafana":args.grafana}
 	set_services(services_dict)
-	
+	print("All configurations set.\nExiting...\n")
