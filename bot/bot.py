@@ -5,7 +5,6 @@ import emoji
 import requests
 import json
 import numpy as np
-import random
 import sys
 import cherrypy
 from etc.generic_service import *
@@ -31,7 +30,6 @@ class LeafBot(Generic_Service):
         self.bot = telepot.Bot(self.tokenBot)
         self.authentications=[]
         self.thresholds=[]
-        self.__message={"alert":"","action":""}
 
         self.keyboards()
         MessageLoop(self.bot, {'chat': self.on_chat_message, 'callback_query': self.on_callback_query}).run_as_thread()
@@ -189,6 +187,7 @@ class LeafBot(Generic_Service):
 
     def get_general_info(self, chat_ID):
         profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
+        resourceURL=requests.get(self.serviceURL+'resource_catalog').json()['url']
         user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
         profile_info=requests.get(profileURL+'/'+user['platform_ID']).json()
         output='Your Leaf device:\n:bust_in_silhouette:'+profile_info['platform_ID']+':\t'+profile_info['platform_name']+'\n'
@@ -205,9 +204,13 @@ class LeafBot(Generic_Service):
                 except:
                     emo_room=':house:'
                 if room['connection_flag']==1:
-                    output+=emo_room+room['preferences']['room_name']+'\n'
+                    output+=emo_room+room['preferences']['room_name']+':\n'
+                    output+='Devices:\n'
+                    devices=requests.get(resourceURL+'/'+user['platform_ID']+'/'+room['room_ID']+'/devices')
+                    for device in devices:
+                        output+=':arrow_forward:'+device['deviceID']+' (last alive: '+device['date']+')\n'
                 else:
-                    output+=emo_room+room['preferences']['room_name']+' (not yet associated)\n'
+                    output+=emo_room+room['preferences']['room_name']+' (not yet associated)\n'               
         else:
             output+='No room detected.\n'
         return output
@@ -318,9 +321,8 @@ class LeafBot(Generic_Service):
         return th
 
     def get_home_measures(self, chat_ID):
-        clientURL=requests.get(self.serviceURL+'/clients_catalog').json()['url']
         user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
-        rooms_list=requests.get(clientURL+'/associated_rooms/'+user['platform_ID']+'/thingspeak').json()
+        rooms_list=requests.get(self.clientURL+'/associated_rooms/'+user['platform_ID']+'/thingspeak').json()
         print(f"rooms_list: {rooms_list}")
         platform_name=self.get_platform_name(chat_ID, user["platform_ID"])
         output=f':house:Current condition in {platform_name}:\n\n'
@@ -467,14 +469,14 @@ class LeafBot(Generic_Service):
                 else:
                     self.bot.sendMessage(chat_ID, 'Update was unsuccesfull! Please try again', reply_markup=self.home_keyboard)
                 user['flags']['platform_name_flag']=0
-
+            #user has written new room 
             elif user['flags']['new_room_flag']==1:
                 if self.add_room(chat_ID, message):
                     self.bot.sendMessage(chat_ID, f'A new instance for the room {message} has been added to the platform!', reply_markup=self.home_keyboard)
                 else:
                     self.bot.sendMessage(chat_ID, 'unsuccesfull operation! Please try again.', reply_markup=self.home_keyboard)
                 user['flags']['new_room_flag']=0
-
+            #user has written new name for room
             elif user['flags']['room_name_flag']==1:
                 profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
                 body_profile={
@@ -487,7 +489,7 @@ class LeafBot(Generic_Service):
                 else:
                     self.bot.sendMessage(chat_ID, 'Update was unsuccesfull! Please try again', reply_markup=self.home_keyboard)
                 user['flags']['room_name_flag']=0
-
+            #user has written new thresholds for a parameter in a room
             elif user['flags']['thresholds_flag']==1:
                 min_th=float(message.split(" ")[0])
                 max_th=float(message.split(" ")[1])
@@ -517,9 +519,8 @@ class LeafBot(Generic_Service):
                     self.bot.sendMessage(chat_ID, 'Update was unsuccesfull! Please try again', reply_markup=self.room_menu)
                     user['flags']['thresholds_flag']=0
                     self.thresholds=[i for i in self.thresholds if i['chat_ID']!=chat_ID]
-
+            #user has written new platform
             elif user['flags']['new_platform_flag']==1:
-                clientURL=requests.get(self.serviceURL+'/clients_catalog').json()['url']
                 body={
                     'username':user['user_ID'],
                     'platformID':message
@@ -643,13 +644,6 @@ class LeafBot(Generic_Service):
                 [InlineKeyboardButton(text=emoji.emojize(':radio_button: Change room thresholds', use_aliases=True), callback_data='change_thresholds')],
                 [InlineKeyboardButton(text=emoji.emojize(':back: BACK', use_aliases=True), callback_data='back')]
                 ])
-
-        self.home_button=InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text=emoji.emojize(':house: HOME', use_aliases=True), callback_data='home')]
-                    ])
-
-        
-
         
 
     def on_callback_query(self, msg):
