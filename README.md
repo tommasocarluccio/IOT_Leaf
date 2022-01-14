@@ -80,10 +80,10 @@ It is suggested to use a virtual **Python 3** environment, installing the necess
 pip3 install -r requirements.txt
 ``
 
-Then, it is important to set the IP address of crucial built-in services: service catalog, MQTT broker and Grafana. The following command will set all the configuration files accordingly (replace IP address and  port with the desired ones):
+Then, it is important to set the IP address of crucial built-in services: service catalog, MQTT broker, Grafana and ngrok. The following command will set all the configuration files accordingly (replace IP address and  port with the desired ones):
 
 ``
-python3 conf_ip.py -sc=192.168.1.130:8080 -br=192.168.1.130:1883 -gr=192.168.1.130:3000
+python3 conf_ip.py -sc=192.168.1.130:8080 -br=192.168.1.130:1883 -gr=192.168.1.130:3000 -nk=192.168.1.130:4040
 ``
 
 For setting ngrok, edit the configuration file:
