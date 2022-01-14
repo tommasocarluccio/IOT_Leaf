@@ -18,7 +18,7 @@ class LeafBot(Generic_Service):
 
         self.conf_content=json.load(open(configuration_file,"r"))
         self.serviceURL=self.conf_content['service_catalog']
-        self.clientURL=requests.get(self.serviceURL+'/clients_catalog/public').json()['url']+"/clients_catalog"
+        self.clientURL=requests.get(self.serviceURL+'/clients_catalog/public').json()['url']
 
         self.api_coordinates_url='http://api.waqi.info/feed/geo:'
         self.api_city_url='http://api.waqi.info/feed/'
