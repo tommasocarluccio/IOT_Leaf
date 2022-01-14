@@ -85,6 +85,9 @@ Then, it is important to set the IP address of crucial built-in services: servic
 ``
 python3 conf_ip.py -sc=192.168.1.130:8080 -br=192.168.1.130:1883 -gr=192.168.1.130:3000
 ``
+
+For setting ngrok, use the configuration file:
+> ngrok.yml
 #### Run the services
 
 Scripts have similar structure and they require to be individually launched, indicating the configuration file.
