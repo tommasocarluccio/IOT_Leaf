@@ -21,16 +21,12 @@ class SensorPublisher(MyPublisher):
         for result in  result_list:
             for element in self.settings['parameters']:
                 if element['parameter']==result['parameter']:
-                    #e=[{"n":result["parameter"],"u":element["unit"],"t":result["time"],"v":result["value"]}]
                     e.append({"n":result["parameter"],"u":element["unit"],"t":result["time"],"v":result["value"]})
                     data={"bn":self.platform_ID+'/'+self.room_ID+'/'+self.device_ID,"e":e}
-                    #data={"bn":self.device_ID,"e":e}
-                    #topic=self.topic+'/'+element['parameter']
                     print(element['parameter']+": "+str(result['value'])+' '+ element['unit'])
         topic=self.topic
         self.myPublish(topic,json.dumps(data))
-                    
-                    
+                               
     def create_info(self):
         e=[]
         for element in self.settings['parameters']:

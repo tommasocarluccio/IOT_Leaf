@@ -7,7 +7,7 @@ General command:
 
 In particular, to run the gas sensor for a testing platform which input is coming from the serial port:
 
-> python3 main.py Leaf_002 room_1 mq5 /dev/ttyACM0
+> python3 main.py Leaf_002 room_1 mq135 /dev/ttyACM0
 
 For the temperature and humidity sensor:
 

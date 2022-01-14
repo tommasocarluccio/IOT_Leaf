@@ -14,15 +14,6 @@ import json
 import requests
 import threading
 
-import subprocess
-
-# Raspberry Pi pin configuration:
-RST = None     # on the PiOLED this pin isnt used
-# Note the following are only used with SPI:
-DC = 23
-SPI_PORT = 0
-SPI_DEVICE = 0
-
 class pingThread(threading.Thread):
     def __init__(self,threadID,platform_ID,room_ID,data,catalog_url):
         threading.Thread.__init__(self)
@@ -105,18 +96,17 @@ class OLED():
                     #self.draw.text((self.x+6, self.top+16),    str("Hum.")+ "    " + str(value)+unit,  font=self.font, fill=255)
                 if(parameter=="AQI"):
                     self.aqi=round(value,2)
-                    if(value <=600):
+                    if(value <=400):
                         self.AQI="GOOD"
-                    elif(value>600 and value <=750):
+                    elif(value>400 and value <=650):
                         self.AQI="BAD"
-                    elif(value>750):
+                    elif(value>650):
                         self.AQI="UNSAFE"
                     else:
                         self.AQI="NONE"
             self.draw.rectangle((0,0,self.disp.width,self.disp.height), outline=0, fill=0)
             self.draw.text((self.x+55, self.top),     "LEAF", font=self.font, fill=255)
             self.draw.text((self.x+6, self.top+16),     str("Temp.")+ "   " + str(self.temp)+"°C", font=self.font, fill=255)
-            #self.draw.text((self.x+6, self.top+25),    str("Wind")+ "    " + str(self.wind)+" "+"kmH",  font=self.font, fill=255)        
             self.draw.text((self.x+6, self.top+8),       "AQI:    " +str(self.aqi),  font=self.font, fill=255)
             self.draw.text((self.x+66, self.top+8),       "    " +str(self.AQI),  font=self.font, fill=255)
             
@@ -139,11 +129,7 @@ class OLED():
 
         
         self.disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)
-
-        # Initialize library.
         self.disp.begin()
-
-        # Clear display.
         self.disp.clear()
         self.disp.display()
 
@@ -160,8 +146,6 @@ class OLED():
         self.bottom = height-padding
 
         self.x = 0
-
-
         # Load default font.
         self.font = ImageFont.load_default()
         #self.font = ImageFont.truetype('font/coolvetica rg.otf', 10)

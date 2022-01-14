@@ -64,7 +64,6 @@ class pingThread(threading.Thread):
 
 
 if __name__ == '__main__':
-    #settingFile=sys.argv[1]
     platform_ID=sys.argv[1]
     room_ID=sys.argv[2]
     device_ID=sys.argv[3]

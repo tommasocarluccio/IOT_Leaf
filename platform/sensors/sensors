@@ -1,4 +1,0 @@
-#! /bin/bash
-
-xterm -e "python3 mq5.py conf/etc/mq5_settings.json room_settings.json /dev/ttyACM0 & python3 dht11.py conf/etc/dht11_settings.json room_settings.json 4" 
-
