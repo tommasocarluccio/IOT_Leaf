@@ -19,6 +19,7 @@ class Stats(Generic_Service):
         self.serviceURL = self.conf_content['service_catalog']
 
     def calculateStats(self, json_response):
+        
         AQI = {
             "values": [],
             "field":"field1",
@@ -55,58 +56,6 @@ class Stats(Generic_Service):
 
         return resp
                 
-    #OLD
-    def calculateStats2(self, json_response):
-
-        # get element into list
-        AQI = []
-        temp = []
-        hum = []
-        for feed in json_response['feeds']:
-            AQI.append(feed['field1'])
-            temp.append(feed['field3'])
-            hum.append(feed['field5'])
-
-        AQI = np.array(AQI).astype(float)
-        temp = np.array(temp).astype(float)
-        hum = np.array(hum).astype(float)
-        
-        # remove nan
-        AQI = AQI[~(np.isnan(AQI))]
-        temp = temp[~(np.isnan(temp))]
-        hum = hum[~(np.isnan(hum))]
-
-        resp = {}
-        resp['AQI'] = {}
-        resp['temp'] = {}
-        resp['hum'] = {}
-        if AQI.size > 0:
-            resp['AQI']['avg'] = AQI.mean()
-            resp['AQI']['max'] = AQI.max()
-            resp['AQI']['min'] = AQI.min()
-        else:
-            resp['AQI']['avg'] = 'no_data'
-            resp['AQI']['max'] = 'no_data'
-            resp['AQI']['min'] = 'no_data'
-        if temp.size > 0:
-            resp['temp']['avg'] = temp.mean()
-            resp['temp']['max'] = temp.max()
-            resp['temp']['min'] = temp.min()
-        else:
-            resp['temp']['avg'] = 'no_data'
-            resp['temp']['max'] = 'no_data'
-            resp['temp']['min'] = 'no_data'
-        if hum.size > 0:
-            resp['hum']['avg'] = hum.mean()
-            resp['hum']['max'] = hum.max()
-            resp['hum']['min'] = hum.min()
-        else:
-            resp['hum']['avg'] = 'no_data'
-            resp['hum']['max'] = 'no_data'
-            resp['hum']['min'] = 'no_data'
-
-        return resp
-
     def GET(self,*uri):
         try:
             platform_ID=uri[0]
@@ -126,11 +75,8 @@ class Stats(Generic_Service):
             nnow = str(now).split(' ')
             last_period_date = '_'.join(last).split('.')[0]
             now = '_'.join(nnow).split('.')[0]
-            print(last_period_date)
 
-            res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
-            print(res)
-        
+            res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()        
             respDEF = self.calculateStats(res)
 
             NUM_DAYS = 7

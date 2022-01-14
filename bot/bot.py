@@ -18,7 +18,7 @@ class LeafBot(Generic_Service):
 
         self.conf_content=json.load(open(configuration_file,"r"))
         self.serviceURL=self.conf_content['service_catalog']
-        self.clientURL=requests.get(self.serviceURL+'/clients_catalog').json()['url']
+        self.clientURL=requests.get(self.serviceURL+'/clients_catalog/public').json()['url']
 
         self.api_coordinates_url='http://api.waqi.info/feed/geo:'
         self.api_city_url='http://api.waqi.info/feed/'
@@ -335,12 +335,10 @@ class LeafBot(Generic_Service):
 
     def get_statistics(self, chat_ID, period):
         statisticsURL=requests.get(self.serviceURL+'/statistics_catalog').json()['url']
-        print(statisticsURL)
         user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
         room_name=self.get_room_name(chat_ID, user['room_ID'])
         output=f'Statistics for {room_name} for the last {period}\n'
         log=requests.get(statisticsURL+'/'+user['platform_ID']+'/'+user['room_ID']+'/'+period).json()
-        print(log)
 
         for key, value in log.items():
             if key=='temp':

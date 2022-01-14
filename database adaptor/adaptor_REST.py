@@ -30,6 +30,7 @@ class AdaptorREST():
 
         except:
             raise cherrypy.HTTPError(400,"Check your request and try again!")
+            
         if command=="now":
             thingspeak_url="{}/channels/{}/feeds/last.json".format(self.adaptor.thingspeak_url,channelID)
             result=requests.get(thingspeak_url).json()
