@@ -83,19 +83,6 @@ class Grafana(Generic_Service):
         else:
             return False
 
-
-    def retrieveDashInfo(self, platformID, roomID):
-        notFound=1
-        for org in self.orgContent["organizations"]:
-            if org["org_name"]==platformID:
-                for dash in org["dashboards"]:
-                    if dash["uid"]==platformID+roomID:
-                        notFound=0
-                        dash_url=self.getDashboardURL(platformID, roomID)
-                        return dash_url
-        if notFound==1:
-            return False
-
     def getDashboardURL(self, platformID, roomID):
         clients_catalog=self.retrieveService('clients_catalog')
         grafana_data=requests.get(clients_catalog['url']+"/info/"+platformID+"/grafana").json()
@@ -117,18 +104,4 @@ class Grafana(Generic_Service):
             dash_url=public_grafanaURL+data["meta"]["url"]+"?orgId="+org_ID
             return dash_url
         except:
-            return False
-
-    def getHomeURL(self, platformID):
-        notFound=1
-        for org in self.orgContent["organizations"]:
-            if org["org_name"]==platformID:
-                self.key=org["key"]
-                self.orgID=str(org["orgId"])
-                notFound=0
-                break
-        if notFound==0:
-            self.home_url=self.server_url+"?orgId="+self.orgID
-            return self.home_url
-        else:
             return False
