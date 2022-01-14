@@ -18,6 +18,7 @@ class ServiceCatalogREST():
                 if uri[1]=='public':
                     try:
                         url=requests.get(self.catalog.content['ngrok']+"/api/tunnels/"+uri[0]).json()['public_url']
+                        url=url+self.catalog.content[str(uri[0])]['service']
                         output={"url":url}
                     except:
                         try:
