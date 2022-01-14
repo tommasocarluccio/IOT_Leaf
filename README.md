@@ -71,17 +71,21 @@ The final user can interact with the system by exploting:
 
 
 ## Getting started
+
+#### Configuration
+
 It is suggested to use a virtual **Python 3** environment, installing the necessary requirements:
 
 ``
 pip3 install -r requirements.txt
 ``
 
-Then, it is important to set the IP address of crucial built-in services: service catalog, MQTT broker and Grafana. The following command will set the configuration files according.
+Then, it is important to set the IP address of crucial built-in services: service catalog, MQTT broker and Grafana. The following command will set the configuration files accordingly:
 
 ``
 python3 conf_ip.py -sc=192.168.1.130:8080 -br=192.168.1.130:1883 -gr=192.168.1.130:3000
 ``
+#### Run the services
 
 Scripts have similar structure and they require to be individually launched, indicating the configuration file.
 Configuration files can be accessed and edited under:
