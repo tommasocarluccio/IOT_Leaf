@@ -39,7 +39,7 @@ class RoomConfiguration(object):
             resourcesAddress=self.findService('resource_catalog')
             server_msg={"room_ID":self.room_ID,"room_name":self.room_name,"devices":self.content['room_info']['devices']}
             r=requests.put(f'{resourcesAddress}/insertRoom/{self.platform_ID}',json=server_msg)
-            self.content['room_info']['connection_flag]=True
+            self.content['room_info']['connection_flag']=True
             r.raise_for_status()
             return True
         except Exception as e:
