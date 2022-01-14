@@ -50,7 +50,8 @@ class Adaptor(Generic_Service):
             print(e)
             print("MQTT Subscriber not created")
             return False
-
+            
+    #send individually measurments
     def retrieve_info(self,e,platform):
         try:
             clients_catalog=self.retrieveService('clients_catalog')
@@ -66,7 +67,7 @@ class Adaptor(Generic_Service):
             print(e)
             return False
 
-
+    # 'pack' measurements to bypass thingspeak limitations
     def retrieve_info2(self,platform_ID,room_ID):
         for platform in self.platforms_last:
             if platform['platform_ID']==platform_ID:
@@ -91,7 +92,6 @@ class Adaptor(Generic_Service):
 
     def send(self,command,params):
         try:
-            #print(params)
             r=requests.post("{}{}".format(self.thingspeak_url,command),params=params)
             if r.status_code==200:
                 self.last_msg_time=time.time()
@@ -115,7 +115,6 @@ class Adaptor(Generic_Service):
 
     def reset(self,platform_ID):
         index=self.find_pos(platform_ID)
-        #self.platforms_last.pop(index)
         self.platforms_last[index]["last_msg_time"]=time.time()
         self.platforms_last[index]["measurements"]={}
 
