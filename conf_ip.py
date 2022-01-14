@@ -7,6 +7,7 @@ def set_ip(folder,filename,ip):
 	conf_content['service_catalog']="http://{}/service_catalog".format(ip)
 	with open(file_path,'w') as file:
 		json.dump(conf_content,file, indent=4)
+
 def set_services(services_dict):
 	conf_content=json.load(open("service catalog/conf/service_catalog.json","r"))
 
@@ -18,6 +19,7 @@ def set_services(services_dict):
 
 	conf_content['grafana']['IP_address']=services_dict['grafana'].split(":")[0]
 	conf_content['grafana']['port']=int(services_dict['grafana'].split(":")[1])
+	conf_content['ngrok']="http://{}".format(services_dict['ngrok'])
 	with open("service catalog/conf/service_catalog.json",'w') as file:
 		json.dump(conf_content,file, indent=4)
 
@@ -27,6 +29,7 @@ if __name__ == '__main__':
 	parser.add_argument("-sc", "--service_catalog", dest = "service_catalog_ip", default = "192.168.1.130:8080")
 	parser.add_argument("-br", "--broker", dest = "broker", default = "192.168.1.130:1883")
 	parser.add_argument("-gr", "--grafana", dest = "grafana", default = "192.168.1.130:3000")
+	parser.add_argument("-nk", "--ngrok", dest = "ngrok", default = "192.168.1.130:4040")
 
 	args = parser.parse_args()
 	
@@ -49,6 +52,6 @@ if __name__ == '__main__':
 
 	set_ip("bot/conf/","conf.json",args.service_catalog_ip)
 	
-	services_dict={"service_catalog":args.service_catalog_ip,"broker":args.broker,"grafana":args.grafana}
+	services_dict={"service_catalog":args.service_catalog_ip,"broker":args.broker,"grafana":args.grafana, "ngrok":args.ngrok}
 	set_services(services_dict)
 	print("All configurations set.\nExiting...\n")
