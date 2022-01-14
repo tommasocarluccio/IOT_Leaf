@@ -1,4 +1,9 @@
 {
     "description": "Welcome to the warning control strategy",
-    "service_catalog": "http://172.29.4.158:8080/service_catalog"
+    "service_catalog": "http://192.168.1.130:8080/service_catalog",
+    "msg": {
+        "parameter": null,
+        "status": null,
+        "tip": null
+    }
 }
