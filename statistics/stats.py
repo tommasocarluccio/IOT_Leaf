@@ -19,6 +19,7 @@ class Stats(Generic_Service):
         self.serviceURL = self.conf_content['service_catalog']
 
     def calculateStats(self, json_response):
+        
         AQI = {
             "values": [],
             "field":"field1",
