@@ -1,7 +1,0 @@
-{
-    "description": "Welcome to the users registration service",
-    "service_catalog": "http://192.168.1.191:8080/service_catalog",
-    "service_name": "clients_catalog",
-    "IP_address": "192.168.1.191",
-    "IP_port": 9090
-}

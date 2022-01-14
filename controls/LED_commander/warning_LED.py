@@ -6,8 +6,8 @@ from etc.warning_class import *
 if __name__ == '__main__':
     conf=sys.argv[1]
     connected_flag=False
-    clientID="warning_control"
     c=warningControl(conf)
+    clientID=c.conf_content['clientID']
     while not c.setup(clientID):
         print("Try again..")
         time.sleep(10)
