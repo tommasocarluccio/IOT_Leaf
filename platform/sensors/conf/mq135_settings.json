@@ -1,0 +1,12 @@
+{
+	"service_catalog": "http://192.168.1.130:8080/service_catalog",
+	"sensorID": "mq135",
+	"end_points": "MQTT",
+	"time_sleep":3,
+	"parameters": [{
+		"parameter": "AQI",
+		"value": null,
+		"unit": "ppm",
+		"timestamp":null
+	}]
+}
