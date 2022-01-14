@@ -187,7 +187,7 @@ class LeafBot(Generic_Service):
 
     def get_general_info(self, chat_ID):
         profileURL=requests.get(self.serviceURL+'/profiles_catalog').json()['url']
-        resourceURL=requests.get(self.serviceURL+'resource_catalog').json()['url']
+        resourceURL=requests.get(self.serviceURL+'/resource_catalog').json()['url']
         user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
         profile_info=requests.get(profileURL+'/'+user['platform_ID']).json()
         output='Your Leaf device:\n:bust_in_silhouette:'+profile_info['platform_ID']+':\t'+profile_info['platform_name']+'\n'
@@ -206,7 +206,7 @@ class LeafBot(Generic_Service):
                 if room['connection_flag']==1:
                     output+=emo_room+room['preferences']['room_name']+':\n'
                     output+='Devices:\n'
-                    devices=requests.get(resourceURL+'/'+user['platform_ID']+'/'+room['room_ID']+'/devices')
+                    devices=requests.get(resourceURL+'/'+user['platform_ID']+'/'+room['room_ID']+'/devices').json()
                     for device in devices:
                         output+=':arrow_forward:'+device['deviceID']+' (last alive: '+device['date']+')\n'
                 else:
