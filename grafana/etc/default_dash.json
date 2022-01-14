@@ -47,7 +47,7 @@
               "mode": "thresholds"
             },
             "decimals": 0,
-            "displayName": "IAQI",
+            "displayName": "AQI",
             "mappings": [],
             "max": 400,
             "min": 0,
@@ -564,7 +564,7 @@
               }
             },
             "decimals": 0,
-            "displayName": "IAQI",
+            "displayName": "AQI",
             "mappings": [],
             "thresholds": {
               "mode": "absolute",
@@ -622,7 +622,7 @@
             "columns": [
               {
                 "selector": "field1",
-                "text": "IAQI",
+                "text": "AQI",
                 "type": "number"
               },
               {
@@ -692,7 +692,7 @@
             {
               "matcher": {
                 "id": "byName",
-                "options": "IAQI"
+                "options": "AQI"
               },
               "properties": [
                 {
@@ -849,7 +849,7 @@
               },
               {
                 "selector": "field1",
-                "text": "IAQI",
+                "text": "AQI",
                 "type": "number"
               },
               {
@@ -1287,7 +1287,7 @@
       "list": []
     },
     "time": {
-      "from": "now-5m",
+      "from": "now-3h",
       "to": "now"
     },
     "timepicker": {},
