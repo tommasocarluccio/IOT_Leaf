@@ -4,8 +4,6 @@ import time
 import cherrypy
 from etc.generic_service import *
 
-#server_url="587f7d3d617a.ngrok.io"
-
 class Grafana(Generic_Service):
     def __init__(self, conf_filename):
         Generic_Service.__init__(self,conf_filename)
