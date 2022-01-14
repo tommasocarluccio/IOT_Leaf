@@ -40,7 +40,7 @@ class AlertingControl(warningControl):
                 try:
                     status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],meas['v'])
                     if status is not False:
-                        
+                        #monitor average value of given period
                         avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
                         avg_status=self.compare_value(th_dict[parameter]["min"],th_dict[parameter]["max"],avg_value)
                         if avg_status is not False:
@@ -54,7 +54,7 @@ class AlertingControl(warningControl):
                                     print(msg) 
                                 except:
                                     print("Bot Communication failed")
-                    #optional: if you want an alerting when conditions come back to normal
+                    #alerting when conditions come back to normal
                     else:
                         if not self.check_last_log(platform_ID,room_ID,parameter,status):
                             avg_value=requests.get(self.adaptor_url+'/'+platform_ID+'/'+room_ID+'/check_warning?parameter='+parameter+"&time=60").json()
@@ -98,6 +98,7 @@ class AlertingControl(warningControl):
         else:
             return None
 
+    #avoid sending too many notifications, check if the same notification was already sent recently
     def check_last_log(self, platform_ID,room_ID,parameter,status):
         try:
             room=self.logs[platform_ID][room_ID]
@@ -122,8 +123,8 @@ class AlertingControl(warningControl):
 
 if __name__ == '__main__':
     conf=sys.argv[1]
-    clientID="alerting_control"
     c=AlertingControl(conf)
+    clientID=c.conf_content['clientID']
     while not c.setup(clientID):
         print("Try again..")
         time.sleep(10)
