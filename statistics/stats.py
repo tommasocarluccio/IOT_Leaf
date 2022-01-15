@@ -26,25 +26,9 @@ class Stats(Generic_Service):
         self.conf_content = json.load(open(configuration_file,"r"))
         self.serviceURL = self.conf_content['service_catalog']
 
-    def calculateStats(self, json_response):
-        
-        AQI = {
-            "values": [],
-            "field":"field1",
-            "name":"AQI"
-        }
-        temp = {
-            "values": [],
-            "field":"field3",
-            "name":"temp"
-        }
-        hum = {
-            "values": [],
-            "field":"field5",
-            "name":"hum"
-        }
+    def calculateStats(self, parameters_list,json_response):
         resp={}
-        for param in [AQI, temp, hum]:
+        for param in parameters_list:
             for feed in json_response['feeds']:
                 param["values"].append(feed[param["field"]])
 
@@ -92,14 +76,11 @@ class Stats(Generic_Service):
                 if room['room']==room_ID:
                     break
             for field in room['fields']:
-                print(field)
-                #parameters_list.append(ParamDict())
+                parameters_list.append(ParamDict(room['fields'].get(field),field).jsonify())
 
+            respDEF = self.calculateStats(parameters_list,res)
 
-
-            respDEF = self.calculateStats(res)
-
-            NUM_DAYS = 7
+            NUM_DAYS = 1
             avg_lastAQI = 0
             avg_lastTemp = 0
             avg_lastHum = 0
