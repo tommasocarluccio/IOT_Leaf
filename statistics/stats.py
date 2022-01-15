@@ -101,7 +101,7 @@ class Stats(Generic_Service):
 
                     res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
 
-                    resp = self.calculateStats(res)
+                    resp = self.calculateStats(parameters_list,res)
                     for p in parameters_list:
                         respDEF[p['name']]['avg_last']+= resp[p['name']]['avg']
                 
