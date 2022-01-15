@@ -41,12 +41,16 @@ class Stats(Generic_Service):
                 resp[param['name']]['avg'] = param['values'].mean()
                 resp[param['name']]['max'] = param['values'].max()
                 resp[param['name']]['min'] = param['values'].min()
+                resp[param['name']]['avg_last'] = 0
             else:
                 resp[param]['avg'] = 'no_data'
                 resp[param]['max'] = 'no_data'
                 resp[param]['min'] = 'no_data'
 
         return resp
+    def compute_last_avg(self,params_list,body,n_days):
+        for p in parameters_list:
+            body[param['name']]['avg_last']=/= NUM_DAYS
                 
     def GET(self,*uri):
         try:
@@ -82,9 +86,6 @@ class Stats(Generic_Service):
             print(respDEF)
 
             NUM_DAYS = 1
-            avg_lastAQI = 0
-            avg_lastTemp = 0
-            avg_lastHum = 0
 
             try:
                 # query for avgs of last 7 days
@@ -100,13 +101,10 @@ class Stats(Generic_Service):
                     res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
 
                     resp = self.calculateStats(res)
-
-                    avg_lastAQI += resp['AQI']['avg']
-                    avg_lastTemp += resp['temp']['avg']
-                    avg_lastHum += resp['hum']['avg']
-                avg_lastAQI /= NUM_DAYS
-                avg_lastTemp /= NUM_DAYS
-                avg_lastHum /= NUM_DAYS
+                    for p in parameters_list:
+                        respDEF[param['name']]['avg_last']+= resp[param['name']]['avg']
+                
+                self.compute_last_avg(respDEF,NUM_DAYS)    
 
                 # print advice msg
                 if respDEF['AQI']['avg'] > avg_lastAQI:
