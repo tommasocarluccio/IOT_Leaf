@@ -14,7 +14,7 @@ class ParamDict():
         self.name=name
         self.values=[]
     def jsonify(self):
-        return ({"name":self.name,"field":self.field,"values":self.values})
+        return ({self.name:{"field":self.field,"values":self.values}})
 
 class Stats(Generic_Service):
     exposed=True 
@@ -79,6 +79,7 @@ class Stats(Generic_Service):
                 parameters_list.append(ParamDict(room['fields'].get(field),field).jsonify())
 
             respDEF = self.calculateStats(parameters_list,res)
+            print(respDEF)
 
             NUM_DAYS = 1
             avg_lastAQI = 0
@@ -95,11 +96,11 @@ class Stats(Generic_Service):
                     nnow = str(now).split(' ')
                     last_period_date = '_'.join(last).split('.')[0]
                     now = '_'.join(nnow).split('.')[0]
-                    print(last_period_date)
 
                     res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
 
                     resp = self.calculateStats(res)
+
                     avg_lastAQI += resp['AQI']['avg']
                     avg_lastTemp += resp['temp']['avg']
                     avg_lastHum += resp['hum']['avg']
