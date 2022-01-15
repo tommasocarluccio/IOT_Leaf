@@ -79,7 +79,7 @@ class Stats(Generic_Service):
             res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()        
             respDEF = self.calculateStats(res)
 
-            NUM_DAYS = 7
+            NUM_DAYS = 1
             avg_lastAQI = 0
             avg_lastTemp = 0
             avg_lastHum = 0
