@@ -110,7 +110,7 @@ class Stats(Generic_Service):
 
                 last = str(last_period_date).split(' ')
                 now2=now
-                nnow = str(now).split(' ')
+                nnow = str(now2).split(' ')
                 last_period_date = '_'.join(last).split('.')[0]
                 now_str = '_'.join(nnow).split('.')[0]
 
