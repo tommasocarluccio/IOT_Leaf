@@ -109,7 +109,7 @@ class Stats(Generic_Service):
                 for p in parameters_list:
                     respDEF[p['name']]['avg_last']+= resp[p['name']]['avg']
             
-            self.compute_last_avg(parameters_list,,respDEF,NUM_DAYS)    
+            self.compute_last_avg(parameters_list,respDEF,NUM_DAYS)    
 
             # print advice msg
             for p in parameters_list:
