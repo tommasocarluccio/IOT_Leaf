@@ -26,18 +26,16 @@ class Stats(Generic_Service):
         self.conf_content = json.load(open(configuration_file,"r"))
         self.serviceURL = self.conf_content['service_catalog']
 
-    def create_array(self,parameters_list,json_response):
+
+    def calculateStats(self, parameters_list,json_response):
+        resp={}
         for param in parameters_list:
             for feed in json_response['feeds']:
                 param["values"].append(feed[param["field"]])
 
             param['values']=np.array(param['values']).astype(float)
             param['values']=param['values'][~(np.isnan(param['values']))]
-        return parameters_list
 
-    def calculateStats(self, parameters_list):
-        resp={}
-        for param in parameters_list:
             resp[param["name"]]={}
 
             if param['values'].size > 0:
@@ -85,10 +83,8 @@ class Stats(Generic_Service):
                     break
             for field in room['fields']:
                 parameters_list.append(ParamDict(room['fields'].get(field),field).jsonify())
-
-            parameters_list_set=self.create_array(parameters_list,res)
-
-            respDEF = self.calculateStats(parameters_list_set)
+            p_list=parameters_list.copy()
+            respDEF = self.calculateStats(parameters_list,res)
             print(respDEF)
 
             NUM_DAYS = 1
@@ -105,8 +101,8 @@ class Stats(Generic_Service):
                 now = '_'.join(nnow).split('.')[0]
 
                 res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
-                new_list=self.create_array(parameters_list,res)
-                resp = self.calculateStats(new_list)
+
+                resp = self.calculateStats(p_list,res)
                 for p in parameters_list:
                     respDEF[p['name']]['avg_last']+= resp[p['name']]['avg']
             
