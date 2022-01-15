@@ -51,9 +51,9 @@ class OLED():
     def __init__(self,clientID,base_topic,broker_IP,broker_port):
         self.broker_IP=broker_IP
         self.broker_port=broker_port
-        self.temp=0
-        self.hum=0
-        self.aqi=0
+        self.temp=None
+        self.hum=None
+        self.aqi=None
         self.AQI="NONE"
         self.clientID=clientID
         self.topic=base_topic+"/"+self.clientID
