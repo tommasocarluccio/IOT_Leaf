@@ -98,44 +98,44 @@ class Stats(Generic_Service):
                 parameters_list.append(ParamDict(room['fields'].get(field),field).jsonify())
             respDEF = self.calculateStats(parameters_list,res)
 
-            try:
-                for d in range(N):
-                    now = last_period_date
-                    if command=='day':
-                        last_period_date = now + relativedelta(days=-1)
-                    elif command=='week':
-                        last_period_date = now + relativedelta(weeks=-1)
-                    else:
-                        last_period_date = now + relativedelta(months=-1)
+            #try:
+            for d in range(N):
+                now = last_period_date
+                if command=='day':
+                    last_period_date = now + relativedelta(days=-1)
+                elif command=='week':
+                    last_period_date = now + relativedelta(weeks=-1)
+                else:
+                    last_period_date = now + relativedelta(months=-1)
 
-                    last = str(last_period_date).split(' ')
-                    nnow = str(now).split(' ')
-                    last_period_date = '_'.join(last).split('.')[0]
-                    now_str = '_'.join(nnow).split('.')[0]
+                last = str(last_period_date).split(' ')
+                nnow = str(now).split(' ')
+                last_period_date = '_'.join(last).split('.')[0]
+                now_str = '_'.join(nnow).split('.')[0]
 
-                    res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now_str}/{last_period_date}').json()
-                    p_list=[]
-                    
-                    for field in room['fields']:
-                        p_list.append(ParamDict(room['fields'].get(field),field).jsonify())
-
-                    resp = self.calculateStats(p_list,res)
-                    for p in parameters_list:
-                        respDEF[p['name']]['avg_last'] += resp[p['name']]['avg']
+                res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now_str}/{last_period_date}').json()
+                p_list=[]
                 
-                self.compute_last_avg(parameters_list,respDEF,N)    
+                for field in room['fields']:
+                    p_list.append(ParamDict(room['fields'].get(field),field).jsonify())
 
-                # print advice msg
+                resp = self.calculateStats(p_list,res)
                 for p in parameters_list:
-                    avg=respDEF[p['name']]['avg']
-                    avg_last=round(respDEF[p['name']]['avg_last'],2)
-                    element_name=p['name']
-                    if avg > avg_last:
-                        respDEF[p['name']]['Advice'] = f'The average {element_name} {output_command} is higher than the previous {N} {command}s! (avg: {avg_last})'
-                    else:
-                        respDEF[p['name']]['Advice'] = f'The average {element_name} {output_command} is lower than the previous {N} {command}s! (avg: {avg_last})'
-            except Exception as e:
-                print(e)
+                    respDEF[p['name']]['avg_last'] += resp[p['name']]['avg']
+            
+            self.compute_last_avg(parameters_list,respDEF,N)    
+
+            # print advice msg
+            for p in parameters_list:
+                avg=respDEF[p['name']]['avg']
+                avg_last=round(respDEF[p['name']]['avg_last'],2)
+                element_name=p['name']
+                if avg > avg_last:
+                    respDEF[p['name']]['Advice'] = f'The average {element_name} {output_command} is higher than the previous {N} {command}s! (avg: {avg_last})'
+                else:
+                    respDEF[p['name']]['Advice'] = f'The average {element_name} {output_command} is lower than the previous {N} {command}s! (avg: {avg_last})'
+        #except Exception as e:
+            #print(e)
 
         else:
             raise cherrypy.HTTPError(501, "No operation!")
