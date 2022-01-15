@@ -129,7 +129,7 @@ class Stats(Generic_Service):
                 # print advice msg
                 for p in parameters_list:
                     avg=respDEF[p['name']]['avg']
-                    avg_last=roun(respDEF[p['name']]['avg_last'],2)
+                    avg_last=round(respDEF[p['name']]['avg_last'],2)
                     element_name=p['name']
                     if avg > avg_last:
                         respDEF[p['name']]['Advice'] = f'The average {element_name} this {output_command} is higher than the previous {N} {command}s! (avg: {avg_last})'
