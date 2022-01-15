@@ -42,6 +42,7 @@ class Stats(Generic_Service):
                 resp[param['name']]['max'] = param['values'].max()
                 resp[param['name']]['min'] = param['values'].min()
                 resp[param['name']]['avg_last'] = 0
+                resp[param['name']]['Advice']='not enough data'
             else:
                 resp[param]['avg'] = 'no_data'
                 resp[param]['max'] = 'no_data'
@@ -102,29 +103,20 @@ class Stats(Generic_Service):
 
                     resp = self.calculateStats(res)
                     for p in parameters_list:
-                        respDEF[param['name']]['avg_last']+= resp[param['name']]['avg']
+                        respDEF[p['name']]['avg_last']+= resp[p['name']]['avg']
                 
                 self.compute_last_avg(respDEF,NUM_DAYS)    
 
                 # print advice msg
-                if respDEF['AQI']['avg'] > avg_lastAQI:
-                    #add round
-                    AQI_avice = f'The average AQI today is higher than the previous {NUM_DAYS} days! (avg: {avg_lastAQI})'
+                for p in parameters_list:
+
+                    if respDEF[p['name']]['avg'] > respDEF[p['name']]['avg_last']:
+                        respDEF[p['name']['Advice']] = f'The average {p['name']} today is higher than the previous {NUM_DAYS} days! (avg: {round(respDEF[p['name']]['avg_last'],2)})'
                 else:
-                    AQI_avice = f'The average AQI today is lower than the previous {NUM_DAYS} days! (avg: {avg_lastAQI})'
-                if respDEF['temp']['avg'] > avg_lastTemp:
-                    temp_avice = f'The average temperature today is higher than the previous {NUM_DAYS} days! (avg: {avg_lastTemp})'
-                else:
-                    temp_avice = f'The average temperature today is lower than the previous {NUM_DAYS} days! (avg: {avg_lastTemp})'
-                if respDEF['hum']['avg'] > avg_lastHum:
-                    hum_avice = f'The average humidity today is higher than the previous {NUM_DAYS} days! (avg: {avg_lastHum})'
-                else:
-                    hum_avice = f'The average humidity today is lower than the previous {NUM_DAYS} days! (avg: {avg_lastHum})'
+                    respDEF[p['name']['Advice']] = f'The average {p['name']} today is lower than the previous {NUM_DAYS} days! (avg: {round(respDEF[p['name']]['avg_last'],2)})'
+
             except Exception as e:
                 print(e) 
-                AQI_avice = 'not enough data'
-                temp_avice = 'not enough data'
-                hum_avice = 'not enough data'
 
         elif command=="week":
 
@@ -233,10 +225,7 @@ class Stats(Generic_Service):
         else:
             raise cherrypy.HTTPError(501, "No operation!")
 
-        respDEF['AQI']['Advice'] = AQI_avice
-        respDEF['temp']['Advice'] = temp_avice
-        respDEF['hum']['Advice'] = hum_avice
-
+        
         return json.dumps(respDEF)
 
 
