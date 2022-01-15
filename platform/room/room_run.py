@@ -2,7 +2,6 @@ import json
 import requests
 import sys
 import time
-#from lcd import LCDAdapter
 
 class RoomConfiguration(object):
     def __init__(self, filename, platform_ID):
