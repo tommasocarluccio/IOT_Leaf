@@ -51,9 +51,9 @@ class Stats(Generic_Service):
 
         return resp
 
-    def compute_last_avg(self,parameters_list,body,n_days):
+    def compute_last_avg(self,parameters_list,body,n):
         for p in parameters_list:
-            body[p['name']]['avg_last'] /= n_days
+            body[p['name']]['avg_last'] /= n
                 
     def GET(self,*uri):
         try:
@@ -68,8 +68,17 @@ class Stats(Generic_Service):
         except:
             raise cherrypy.HTTPError(400,"Check your request and try again!")
         
-        if command=='day':
-            last_period_date = now + relativedelta(command+'s'=-1)
+        if command in ['day','week','month']:
+            if command=='day':
+                last_period_date = now + relativedelta(days=-1)
+                N = 1
+            elif command=='week'::
+                last_period_date = now + relativedelta(weeks=-1)
+                N = 1
+            else:
+                last_period_date = now + relativedelta(months=-1)
+                N = 1
+
             last = str(last_period_date).split(' ')
             nnow = str(now).split(' ')
             last_period_date_str = '_'.join(last).split('.')[0]
@@ -86,95 +95,44 @@ class Stats(Generic_Service):
                 parameters_list.append(ParamDict(room['fields'].get(field),field).jsonify())
             respDEF = self.calculateStats(parameters_list,res)
 
-            NUM_DAYS = 1
-
             # query for avgs of last 7 days
-            for d in range(NUM_DAYS):
-                now = last_period_date
-                last_period_date = now + relativedelta(days=-1)
-
-                last = str(last_period_date).split(' ')
-                nnow = str(now).split(' ')
-                last_period_date = '_'.join(last).split('.')[0]
-                now = '_'.join(nnow).split('.')[0]
-
-                res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
-                p_list=[]
-                
-                for field in room['fields']:
-                    p_list.append(ParamDict(room['fields'].get(field),field).jsonify())
-
-                resp = self.calculateStats(p_list,res)
-                for p in parameters_list:
-                    respDEF[p['name']]['avg_last']+= resp[p['name']]['avg']
-            
-            self.compute_last_avg(parameters_list,respDEF,NUM_DAYS)    
-
-            # print advice msg
-            for p in parameters_list:
-                avg=respDEF[p['name']]['avg']
-                avg_last=respDEF[p['name']]['avg_last']
-                element_name=p['name']
-
-                if avg > avg_last:
-                    respDEF[p['name']]['Advice'] = f'The average {element_name} this week is higher than the previous {NUM_DAYS} {command}s! (avg: {round(avg_last,2)})'
-                else:
-                    respDEF[p['name']]['Advice'] = f'The average {element_name} today is lower than the previous {NUM_DAYS} {command}s! (avg: {round(avg_last,2)}'
-
-
-
-        elif command=="week":
-
-            last_period_date = now + relativedelta(weeks=-1)
-            last = str(last_period_date).split(' ')
-            nnow = str(now).split(' ')
-            last_period_date = '_'.join(last).split('.')[0]
-            now = '_'.join(nnow).split('.')[0]
-            
-            res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
-            respDEF = self.calculateStats(res)
-
-            NUM_WEEKS = 4
-            avg_lastAQI = 0
-            avg_lastTemp = 0
-            avg_lastHum = 0
-
-            try: 
-                for d in range(NUM_WEEKS):
+            try:
+                for d in range(NUM_DAYS):
                     now = last_period_date
-                    last_period_date = now + relativedelta(weeks=-1)
+                    last_period_date = now + relativedelta(days=-1)
+
                     last = str(last_period_date).split(' ')
                     nnow = str(now).split(' ')
                     last_period_date = '_'.join(last).split('.')[0]
                     now = '_'.join(nnow).split('.')[0]
-                    print(last_period_date)                    
+
                     res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
+                    p_list=[]
+                    
+                    for field in room['fields']:
+                        p_list.append(ParamDict(room['fields'].get(field),field).jsonify())
 
-                    resp = self.calculateStats(res)
-                    avg_lastAQI += resp['AQI']['avg']
-                    avg_lastTemp += resp['temp']['avg']
-                    avg_lastHum += resp['hum']['avg']
-                avg_lastAQI /= NUM_WEEKS
-                avg_lastTemp /= NUM_WEEKS
-                avg_lastHum /= NUM_WEEKS
+                    resp = self.calculateStats(p_list,res)
+                    for p in parameters_list:
+                        respDEF[p['name']]['avg_last']+= resp[p['name']]['avg']
+                
+                self.compute_last_avg(parameters_list,respDEF,N)    
 
-                if respDEF['AQI']['avg'] > avg_lastAQI:
-                    AQI_avice = f'The average AQI this week is higher than the previous {NUM_WEEKS} weeks! (avg: {avg_lastAQI})'
-                else:
-                    AQI_avice = f'The average AQI this week is lower than the previous {NUM_WEEKS} weeks! (avg: {avg_lastAQI})'
-                if respDEF['temp']['avg'] > avg_lastTemp:
-                    temp_avice = f'The average temperature this week is higher than the previous {NUM_WEEKS} weeks! (avg: {avg_lastTemp})'
-                else:
-                    temp_avice = f'The average temperature this week is lower than the previous {NUM_WEEKS} weeks! (avg: {avg_lastTemp})'
-                if respDEF['hum']['avg'] > avg_lastHum:
-                    hum_avice = f'The average humidity this week is higher than the previous {NUM_WEEKS} weeks! (avg: {avg_lastHum})'
-                else:
-                    hum_avice = f'The average humidity this week is lower than the previous {NUM_WEEKS} weeks! (avg: {avg_lastHum})'
-            except:
-                'Could not find enough data'
-                AQI_avice = 'not enough data'
-                temp_avice = 'not enough data'
-                hum_avice = 'not enough data'
+                # print advice msg
+                for p in parameters_list:
+                    avg=respDEF[p['name']]['avg']
+                    avg_last=respDEF[p['name']]['avg_last']
+                    element_name=p['name']
+
+                    if avg > avg_last:
+                        respDEF[p['name']]['Advice'] = f'The average {element_name} this week is higher than the previous {NUM_DAYS} {command}s! (avg: {round(avg_last,2)})'
+                    else:
+                        respDEF[p['name']]['Advice'] = f'The average {element_name} today is lower than the previous {NUM_DAYS} {command}s! (avg: {round(avg_last,2)}'
+            except Exception as e:
+                print(e)
+
+
+       """
 
         elif command=="month":
             last_period_date = now + relativedelta(months=-1)
@@ -227,6 +185,7 @@ class Stats(Generic_Service):
                 AQI_avice = 'not enough data'
                 temp_avice = 'not enough data'
                 hum_avice = 'not enough data'
+        """
         else:
             raise cherrypy.HTTPError(501, "No operation!")
 
