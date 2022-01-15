@@ -50,7 +50,7 @@ class Stats(Generic_Service):
                 resp[param]['min'] = 'no_data'
 
         return resp
-    def compute_last_avg(self,params_list,body,n_days):
+    def compute_last_avg(self,parameters_list,body,n_days):
         for p in parameters_list:
             body[param['name']]['avg_last'] /= NUM_DAYS
                 
