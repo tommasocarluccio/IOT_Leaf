@@ -83,7 +83,6 @@ class Stats(Generic_Service):
                     break
             for field in room['fields']:
                 parameters_list.append(ParamDict(room['fields'].get(field),field).jsonify())
-            p_list=parameters_list.copy()
             respDEF = self.calculateStats(parameters_list,res)
             print(respDEF)
 
@@ -101,6 +100,10 @@ class Stats(Generic_Service):
                 now = '_'.join(nnow).split('.')[0]
 
                 res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
+                p_list=[]
+                
+                for field in room['fields']:
+                    p_list.append(ParamDict(room['fields'].get(field),field).jsonify())
 
                 resp = self.calculateStats(p_list,res)
                 for p in parameters_list:
