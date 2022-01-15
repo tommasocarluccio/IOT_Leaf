@@ -113,9 +113,9 @@ class Stats(Generic_Service):
                     avg_last=respDEF[p['name']]['avg_last']
 
                     if avg > avg_last:
-                        respDEF[p['name']['Advice']] = "ciao"
+                        respDEF[p['name']['Advice']] = f'The average {p['name']} this week is higher than the previous {NUM_WEEKS} weeks!'
                     else:
-                        respDEF[p['name']['Advice']] = "ciao"
+                        respDEF[p['name']['Advice']] = f'The average {p['name']} today is lower than the previous {NUM_DAYS} days!'
 
             except Exception as e:
                 print(e) 
