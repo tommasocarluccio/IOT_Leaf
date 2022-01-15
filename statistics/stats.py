@@ -101,7 +101,7 @@ class Stats(Generic_Service):
                     now = last_period_date
                     if command=='day':
                         last_period_date = now + relativedelta(days=-1)
-                    elif command=='week'::
+                    elif command=='week':
                         last_period_date = now + relativedelta(weeks=-1)
                     else:
                         last_period_date = now + relativedelta(months=-1)
