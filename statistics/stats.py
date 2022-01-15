@@ -73,10 +73,10 @@ class Stats(Generic_Service):
             last_period_date = now + relativedelta(days=-1)
             last = str(last_period_date).split(' ')
             nnow = str(now).split(' ')
-            last_period_date = '_'.join(last).split('.')[0]
-            now = '_'.join(nnow).split('.')[0]
+            last_period_date_str = '_'.join(last).split('.')[0]
+            now_str = '_'.join(nnow).split('.')[0]
 
-            res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()        
+            res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now_str}/{last_period_date_str}').json()        
             respDEF = self.calculateStats(res)
 
             NUM_DAYS = 1
@@ -88,7 +88,7 @@ class Stats(Generic_Service):
                 # query for avgs of last 7 days
                 for d in range(NUM_DAYS):
                     now = last_period_date
-                    last_period_date = now + str(relativedelta(days=-1))
+                    last_period_date = now + relativedelta(days=-1)
 
                     last = str(last_period_date).split(' ')
                     nnow = str(now).split(' ')
