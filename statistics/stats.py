@@ -50,6 +50,7 @@ class Stats(Generic_Service):
                 resp[param]['min'] = 'no_data'
 
         return resp
+
     def compute_last_avg(self,parameters_list,body,n_days):
         for p in parameters_list:
             body[p['name']]['avg_last'] /= n_days
@@ -67,8 +68,8 @@ class Stats(Generic_Service):
         except:
             raise cherrypy.HTTPError(400,"Check your request and try again!")
         
-        if command=="day":
-            last_period_date = now + relativedelta(days=-1)
+        if command=='day':
+            last_period_date = now + relativedelta(command+'s'=-1)
             last = str(last_period_date).split(' ')
             nnow = str(now).split(' ')
             last_period_date_str = '_'.join(last).split('.')[0]
@@ -84,11 +85,9 @@ class Stats(Generic_Service):
             for field in room['fields']:
                 parameters_list.append(ParamDict(room['fields'].get(field),field).jsonify())
             respDEF = self.calculateStats(parameters_list,res)
-            print(respDEF)
 
             NUM_DAYS = 1
 
-            
             # query for avgs of last 7 days
             for d in range(NUM_DAYS):
                 now = last_period_date
@@ -118,9 +117,9 @@ class Stats(Generic_Service):
                 element_name=p['name']
 
                 if avg > avg_last:
-                    respDEF[p['name']]['Advice'] = f'The average {element_name} this week is higher than the previous {NUM_DAYS} weeks! (avg: {round(avg_last,2)})'
+                    respDEF[p['name']]['Advice'] = f'The average {element_name} this week is higher than the previous {NUM_DAYS} {command}s! (avg: {round(avg_last,2)})'
                 else:
-                    respDEF[p['name']]['Advice'] = f'The average {element_name} today is lower than the previous {NUM_DAYS} days! (avg: {round(avg_last,2)}'
+                    respDEF[p['name']]['Advice'] = f'The average {element_name} today is lower than the previous {NUM_DAYS} {command}s! (avg: {round(avg_last,2)}'
 
 
 
