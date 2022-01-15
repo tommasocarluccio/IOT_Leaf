@@ -105,7 +105,7 @@ class Stats(Generic_Service):
                 for field in room['fields']:
                     p_list.append(ParamDict(room['fields'].get(field),field).jsonify())
 
-                resp = self.calculateStats(p_list,res)
+                resp = self.calculateStats(p_list,res,NUM_DAYS)
                 for p in parameters_list:
                     respDEF[p['name']]['avg_last']+= resp[p['name']]['avg']
             
