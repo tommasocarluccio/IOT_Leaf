@@ -111,9 +111,9 @@ class Stats(Generic_Service):
                 for p in parameters_list:
 
                     if respDEF[p['name']]['avg'] > respDEF[p['name']]['avg_last']:
-                        respDEF[p['name']['Advice']] = f'The average {p['name']} today is higher than the previous {NUM_DAYS} days! (avg: {round(respDEF[p['name']]['avg_last'],2)})'
+                        respDEF[p['name']['Advice']] = f'The average {p['name']} today is higher than the previous {NUM_DAYS} days! (avg: {respDEF[p['name']]['avg_last']})'
                 else:
-                    respDEF[p['name']['Advice']] = f'The average {p['name']} today is lower than the previous {NUM_DAYS} days! (avg: {round(respDEF[p['name']]['avg_last'],2)})'
+                    respDEF[p['name']['Advice']] = f'The average {p['name']} today is lower than the previous {NUM_DAYS} days! (avg: {respDEF[p['name']]['avg_last']})'
 
             except Exception as e:
                 print(e) 
