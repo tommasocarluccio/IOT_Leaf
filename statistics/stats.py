@@ -76,7 +76,7 @@ class Stats(Generic_Service):
             elif command=='week':
                 last_period_date = now + relativedelta(weeks=-1)
                 output_command='this week'
-                N = 2
+                N = 1
             else:
                 last_period_date = now + relativedelta(months=-1)
                 output_command='this month'
@@ -135,7 +135,7 @@ class Stats(Generic_Service):
                     else:
                         respDEF[p['name']]['Advice'] = f'The average {element_name} {output_command} is lower than the previous {N} {command}s! (avg: {avg_last})'
             except Exception as e:
-                print(e)
+                print("Can't produce advices")
 
         else:
             raise cherrypy.HTTPError(501, "No operation!")
