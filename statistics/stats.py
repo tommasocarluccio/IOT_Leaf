@@ -98,7 +98,6 @@ class Stats(Generic_Service):
                 parameters_list.append(ParamDict(room['fields'].get(field),field).jsonify())
             respDEF = self.calculateStats(parameters_list,res)
 
-            # query for avgs of last 7 days
             try:
                 for d in range(N):
                     now = last_period_date
@@ -112,9 +111,9 @@ class Stats(Generic_Service):
                     last = str(last_period_date).split(' ')
                     nnow = str(now).split(' ')
                     last_period_date = '_'.join(last).split('.')[0]
-                    now = '_'.join(nnow).split('.')[0]
+                    now_str = '_'.join(nnow).split('.')[0]
 
-                    res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
+                    res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now_str}/{last_period_date}').json()
                     p_list=[]
                     
                     for field in room['fields']:
