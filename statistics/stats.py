@@ -119,8 +119,8 @@ class Stats(Generic_Service):
                     hum_avice = f'The average humidity today is higher than the previous {NUM_DAYS} days! (avg: {avg_lastHum})'
                 else:
                     hum_avice = f'The average humidity today is lower than the previous {NUM_DAYS} days! (avg: {avg_lastHum})'
-            except: 
-                'Could not find enough data'
+            except Exception as e:
+                print(e) 
                 AQI_avice = 'not enough data'
                 temp_avice = 'not enough data'
                 hum_avice = 'not enough data'
