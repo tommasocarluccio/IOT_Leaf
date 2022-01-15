@@ -98,6 +98,7 @@ class Stats(Generic_Service):
                     nnow = str(now).split(' ')
                     last_period_date = '_'.join(last).split('.')[0]
                     now = '_'.join(nnow).split('.')[0]
+                    print("ciao")
 
                     res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
 
