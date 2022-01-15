@@ -83,7 +83,7 @@ class Stats(Generic_Service):
                 N = 1
 
             last = str(last_period_date).split(' ')
-            nnow = str(now).split(' ')
+            nnow = str(now.copy()).split(' ')
             last_period_date_str = '_'.join(last).split('.')[0]
             now_str = '_'.join(nnow).split('.')[0]
 
@@ -109,7 +109,7 @@ class Stats(Generic_Service):
                     last_period_date = now + relativedelta(months=-1)
 
                 last = str(last_period_date).split(' ')
-                nnow = str(now).split(' ')
+                nnow = str(now.copy()).split(' ')
                 last_period_date = '_'.join(last).split('.')[0]
                 now_str = '_'.join(nnow).split('.')[0]
 
