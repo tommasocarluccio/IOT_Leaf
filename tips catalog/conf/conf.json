@@ -1,0 +1,7 @@
+{
+    "description": "Welcome to the tips catalog",
+    "service_catalog": "http://192.168.1.130:8080/service_catalog",
+    "service_name": "tips_catalog",
+    "IP_address": "192.168.1.130",
+    "IP_port": 8099
+}
