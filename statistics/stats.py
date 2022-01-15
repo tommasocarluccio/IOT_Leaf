@@ -88,7 +88,7 @@ class Stats(Generic_Service):
                 # query for avgs of last 7 days
                 for d in range(NUM_DAYS):
                     now = last_period_date
-                    last_period_date = now + relativedelta(days=-1)
+                    last_period_date = now + str(relativedelta(days=-1))
 
                     last = str(last_period_date).split(' ')
                     nnow = str(now).split(' ')
