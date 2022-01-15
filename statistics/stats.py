@@ -50,7 +50,7 @@ class Stats(Generic_Service):
         return resp
     def compute_last_avg(self,params_list,body,n_days):
         for p in parameters_list:
-            body[param['name']]['avg_last']=/= NUM_DAYS
+            body[param['name']]['avg_last'] /= NUM_DAYS
                 
     def GET(self,*uri):
         try:
