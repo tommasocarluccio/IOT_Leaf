@@ -121,8 +121,7 @@ class OLED():
             
 
     def initializeDisplay(self):
-        RST = None     # on the PiOLED this pin isnt used
-        # Note the following are only used with SPI:
+        RST = None   
         DC = 23
         SPI_PORT = 0
         SPI_DEVICE = 0
