@@ -26,7 +26,7 @@ class Stats(Generic_Service):
         self.conf_content = json.load(open(configuration_file,"r"))
         self.serviceURL = self.conf_content['service_catalog']
 
-    def create_array(self,params_list):
+    def create_array(self,parameters_list):
         for param in parameters_list:
             for feed in json_response['feeds']:
                 param["values"].append(feed[param["field"]])
