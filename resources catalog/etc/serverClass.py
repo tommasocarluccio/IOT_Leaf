@@ -127,7 +127,7 @@ class ResourceService(Generic_Service):
    
     def removePlatform(self,platform_ID):
         notFound=True
-        for i in self.db_content['platforms_list']:
+        for i in range(len(self.db_content['platforms_list'])):
             if self.db_content['platforms_list'][i]['platform_ID']==platform_ID:
                 self.db_content['platforms_list'].pop(i)
                 notFound=False
