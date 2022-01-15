@@ -101,7 +101,6 @@ class Stats(Generic_Service):
             #try:
             for d in range(N):
                 now = last_period_date
-                print(now)
                 if command=='day':
                     last_period_date = now + relativedelta(days=-1)
                 elif command=='week':
@@ -110,8 +109,8 @@ class Stats(Generic_Service):
                     last_period_date = now + relativedelta(months=-1)
 
                 last = str(last_period_date).split(' ')
+                now2=now
                 nnow = str(now).split(' ')
-                print(now)
                 last_period_date = '_'.join(last).split('.')[0]
                 now_str = '_'.join(nnow).split('.')[0]
 
