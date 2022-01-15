@@ -109,12 +109,11 @@ class Stats(Generic_Service):
                     last_period_date = now + relativedelta(months=-1)
 
                 last = str(last_period_date).split(' ')
-                now2=now
-                nnow = str(now2).split(' ')
-                last_period_date = '_'.join(last).split('.')[0]
+                nnow = str(now).split(' ')
+                last_period_date_str = '_'.join(last).split('.')[0]
                 now_str = '_'.join(nnow).split('.')[0]
 
-                res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now_str}/{last_period_date}').json()
+                res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now_str}/{last_period_date_str}').json()
                 p_list=[]
                 
                 for field in room['fields']:
