@@ -19,6 +19,7 @@ class LeafBot(Generic_Service):
         self.conf_content=json.load(open(configuration_file,"r"))
         self.serviceURL=self.conf_content['service_catalog']
         self.clientURL=requests.get(self.serviceURL+'/clients_catalog/public').json()['url']
+        print(self.clientURL)
 
         self.api_coordinates_url='http://api.waqi.info/feed/geo:'
         self.api_city_url='http://api.waqi.info/feed/'
@@ -339,7 +340,6 @@ class LeafBot(Generic_Service):
         room_name=self.get_room_name(chat_ID, user['room_ID'])
         output=f'Statistics for {room_name} for the last {period}\n'
         log=requests.get(statisticsURL+'/'+user['platform_ID']+'/'+user['room_ID']+'/'+period).json()
-
         for key, value in log.items():
             if key=='temp':
                 key='temperature'
@@ -354,10 +354,6 @@ class LeafBot(Generic_Service):
             except:
                 unit=''
             output+=emo+key+'\n'
-            if value['avg']=='no_data':
-                output+='\t'+'Average'+': '+value['avg']+'\n'
-            else:
-                output+='\t'+'Average'+': '+str(round(value['avg'], 2))+' '+unit+'\n'
             if value['min']=='no_data':
                 output+='\t'+'Min'+': '+value['min']+'\n'
             else:
@@ -366,6 +362,13 @@ class LeafBot(Generic_Service):
                 output+='\t'+'Max'+': '+value['max']+'\n'
             else:
                 output+='\t'+'Max'+': '+str(round(value['max'], 2))+' '+unit+'\n'
+            if value['avg']=='no_data':
+                output+='\t'+'Average'+': '+value['avg']+'\n'
+            else:
+                if value['Advice']!="not enough data":
+                    output+='\t'+'Average'+': '+str(round(value['avg'], 2))+' '+unit+'\n' + ":memo:"+value['Advice']+"\n\n"
+                else:
+                    output+='\t'+'Average'+': '+str(round(value['avg'], 2))+' '+unit+'\n'
         return output
      
     def get_room_name(self, chat_ID, room_ID):
