@@ -1,11 +1,11 @@
 {
     "service_catalog": "http://192.168.1.130:8080/service_catalog",
     "room_info": {
-        "room_ID": "",
-        "room_name": "",
-        "connection_flag": false,
+        "room_ID": "room_7",
+        "room_name": "Prova",
+        "connection_flag": true,
         "devices": [],
-        "connection_timestamp": null
+        "connection_timestamp": 1642246797.1157234
     },
-    "platform_ID": ""
+    "platform_ID": "Leaf_002"
 }

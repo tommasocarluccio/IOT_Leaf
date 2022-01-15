@@ -15,7 +15,7 @@
                 },
                 "thingspeak": [
                     {
-                        "room": "room_1",
+                        "room": "room_7",
                         "channelID": "1021300",
                         "write_key": "58EQ7229TU9O5RXP",
                         "read_key": "D27OY6P75NOTG7UA",
@@ -42,7 +42,8 @@
                 "chatIDs": [
                     70387018,
                     1013178107,
-                    306741166
+                    306741166,
+                    102883167
                 ]
             }
         },

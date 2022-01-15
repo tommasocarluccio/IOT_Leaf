@@ -5,49 +5,13 @@
             "platform_ID": "Leaf_002",
             "platform_name": "My Home",
             "warning": true,
-            "room_cnt": 6,
+            "room_cnt": 7,
             "location": null,
             "coord": {
-                "lat": 45.0314278,
-                "long": 7.6517438
+                "lat": 45.470501,
+                "long": 9.19746075
             },
             "rooms": [
-                {
-                    "room_ID": "room_1",
-                    "connection_flag": true,
-                    "preferences": {
-                        "optimal": {
-                            "temperature": {
-                                "min": 20,
-                                "max": 22
-                            },
-                            "humidity": {
-                                "min": 40,
-                                "max": 60
-                            },
-                            "AQI": {
-                                "min": 0,
-                                "max": 650
-                            }
-                        },
-                        "thresholds": {
-                            "temperature": {
-                                "min": 20.0,
-                                "max": 23.0
-                            },
-                            "humidity": {
-                                "min": 40.0,
-                                "max": 70.0
-                            },
-                            "AQI": {
-                                "min": 0,
-                                "max": 650
-                            }
-                        },
-                        "room_name": "Bedroom"
-                    },
-                    "connection_timestamp": 1639600205.3839352
-                },
                 {
                     "room_ID": "room_6",
                     "connection_flag": false,
@@ -68,8 +32,8 @@
                         },
                         "thresholds": {
                             "temperature": {
-                                "min": 16,
-                                "max": 25
+                                "min": 20.0,
+                                "max": 22.0
                             },
                             "humidity": {
                                 "min": 40,
@@ -83,6 +47,42 @@
                         "room_name": "Kitchen"
                     },
                     "connection_timestamp": 1642179545.4941387
+                },
+                {
+                    "room_ID": "room_7",
+                    "connection_flag": true,
+                    "preferences": {
+                        "optimal": {
+                            "temperature": {
+                                "min": 20,
+                                "max": 22
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 60
+                            },
+                            "AQI": {
+                                "min": 0,
+                                "max": 650
+                            }
+                        },
+                        "thresholds": {
+                            "temperature": {
+                                "min": 20.0,
+                                "max": 22.0
+                            },
+                            "humidity": {
+                                "min": 40,
+                                "max": 70
+                            },
+                            "AQI": {
+                                "min": 0,
+                                "max": 650
+                            }
+                        },
+                        "room_name": "Bedroom"
+                    },
+                    "connection_timestamp": 1642246797.1157234
                 }
             ],
             "creation_date": "15/12/2021 21:29"
