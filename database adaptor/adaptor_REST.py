@@ -44,7 +44,6 @@ class AdaptorREST():
         elif command=='station':
             thingspeak_url="{}/channels/{}/feeds.json?metadata=true".format(self.adaptor.thingspeak_url,channelID)
             result=requests.get(thingspeak_url).json()
-            print(result)
             return json.dumps(result['channel']['metadata'])
 
         elif command=="check_warning":
