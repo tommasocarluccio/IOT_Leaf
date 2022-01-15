@@ -71,12 +71,15 @@ class Stats(Generic_Service):
         if command in ['day','week','month']:
             if command=='day':
                 last_period_date = now + relativedelta(days=-1)
+                output_command='today'
                 N = 1
             elif command=='week':
                 last_period_date = now + relativedelta(weeks=-1)
+                output_command='this week'
                 N = 1
             else:
                 last_period_date = now + relativedelta(months=-1)
+                output_command='this month'
                 N = 1
 
             last = str(last_period_date).split(' ')
@@ -126,13 +129,12 @@ class Stats(Generic_Service):
                 # print advice msg
                 for p in parameters_list:
                     avg=respDEF[p['name']]['avg']
-                    avg_last=respDEF[p['name']]['avg_last']
+                    avg_last=roun(respDEF[p['name']]['avg_last'],2)
                     element_name=p['name']
-
                     if avg > avg_last:
-                        respDEF[p['name']]['Advice'] = f'The average {element_name} this {command if command!='day' else 'today'} is higher than the previous {N} {command}s! (avg:)'
+                        respDEF[p['name']]['Advice'] = f'The average {element_name} this {output_command} is higher than the previous {N} {command}s! (avg: {avg_last})'
                     else:
-                        respDEF[p['name']]['Advice'] = f'The average {element_name} this {command if command!='day' else 'today'} is lower than the previous {N} {command}s! (avg: '
+                        respDEF[p['name']]['Advice'] = f'The average {element_name} this {output_command} is lower than the previous {N} {command}s! (avg: {avg_last})'
             except Exception as e:
                 print(e)
 
