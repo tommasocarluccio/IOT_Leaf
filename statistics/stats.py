@@ -130,9 +130,9 @@ class Stats(Generic_Service):
                     element_name=p['name']
 
                     if avg > avg_last:
-                        respDEF[p['name']]['Advice'] = f'The average {element_name} this {command if command!='day' else 'today'} is higher than the previous {N} {command}s! (avg: {round(avg_last,2)})'
+                        respDEF[p['name']]['Advice'] = f'The average {element_name} this {command if command!='day' else 'today'} is higher than the previous {N} {command}s! (avg:)'
                     else:
-                        respDEF[p['name']]['Advice'] = f'The average {element_name} this {command if command!='day' else 'today'} is lower than the previous {N} {command}s! (avg: {round(avg_last,2)}'
+                        respDEF[p['name']]['Advice'] = f'The average {element_name} this {command if command!='day' else 'today'} is lower than the previous {N} {command}s! (avg: '
             except Exception as e:
                 print(e)
 
