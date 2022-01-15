@@ -93,8 +93,8 @@ class AdaptorREST():
             command=uri[2]
             try:
                 clients_catalog=self.adaptor.retrieveService('clients_catalog')
+                print(clients_catalog)
                 clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+'/'+room_ID+"/thingspeak").json()
-                print(clients_result)
                 client=next((item for item in clients_result if item["room"] == room_ID), False)
                 channelID=client["channelID"]
                 put_key=client["put_key"]
