@@ -86,9 +86,9 @@ class Stats(Generic_Service):
             for field in room['fields']:
                 parameters_list.append(ParamDict(room['fields'].get(field),field).jsonify())
 
-            parameters_list=self.create_array(parameters_list,res)
+            parameters_list_set=self.create_array(parameters_list,res)
 
-            respDEF = self.calculateStats(parameters_list)
+            respDEF = self.calculateStats(parameters_list_set)
             print(respDEF)
 
             NUM_DAYS = 1
@@ -105,7 +105,7 @@ class Stats(Generic_Service):
                 now = '_'.join(nnow).split('.')[0]
 
                 res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
-                new_list=self.create_array(parameters_list.copy(),res)
+                new_list=self.create_array(parameters_list,res)
                 resp = self.calculateStats(new_list)
                 for p in parameters_list:
                     respDEF[p['name']]['avg_last']+= resp[p['name']]['avg']
