@@ -76,7 +76,7 @@ class Stats(Generic_Service):
             elif command=='week':
                 last_period_date = now + relativedelta(weeks=-1)
                 output_command='this week'
-                N = 1
+                N = 2
             else:
                 last_period_date = now + relativedelta(months=-1)
                 output_command='this month'
