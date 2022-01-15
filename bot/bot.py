@@ -298,9 +298,12 @@ class LeafBot(Generic_Service):
                     unit=self.unit_dict[value[0]]
                 except:
                     unit=''
-                if self.check_values(chat_ID, room_ID, value[0], value[1]):
-                    warning_emo=":warning:"
-                else:
+                try:
+                    if self.check_values(chat_ID, room_ID, value[0], value[1]):
+                        warning_emo=":warning:"
+                    else:
+                        warning_emo=""
+                except:
                     warning_emo=""
                 output+=emo+' '+value[0]+': '+str(value[1])+' '+unit+'  '+warning_emo+'\n'
         return output
@@ -324,7 +327,6 @@ class LeafBot(Generic_Service):
     def get_home_measures(self, chat_ID):
         user=next((item for item in self.users_data['users'] if item["chat_ID"] == chat_ID), False)
         rooms_list=requests.get(self.clientURL+'/associated_rooms/'+user['platform_ID']+'/thingspeak').json()
-        print(f"rooms_list: {rooms_list}")
         platform_name=self.get_platform_name(chat_ID, user["platform_ID"])
         output=f':house:Current condition in {platform_name}:\n\n'
         for room in rooms_list:
