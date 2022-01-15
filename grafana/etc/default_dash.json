@@ -49,7 +49,7 @@
             "decimals": 0,
             "displayName": "AQI",
             "mappings": [],
-            "max": 400,
+            "max": 900,
             "min": 0,
             "thresholds": {
               "mode": "absolute",
@@ -60,23 +60,11 @@
                 },
                 {
                   "color": "yellow",
-                  "value": 50
-                },
-                {
-                  "color": "semi-dark-orange",
-                  "value": 100
+                  "value": 300
                 },
                 {
                   "color": "dark-red",
-                  "value": 150
-                },
-                {
-                  "color": "dark-purple",
-                  "value": 200
-                },
-                {
-                  "color": "#332503",
-                  "value": 300
+                  "value": 600
                 }
               ]
             },
@@ -85,8 +73,8 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 8,
-          "w": 4,
+          "h": 11,
+          "w": 8,
           "x": 0,
           "y": 1
         },
@@ -188,9 +176,9 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 8,
-          "w": 4,
-          "x": 4,
+          "h": 11,
+          "w": 8,
+          "x": 8,
           "y": 1
         },
         "id": 9,
@@ -291,9 +279,9 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 8,
-          "w": 4,
-          "x": 8,
+          "h": 11,
+          "w": 8,
+          "x": 16,
           "y": 1
         },
         "id": 27,
@@ -461,10 +449,10 @@
           ]
         },
         "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 12,
-          "y": 1
+          "h": 9,
+          "w": 13,
+          "x": 0,
+          "y": 12
         },
         "id": 22,
         "options": {
@@ -523,7 +511,6 @@
             }
           }
         ],
-        "transparent": true,
         "type": "timeseries"
       },
       {
@@ -534,9 +521,9 @@
               "mode": "thresholds"
             },
             "custom": {
-              "axisLabel": "",
+              "axisLabel": "AQI",
               "axisPlacement": "left",
-              "axisSoftMax": 400,
+              "axisSoftMax": 900,
               "axisSoftMin": 0,
               "barAlignment": 0,
               "drawStyle": "line",
@@ -553,7 +540,7 @@
               "scaleDistribution": {
                 "type": "linear"
               },
-              "showPoints": "auto",
+              "showPoints": "always",
               "spanNulls": false,
               "stacking": {
                 "group": "A",
@@ -575,23 +562,11 @@
                 },
                 {
                   "color": "yellow",
-                  "value": 50
-                },
-                {
-                  "color": "semi-dark-orange",
-                  "value": 100
+                  "value": 300
                 },
                 {
                   "color": "dark-red",
-                  "value": 150
-                },
-                {
-                  "color": "dark-purple",
-                  "value": 200
-                },
-                {
-                  "color": "#332503",
-                  "value": 300
+                  "value": 600
                 }
               ]
             },
@@ -601,9 +576,9 @@
         },
         "gridPos": {
           "h": 9,
-          "w": 10,
-          "x": 0,
-          "y": 9
+          "w": 11,
+          "x": 13,
+          "y": 12
         },
         "id": 24,
         "options": {
@@ -658,7 +633,26 @@
             }
           }
         ],
-        "transparent": true,
+        "transformations": [
+          {
+            "id": "filterByValue",
+            "options": {
+              "filters": [
+                {
+                  "config": {
+                    "id": "equal",
+                    "options": {
+                      "value": 0
+                    }
+                  },
+                  "fieldName": "AQI"
+                }
+              ],
+              "match": "any",
+              "type": "exclude"
+            }
+          }
+        ],
         "type": "timeseries"
       },
       {
@@ -673,7 +667,18 @@
               "filterable": false,
               "minWidth": 1
             },
-            "mappings": [],
+            "mappings": [
+              {
+                "options": {
+                  "null": {
+                    "color": "purple",
+                    "index": 0,
+                    "text": "No value"
+                  }
+                },
+                "type": "value"
+              }
+            ],
             "thresholds": {
               "mode": "absolute",
               "steps": [
@@ -705,31 +710,19 @@
                         "value": null
                       },
                       {
-                        "color": "dark-yellow",
-                        "value": 50
-                      },
-                      {
-                        "color": "dark-orange",
-                        "value": 100
+                        "color": "yellow",
+                        "value": 300
                       },
                       {
                         "color": "dark-red",
-                        "value": 150
-                      },
-                      {
-                        "color": "dark-purple",
-                        "value": 200
-                      },
-                      {
-                        "color": "#332503",
-                        "value": 300
+                        "value": 600
                       }
                     ]
                   }
                 },
                 {
                   "id": "custom.width",
-                  "value": 85
+                  "value": 122
                 }
               ]
             },
@@ -769,7 +762,7 @@
                 },
                 {
                   "id": "custom.width",
-                  "value": 109
+                  "value": 141
                 }
               ]
             },
@@ -809,7 +802,19 @@
                 },
                 {
                   "id": "custom.width",
-                  "value": 104
+                  "value": 223
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Time"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 385
                 }
               ]
             }
@@ -817,9 +822,9 @@
         },
         "gridPos": {
           "h": 9,
-          "w": 7,
-          "x": 10,
-          "y": 9
+          "w": 12,
+          "x": 0,
+          "y": 21
         },
         "id": 6,
         "options": {
@@ -850,17 +855,17 @@
               {
                 "selector": "field1",
                 "text": "AQI",
-                "type": "number"
+                "type": "string"
               },
               {
                 "selector": "field3",
                 "text": "Temperature",
-                "type": "number"
+                "type": "string"
               },
               {
                 "selector": "field5",
                 "text": "Humidity",
-                "type": "number"
+                "type": "string"
               }
             ],
             "csv_options": {
@@ -910,26 +915,6 @@
                 {
                   "color": "green",
                   "value": null
-                },
-                {
-                  "color": "yellow",
-                  "value": 50
-                },
-                {
-                  "color": "semi-dark-orange",
-                  "value": 100
-                },
-                {
-                  "color": "dark-red",
-                  "value": 150
-                },
-                {
-                  "color": "dark-purple",
-                  "value": 200
-                },
-                {
-                  "color": "#332503",
-                  "value": 300
                 }
               ]
             },
@@ -968,24 +953,12 @@
                         "value": null
                       },
                       {
-                        "color": "dark-yellow",
-                        "value": 50
-                      },
-                      {
-                        "color": "dark-orange",
-                        "value": 100
+                        "color": "yellow",
+                        "value": 300
                       },
                       {
                         "color": "dark-red",
-                        "value": 120
-                      },
-                      {
-                        "color": "dark-purple",
-                        "value": 200
-                      },
-                      {
-                        "color": "#332503",
-                        "value": 300
+                        "value": 600
                       }
                     ]
                   }
@@ -1032,9 +1005,9 @@
         },
         "gridPos": {
           "h": 9,
-          "w": 7,
-          "x": 17,
-          "y": 9
+          "w": 12,
+          "x": 12,
+          "y": 21
         },
         "id": 25,
         "options": {
@@ -1047,7 +1020,6 @@
               "mean"
             ],
             "fields": "",
-            "limit": 3,
             "values": false
           },
           "text": {
@@ -1128,10 +1100,10 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 7,
-          "w": 6,
+          "h": 10,
+          "w": 12,
           "x": 0,
-          "y": 18
+          "y": 30
         },
         "id": 20,
         "options": {
@@ -1213,10 +1185,10 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 7,
-          "w": 7,
-          "x": 6,
-          "y": 18
+          "h": 10,
+          "w": 12,
+          "x": 12,
+          "y": 30
         },
         "id": 18,
         "options": {
@@ -1294,8 +1266,7 @@
     "timezone": "",
     "title": "",
     "uid": "",
-    "version": 12,
+    "version": 1,
     "weekStart": ""
   }
-		
-}
+}		
