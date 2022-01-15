@@ -14,7 +14,7 @@ class ParamDict():
         self.name=name
         self.values=[]
     def jsonify(self):
-        return ({self.name:{"field":self.field,"values":self.values}})
+        return (self.name:{"field":self.field,"values":self.values})
 
 class Stats(Generic_Service):
     exposed=True 
