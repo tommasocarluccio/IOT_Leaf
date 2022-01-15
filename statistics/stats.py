@@ -72,11 +72,11 @@ class Stats(Generic_Service):
             if command=='day':
                 last_period_date = now + relativedelta(days=-1)
                 output_command='today'
-                N = 1
+                N = 3
             elif command=='week':
                 last_period_date = now + relativedelta(weeks=-1)
                 output_command='this week'
-                N = 1
+                N = 2
             else:
                 last_period_date = now + relativedelta(months=-1)
                 output_command='this month'
