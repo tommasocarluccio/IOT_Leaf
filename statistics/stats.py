@@ -88,40 +88,38 @@ class Stats(Generic_Service):
 
             NUM_DAYS = 1
 
-            try:
-                # query for avgs of last 7 days
-                for d in range(NUM_DAYS):
-                    now = last_period_date
-                    last_period_date = now + relativedelta(days=-1)
+            
+            # query for avgs of last 7 days
+            for d in range(NUM_DAYS):
+                now = last_period_date
+                last_period_date = now + relativedelta(days=-1)
 
-                    last = str(last_period_date).split(' ')
-                    nnow = str(now).split(' ')
-                    last_period_date = '_'.join(last).split('.')[0]
-                    now = '_'.join(nnow).split('.')[0]
-                    print("ciao")
+                last = str(last_period_date).split(' ')
+                nnow = str(now).split(' ')
+                last_period_date = '_'.join(last).split('.')[0]
+                now = '_'.join(nnow).split('.')[0]
 
-                    res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
+                res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now}/{last_period_date}').json()
 
-                    resp = self.calculateStats(parameters_list,res)
-                    for p in parameters_list:
-                        respDEF[p['name']]['avg_last']+= resp[p['name']]['avg']
-                
-                self.compute_last_avg(respDEF,NUM_DAYS)    
-
-                # print advice msg
+                resp = self.calculateStats(parameters_list,res)
                 for p in parameters_list:
-                    avg=respDEF[p['name']]['avg']
-                    avg_last=respDEF[p['name']]['avg_last']
-                    element_name=p['name']
-                    print(element_name)
+                    respDEF[p['name']]['avg_last']+= resp[p['name']]['avg']
+            
+            self.compute_last_avg(respDEF,NUM_DAYS)    
 
-                    if avg > avg_last:
-                        respDEF[p['name']['Advice']] = f'The average this week is higher than the previous {NUM_WEEKS} weeks! (avg: {avg_last})'
-                    else:
-                        respDEF[p['name']['Advice']] = f'The average today is lower than the previous {NUM_DAYS} days! (avg: {avg_last})'
+            # print advice msg
+            for p in parameters_list:
+                avg=respDEF[p['name']]['avg']
+                avg_last=respDEF[p['name']]['avg_last']
+                element_name=p['name']
+                print(element_name)
 
-            except Exception as e:
-                print(e) 
+                if avg > avg_last:
+                    respDEF[p['name']['Advice']] = f'The average this week is higher than the previous {NUM_WEEKS} weeks! (avg: {avg_last})'
+                else:
+                    respDEF[p['name']['Advice']] = f'The average today is lower than the previous {NUM_DAYS} days! (avg: {avg_last})'
+
+
 
         elif command=="week":
 
