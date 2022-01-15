@@ -96,9 +96,9 @@ class OLED():
                     #self.draw.text((self.x+6, self.top+16),    str("Hum.")+ "    " + str(value)+unit,  font=self.font, fill=255)
                 if(parameter=="AQI"):
                     self.aqi=round(value,2)
-                    if(value <=400):
+                    if(value <=300):
                         self.AQI="GOOD"
-                    elif(value>400 and value <=650):
+                    elif(value>300 and value <=650):
                         self.AQI="BAD"
                     elif(value>650):
                         self.AQI="UNSAFE"
