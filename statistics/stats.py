@@ -26,7 +26,7 @@ class Stats(Generic_Service):
         self.conf_content = json.load(open(configuration_file,"r"))
         self.serviceURL = self.conf_content['service_catalog']
 
-    def create_array(self,parameters_list):
+    def create_array(self,parameters_list,json_response):
         for param in parameters_list:
             for feed in json_response['feeds']:
                 param["values"].append(feed[param["field"]])
@@ -35,7 +35,7 @@ class Stats(Generic_Service):
             param['values']=param['values'][~(np.isnan(param['values']))]
         return parameters_list
 
-    def calculateStats(self, parameters_list,json_response):
+    def calculateStats(self, parameters_list):
         resp={}
         for param in parameters_list:
             resp[param["name"]]={}
@@ -86,9 +86,9 @@ class Stats(Generic_Service):
             for field in room['fields']:
                 parameters_list.append(ParamDict(room['fields'].get(field),field).jsonify())
 
-            parameters_list=self.create_array(parameters_list)
+            parameters_list=self.create_array(parameters_list,res)
 
-            respDEF = self.calculateStats(parameters_list,res)
+            respDEF = self.calculateStats(parameters_list)
             print(respDEF)
 
             NUM_DAYS = 1
