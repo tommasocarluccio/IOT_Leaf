@@ -8,6 +8,14 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta 
 from etc.generic_service import *
 
+class ParamDict():
+    def __init__(self, name, field):
+        self.field=field
+        self.name=name
+        self.values=[]
+    def jsonify(self):
+        return ({"name":self.name,"field":self.field,"values":self.values})
+
 class Stats(Generic_Service):
     exposed=True 
 
@@ -76,10 +84,22 @@ class Stats(Generic_Service):
             last_period_date_str = '_'.join(last).split('.')[0]
             now_str = '_'.join(nnow).split('.')[0]
 
-            res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now_str}/{last_period_date_str}').json()        
+            res = requests.get(f'{adaptorURL}/{platform_ID}/{room_ID}/period/{now_str}/{last_period_date_str}').json()
+            clients_catalog=self.retrieveService('clients_catalog')
+            clients_result=requests.get(clients_catalog['url']+"/info/"+platform_ID+"/thingspeak").json()
+            parameters_list=[]
+            for room in clients_result:
+                if room['room']==room_ID:
+                    break
+            for field in room['fields']:
+                print(field)
+                #parameters_list.append(ParamDict())
+
+
+
             respDEF = self.calculateStats(res)
 
-            NUM_DAYS = 1
+            NUM_DAYS = 7
             avg_lastAQI = 0
             avg_lastTemp = 0
             avg_lastHum = 0
@@ -108,6 +128,7 @@ class Stats(Generic_Service):
 
                 # print advice msg
                 if respDEF['AQI']['avg'] > avg_lastAQI:
+                    #add round
                     AQI_avice = f'The average AQI today is higher than the previous {NUM_DAYS} days! (avg: {avg_lastAQI})'
                 else:
                     AQI_avice = f'The average AQI today is lower than the previous {NUM_DAYS} days! (avg: {avg_lastAQI})'
