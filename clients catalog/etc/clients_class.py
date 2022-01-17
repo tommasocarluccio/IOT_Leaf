@@ -70,6 +70,7 @@ class PlatformsCatalog():
 
     def remove_all_rooms(self,platform_ID):
         platform=self.find_platform(platform_ID)
+        platform['specs']['chatIDs'].clear()
         for spec in platform['specs']['thingspeak']:
             self.removeRoom(platform_ID,spec['room'])
 
