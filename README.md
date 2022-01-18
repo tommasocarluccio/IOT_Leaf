@@ -8,6 +8,9 @@
 
 Source code for the project ***Leaf***🌱, a low-cost IoT system developed for monitoring the indoor air quality and conditions. 
 
+<img src="https://github.com/tommasocarluccio/IOT_Leaf/blob/develop/documents/leaf_logo.png
+" alt="poli_logo" width="200"/>
+
 Video promo: https://www.youtube.com/watch?v=uD7t_eonkQc
 
 Video demo: https://www.youtube.com/watch?v=qpY-RZPQCd0
