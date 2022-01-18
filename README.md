@@ -34,14 +34,13 @@ Eventually, services communications are based on HTTP REST and MQTT protocols, e
 
 Each software component is in charge of some specific functionalities only, following the micro-services approach.
 
-#### Catalogue
+#### Catalog
 
 The main components are:
 - **Service Catalog**, for registering and retrieving services information
 - **Clients Catalog**, storing information concerning the formally deployed platforms and registered users
 - **Profiles Catalog**, where preferences set by the user referred to platforms are collected
 - **Resources Catalog**, tracking all the present and available devices (i.e. sensors, LED, display) following a hierarchical structure according to platforms and rooms
-- **Tips Catalog**, exposing useful tips for the final user
 
 #### Controls
 
@@ -60,7 +59,8 @@ This section is in charge of allowing the physical platform to communicate with 
 
 #### Database
 
-Thingspeak has been implemented for storing historical data. However, services and final user interact with an intermediary element: the **Database Adaptor**.
+- **Database Adaptor**, linking Thingspeak (for storing historical data) with the other system services.
+- **Tips**, exposing useful tips for the final user.
 
 #### User interface
 
