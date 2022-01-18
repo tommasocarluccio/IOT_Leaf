@@ -6,7 +6,7 @@
 
 > **Programming for IoT applications (01QWRBH) 2020-2021**
 
-<img src="https://github.com/tommasocarluccio/IOT_Leaf/blob/develop/documents/leaf_logo.png" alt="leaf_logo" width="200"/>
+<img src="https://github.com/tommasocarluccio/IOT_Leaf/blob/develop/documents/leaf_logo.png" alt="leaf_logo" width="150"/>
 
 Source code for the project ***Leaf***🌱, a low-cost IoT system developed for monitoring the indoor air quality and conditions. 
 
