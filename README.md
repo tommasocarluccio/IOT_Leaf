@@ -6,6 +6,10 @@
 > **Programming for IoT applications (01QWRBH) 2020-2021**
 
 Source code for the project ***Leaf***🌱, a low-cost IoT system developed for monitoring the indoor air quality and conditions. 
+
+Video promo: https://www.youtube.com/watch?v=uD7t_eonkQc
+video demo: https://www.youtube.com/watch?v=qpY-RZPQCd0
+
 ### Key Features
 - Microservices-based architecture
 - Hardware kit with sensor network
