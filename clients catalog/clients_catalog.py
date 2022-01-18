@@ -107,7 +107,6 @@ class Registration_deployer(object):
         if(len(uri))>0 and uri[0]=="login":
             body=cherrypy.request.body.read()
             json_body=json.loads(body.decode('utf-8'))
-            #username=str(cherrypy.request.login)
             username=json_body['username']
             password=json_body['password']
             try:
