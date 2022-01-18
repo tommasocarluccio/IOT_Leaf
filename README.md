@@ -2,8 +2,6 @@
 
 <img src="http://www.politocomunica.polito.it/var/politocomunica/storage/images/media/images/marchio_logotipo_politecnico/1371-1-ita-IT/marchio_logotipo_politecnico_large.jpg" alt="poli_logo" width="200"/>
 
-<img src="https://github.com/tommasocarluccio/IOT_Leaf/blob/develop/documents/leaf_logo.png" alt="leaf_logo" width="200"/>
-
 > **Master course in ICT FOR SMART SOCIETIES**
 
 > **Programming for IoT applications (01QWRBH) 2020-2021**
